@@ -4,12 +4,12 @@ import { StyleSheet, Text, View } from 'react-native';
 import {COLORS} from "./style/colors";
 
 import { loadFonts } from "./style/fonts";
-import {Input} from "./Commons/Input";
-import {Btn} from "./Commons/Btn";
-import {Category} from "./Commons/Category";
-import {IconFacebook} from "./Commons/IconFacebook";
-import {SocialBtn} from "./Commons/SocialBtn";
-import {SizeContainer} from "./Commons/SizeContainer";
+import {Input} from "./components/Input";
+import {Btn} from "./components/Btn";
+import {Category} from "./components/Category";
+import {IconFacebook} from "./components/IconFacebook";
+import {SocialBtn} from "./components/SocialBtn";
+import {SizeContainer} from "./components/SizeContainer";
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
