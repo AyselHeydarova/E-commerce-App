@@ -10,6 +10,7 @@ import {Category} from "./components/Category";
 import {IconFacebook} from "./components/IconFacebook";
 import {SocialBtn} from "./components/SocialBtn";
 import {SizeContainer} from "./components/SizeContainer";
+import { ProductCard } from "./components/ProductCard";
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
@@ -20,11 +21,13 @@ export default function App() {
   }
   return (
     <View style={styles.container}>
-     <Input name={'Name'}/>
+     {/* <Input name={'Name'}/>
      <Btn btnName={'Check'} width={140} height={40} bgColor={COLORS.background} borderWidth={2} borderColor={'white'}/>
      <Category categoryName={'New'}/>
      <SocialBtn/>
-     <SizeContainer width={100} name={'XL'}/>
+     <SizeContainer width={100} name={'XL'}/> */}
+
+     <ProductCard/>
     </View>
   );
 }
@@ -32,7 +35,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    // backgroundColor: COLORS.BACKGROUND,
     alignItems: 'center',
     justifyContent: 'center',
   },
