@@ -3,6 +3,14 @@ import {AppLoading} from "expo";
 import {StyleSheet, Text, View} from 'react-native';
 import {COLORS} from "./style/colors";
 
+import { loadFonts } from "./style/fonts";
+import {Input} from "./components/Input";
+import {Btn} from "./components/Btn";
+import {Category} from "./components/Category";
+import {IconFacebook} from "./components/IconFacebook";
+import {SocialBtn} from "./components/SocialBtn";
+import {SizeContainer} from "./components/SizeContainer";
+import { ProductCard } from "./components/ProductCard";
 import {loadFonts} from "./style/fonts";
 import {Heart} from "./Icons/Heart";
 import {Bag} from "./Icons/Bag";
