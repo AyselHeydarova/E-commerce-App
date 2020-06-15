@@ -2,8 +2,8 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import {COLORS} from "../style/colors";
 import {CustomText} from "./CustomText";
-import {IconFacebook} from "./IconFacebook";
-import {IconGoogle} from "./IconGoogle";
+import {IconFacebook} from "../Icons/IconFacebook";
+import {IconGoogle} from "../Icons/IconGoogle";
 
 
 export const SocialBtn = () => {
