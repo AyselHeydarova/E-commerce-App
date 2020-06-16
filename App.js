@@ -1,8 +1,13 @@
-import React, {useState} from "react";
-import {AppLoading} from "expo";
-import {StyleSheet, Text, View} from 'react-native';
-import {COLORS} from "./style/colors";
+import React, { useState } from "react";
+import { AppLoading } from "expo";
+import { StyleSheet, Text, View } from "react-native";
+import { COLORS } from "./style/colors";
 
+import { loadFonts } from "./style/fonts";
+import { Heart } from "./Icons/Heart";
+import { Bag } from "./Icons/Bag";
+import { SingleProductScreen } from "./Screens/SingleProductScreen";
+import { ProductCard } from "./components/ProductCard";
 import {loadFonts} from "./style/fonts";
 import {Filters} from "./commons/filters";
 import {IconContainer} from "./components/IconContainer";
@@ -19,15 +24,25 @@ export default function App() {
     return (
         <Filters/>
     );
+  }
+  return (
+    <View style={styles.container}>
+      <SingleProductScreen />
+      {/* <Heart width={30} height={30} />
+      <Bag width={30} height={30} /> */}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: COLORS.BACKGROUND,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
 });
 
 {/*<View style={styles.container}>*/}

@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
-import {COLORS} from "../style/colors";
-import {CustomText} from "./CustomText";
+import React, { useState } from "react";
+import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { COLORS } from "../style/colors";
+import { CustomText } from "./CustomText";
+
 
 
 export const SizeContainer = ({width, name,key}) => {
@@ -38,4 +39,6 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         color:"white"
     }
+
+
 });
