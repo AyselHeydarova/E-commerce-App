@@ -1,17 +1,21 @@
 import React from 'react';
-import {StyleSheet, View} from "react-native";
+import {StyleSheet, TouchableOpacity} from "react-native";
 import {COLORS} from "../style/colors";
 
 export const ColorContainer = () => {
     return (
-        <View style={styles.container}>
+        <TouchableOpacity style={[styles.container,{backgroundColor:'red',borderColor:'TouchableOpacity'}]}>
 
-        </View>
+        </TouchableOpacity>
     );
 };
 export const styles = StyleSheet.create({
     container: {
-        width:20,
+        width:40,
+        height:40,
+        borderRadius:20,
+        borderWidth:2,
+        marginRight:15,
 
     },
 

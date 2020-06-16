@@ -11,6 +11,8 @@ import { ProductCard } from "./components/ProductCard";
 import {loadFonts} from "./style/fonts";
 import {Filters} from "./commons/filters";
 import {IconContainer} from "./components/IconContainer";
+import {ColorContainer} from "./components/ColorContainer";
+import {BagContainer} from "./components/BagContainer";
 
 export default function App() {
     const [loaded, setLoaded] = useState(false);
@@ -18,12 +20,9 @@ export default function App() {
         return (
             <AppLoading startAsync={loadFonts} onFinish={() => setLoaded(true)}/>
         );
-    } {/*<Filters/>*/}
+    }
     return (
-
-           <View style={styles.container}>
-               <IconContainer/>
-           </View>
+        <Filters/>
     );
   }
   return (
@@ -36,10 +35,18 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
     alignItems: "center",
     justifyContent: "center",
   },
+
 });
+
+{/*<View style={styles.container}>*/}
+{/*    <IconContainer/>*/}
+{/*    <ColorContainer/>*/}
+{/*    <BagContainer/>*/}
+{/*</View>*/}
