@@ -12,8 +12,8 @@ import {SocialBtn} from "./components/SocialBtn";
 import {SizeContainer} from "./components/SizeContainer";
 import { ProductCard } from "./components/ProductCard";
 import {loadFonts} from "./style/fonts";
-import {Heart} from "./Icons/Heart";
-import {Bag} from "./Icons/Bag";
+import {Filters} from "./commons/filters";
+import {IconContainer} from "./components/IconContainer";
 
 export default function App() {
     const [loaded, setLoaded] = useState(false);
@@ -21,19 +21,19 @@ export default function App() {
         return (
             <AppLoading startAsync={loadFonts} onFinish={() => setLoaded(true)}/>
         );
-    }
+    } {/*<Filters/>*/}
     return (
-            <View style={styles.container}>
-                <Heart width={30} height={30}/>
-                <Bag width={30} height={30}/>
-            </View>
+
+           <View style={styles.container}>
+               <IconContainer/>
+           </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.background,
+        backgroundColor: COLORS.white,
         alignItems: 'center',
         justifyContent: 'center',
     },
