@@ -4,7 +4,7 @@ import {COLORS} from "../style/colors";
 import {CustomText} from "./CustomText";
 
 
-export const SizeContainer = ({width, name}) => {
+export const SizeContainer = ({width, name,key}) => {
     const [isClicked, setIsClicked] = useState(false);
     const handleSize = () => {
         setIsClicked(!isClicked);
@@ -12,12 +12,13 @@ export const SizeContainer = ({width, name}) => {
     }
     return (
         <TouchableOpacity style={[styles.container, {width: width,
-            backgroundColor: isClicked ? COLORS.primary : null,
+            backgroundColor: isClicked ? COLORS.PRIMARY : null,
             borderWidth: isClicked ? 0 : 0.4}
         ]}
-                          onPress={() => handleSize()}>
+                          onPress={() => handleSize()}
+        >
             <CustomText
-                style={[{...styles.containerText}, {color: isClicked ? COLORS.background : "white"}]}>{name}</CustomText>
+                style={styles.containerText}>{name}</CustomText>
         </TouchableOpacity>
     );
 };
@@ -28,11 +29,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,
-        borderColor: '#ABB4BD'
+        borderColor: '#ABB4BD',
+        marginRight:10,
+        marginLeft:10,
     },
     containerText: {
         fontSize: 16,
         lineHeight: 20,
+        color:"white"
     }
-
 });
