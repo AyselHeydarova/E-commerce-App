@@ -8,12 +8,22 @@ import { Heart } from "./Icons/Heart";
 import { Bag } from "./Icons/Bag";
 import { SingleProductScreen } from "./Screens/SingleProductScreen";
 import { ProductCard } from "./components/ProductCard";
+import {loadFonts} from "./style/fonts";
+import {Filters} from "./commons/filters";
+import {IconContainer} from "./components/IconContainer";
 
 export default function App() {
-  const [loaded, setLoaded] = useState(false);
-  if (!loaded) {
+    const [loaded, setLoaded] = useState(false);
+    if (!loaded) {
+        return (
+            <AppLoading startAsync={loadFonts} onFinish={() => setLoaded(true)}/>
+        );
+    } {/*<Filters/>*/}
     return (
-      <AppLoading startAsync={loadFonts} onFinish={() => setLoaded(true)} />
+
+           <View style={styles.container}>
+               <IconContainer/>
+           </View>
     );
   }
   return (
