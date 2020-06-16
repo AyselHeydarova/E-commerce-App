@@ -11,7 +11,7 @@ export const ColorContainer = () => {
 };
 export const styles = StyleSheet.create({
     container: {
-        width:
+        width:20,
 
     },
 
