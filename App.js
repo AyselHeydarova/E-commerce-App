@@ -25,14 +25,7 @@ export default function App() {
         <Filters/>
     );
   }
-  return (
-    <View style={styles.container}>
-      <SingleProductScreen />
-      {/* <Heart width={30} height={30} />
-      <Bag width={30} height={30} /> */}
-    </View>
-  );
-}
+
 
 const styles = StyleSheet.create({
 
