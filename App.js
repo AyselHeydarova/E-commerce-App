@@ -1,12 +1,18 @@
-import React, {useState} from "react";
-import {AppLoading} from "expo";
-import {StyleSheet, Text, View} from 'react-native';
-import {COLORS} from "./style/colors";
+import React, { useState } from "react";
+import { AppLoading } from "expo";
+import { StyleSheet, Text, View } from "react-native";
+import { COLORS } from "./style/colors";
 
+import { loadFonts } from "./style/fonts";
+import { Heart } from "./Icons/Heart";
+import { Bag } from "./Icons/Bag";
+import { SingleProductScreen } from "./Screens/SingleProductScreen";
+import { ProductCard } from "./components/ProductCard";
 import {loadFonts} from "./style/fonts";
-import { RatingReviews } from "./Screens/RatingReviews";
-
-
+import {Filters} from "./commons/filters";
+import {IconContainer} from "./components/IconContainer";
+import {ColorContainer} from "./components/ColorContainer";
+import {BagContainer} from "./components/BagContainer";
 
 export default function App() {
     const [loaded, setLoaded] = useState(false);
@@ -14,22 +20,26 @@ export default function App() {
         return (
             <AppLoading startAsync={loadFonts} onFinish={() => setLoaded(true)}/>
         );
-    } {/*<Filters/>*/}
+    }
     return (
-
-           <View style={styles.container}>
-               {/* <IconContainer/> */}
-               <RatingReviews/>
-               
-           </View>
+        <Filters/>
     );
-}
+  }
+
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: COLORS.BACKGROUND,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
 });
+
+{/*<View style={styles.container}>*/}
+{/*    <IconContainer/>*/}
+{/*    <ColorContainer/>*/}
+{/*    <BagContainer/>*/}
+{/*</View>*/}
