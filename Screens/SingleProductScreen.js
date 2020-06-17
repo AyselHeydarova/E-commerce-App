@@ -8,7 +8,7 @@ import { Heart } from "../Icons/Heart";
 import { CustomText } from "../components/CustomText";
 import { ProductCard } from "../components/ProductCard";
 import { Btn } from "../components/Btn";
-import { GLOBAL_STYLES } from "../style/GlobalStyles";
+import { GLOBAL_STYLES } from "../style/globalStyles";
 
 const products = [
   {
@@ -101,8 +101,8 @@ export const SingleProductScreen = ({ product }) => {
         />
         <View style={styles.main}>
           <View style={styles.row}>
-            <SizeContainer width={138} name="Size" />
-            <SizeContainer width={138} name="Color" />
+            <SizeContainer width={130} name="Size" />
+            <SizeContainer width={130} name="Color" />
             <Heart width={30} height={30} />
           </View>
 
