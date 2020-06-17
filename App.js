@@ -4,15 +4,15 @@ import { StyleSheet, Text, View } from "react-native";
 import { COLORS } from "./style/colors";
 
 import { loadFonts } from "./style/fonts";
-import { Heart } from "./Icons/Heart";
-import { Bag } from "./Icons/Bag";
 import { SingleProductScreen } from "./Screens/SingleProductScreen";
-import { ProductCard } from "./components/ProductCard";
-import {loadFonts} from "./style/fonts";
-import {Filters} from "./commons/filters";
-import {IconContainer} from "./components/IconContainer";
-import {ColorContainer} from "./components/ColorContainer";
-import {BagContainer} from "./components/BagContainer";
+import {BrandsScreen} from "./Screens/BrandsScreen";
+import {SelectSize} from "./commons/SelectSize";
+import {Favorites} from "./Screens/Favorites";
+import {MyBag} from "./Screens/MyBag";
+import {Plus} from "./Icons/Plus";
+import {Minus} from "./Icons/Minus";
+
+
 
 export default function App() {
     const [loaded, setLoaded] = useState(false);
@@ -21,16 +21,12 @@ export default function App() {
             <AppLoading startAsync={loadFonts} onFinish={() => setLoaded(true)}/>
         );
     }
-    return (
-        <Filters/>
-    );
-  }
+
   return (
-    <View style={styles.container}>
-      <SingleProductScreen />
-      {/* <Heart width={30} height={30} />
-      <Bag width={30} height={30} /> */}
-    </View>
+     <View style={styles.container}>
+         <Plus />
+         <Minus />
+     </View>
   );
 }
 
@@ -44,9 +40,3 @@ const styles = StyleSheet.create({
   },
 
 });
-
-{/*<View style={styles.container}>*/}
-{/*    <IconContainer/>*/}
-{/*    <ColorContainer/>*/}
-{/*    <BagContainer/>*/}
-{/*</View>*/}

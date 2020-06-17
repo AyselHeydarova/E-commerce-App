@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import {StyleSheet, Text, View} from "react-native";
 import {COLORS} from "../style/colors";
-import {styles} from "../commons/filters";
+import {styles} from "../Screens/filters";
 
 class Slider extends Component {
     state = {

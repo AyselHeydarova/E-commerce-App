@@ -8,7 +8,7 @@ import { Heart } from "../Icons/Heart";
 import { CustomText } from "../components/CustomText";
 import { ProductCard } from "../components/ProductCard";
 import { Btn } from "../components/Btn";
-import { GLOBAL_STYLES } from "../style/GlobalStyles";
+import { GLOBAL_STYLES } from "../style/globalStyles";
 
 const products = [
   {

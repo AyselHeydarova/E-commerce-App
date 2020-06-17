@@ -6,5 +6,5 @@ export const COLORS = Object.freeze({
     ERROR: "#FF2424",
     SUCCESS: "#55D85A",
     SALE: "#FF3E3E",
-    TEXT: "#F5F5F5",
+    TEXT: "#F7F7F7",
 });
