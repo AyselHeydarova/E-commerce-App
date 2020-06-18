@@ -7,4 +7,5 @@ export const COLORS = Object.freeze({
     SUCCESS: "#55D85A",
     SALE: "#FF3E3E",
     TEXT: "#F7F7F7",
+    STAR:   "#FFBA49"
 });

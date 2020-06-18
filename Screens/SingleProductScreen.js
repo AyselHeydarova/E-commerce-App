@@ -101,8 +101,8 @@ export const SingleProductScreen = ({ product }) => {
         />
         <View style={styles.main}>
           <View style={styles.row}>
-            <SizeContainer width={138} name="Size" />
-            <SizeContainer width={138} name="Color" />
+            <SizeContainer width={130} name="Size" />
+            <SizeContainer width={130} name="Color" />
             <Heart width={30} height={30} />
           </View>
 

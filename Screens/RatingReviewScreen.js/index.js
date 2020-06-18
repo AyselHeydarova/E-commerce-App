@@ -1,0 +1,1 @@
+export {RatingReview} from "./RatingReviews";
