@@ -1,16 +1,10 @@
 import React, { useState } from "react";
 import { AppLoading } from "expo";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { COLORS } from "./style/colors";
-
 import { loadFonts } from "./style/fonts";
-import { SingleProductScreen } from "./Screens/SingleProductScreen";
-import {BrandsScreen} from "./Screens/BrandsScreen";
-import {SelectSize} from "./commons/SelectSize";
-import {Favorites} from "./Screens/Favorites";
-import {MyBag} from "./Screens/MyBag";
-import {Plus} from "./Icons/Plus";
-import {Minus} from "./Icons/Minus";
+import {GLOBAL_STYLES} from "./style/globalStyles";
+import {ProfileScreen} from "./Screens/ProfileScreen";
 
 
 
@@ -23,20 +17,21 @@ export default function App() {
     }
 
   return (
-     <View style={styles.container}>
-         <Plus />
-         <Minus />
-     </View>
+         <ProfileScreen orderCount={12} paymentMethods={"**34"} shippingAddresses={3}/>
   );
 }
+
 
 const styles = StyleSheet.create({
 
   container: {
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
-    alignItems: "center",
+    paddingHorizontal: GLOBAL_STYLES.PADDING,
     justifyContent: "center",
   },
 
 });
+{/*<View style={styles.container}>*/}
+{/*    <ProfileScreen/>*/}
+{/*</View>*/}
