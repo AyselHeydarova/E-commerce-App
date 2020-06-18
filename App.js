@@ -6,6 +6,8 @@ import { COLORS } from "./style/colors";
 import {loadFonts} from "./style/fonts";
 import { RatingReviews } from "./Screens/RatingReviewScreen.js/RatingReviews";
 import { GLOBAL_STYLES } from "./style/globalStyles";
+import { ReviewItem } from "./Screens/RatingReviewScreen.js/ReviewItem";
+import { ClientReview } from "./Screens/RatingReviewScreen.js/ClientReview";
 
 
 export default function App() {
@@ -19,6 +21,8 @@ export default function App() {
       <View style={styles.container}>
 
         <RatingReviews/>
+        <ReviewItem/>
+        <ClientReview/>
       </View>
     );
   }
