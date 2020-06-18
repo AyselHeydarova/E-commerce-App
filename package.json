@@ -11,6 +11,7 @@
     "@expo/webpack-config": "^0.12.12",
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "expo": "^37.0.12",
+    "expo-cli": "^3.21.5",
     "expo-font": "~8.1.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
@@ -18,7 +19,8 @@
     "react-native-image-slider-box": "^1.0.12",
     "react-native-star-rating": "^1.1.0",
     "react-native-svg": "11.0.1",
-    "react-native-web": "~0.11.7"
+    "react-native-web": "~0.11.7",
+    "yarn": "^1.22.4"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

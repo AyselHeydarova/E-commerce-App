@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { COLORS } from "../style/colors";
 import { CustomText } from "./CustomText";
-import { FONT_FAMILIES } from "../style/fonts";
 
 export const Btn = ({
   btnName,

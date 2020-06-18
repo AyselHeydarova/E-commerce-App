@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { AppLoading } from "expo";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { COLORS } from "./style/colors";
+import { loadFonts } from "./style/fonts";
+import {GLOBAL_STYLES} from "./style/globalStyles";
+import {ProfileScreen} from "./Screens/ProfileScreen";
 
-import {loadFonts} from "./style/fonts";
-import { RatingReviews } from "./Screens/RatingReviewScreen.js/RatingReviews";
-import { GLOBAL_STYLES } from "./style/globalStyles";
-import { ReviewItem } from "./Screens/RatingReviewScreen.js/ReviewItem";
-import { ClientReview } from "./Screens/RatingReviewScreen.js/ClientReview";
 
 
 export default function App() {
@@ -17,15 +15,12 @@ export default function App() {
             <AppLoading startAsync={loadFonts} onFinish={() => setLoaded(true)}/>
         );
     }
-    return (
-      <View style={styles.container}>
 
-        <RatingReviews/>
-        <ReviewItem/>
-        <ClientReview/>
-      </View>
-    );
-  }
+  return (
+
+         <ProfileScreen orderCount={12} paymentMethods={"**34"} shippingAddresses={3}/>
+  );
+}
 
 
 const styles = StyleSheet.create({
@@ -38,3 +33,6 @@ const styles = StyleSheet.create({
   },
 
 });
+{/*<View style={styles.container}>*/}
+{/*    <ProfileScreen/>*/}
+{/*</View>*/}
