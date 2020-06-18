@@ -24,8 +24,7 @@ export default function App() {
 
   return (
      <View style={styles.container}>
-         <Plus />
-         <Minus />
+         <MyBag />
      </View>
   );
 }
