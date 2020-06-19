@@ -1,5 +1,4 @@
 import React from "react";
-
 import { SliderBox } from "react-native-image-slider-box";
 import { COLORS } from "../style/colors";
 import { ScrollView, View, StyleSheet, FlatList } from "react-native";
@@ -7,8 +6,8 @@ import { SizeContainer } from "../components/SizeContainer";
 import { Heart } from "../Icons/Heart";
 import { CustomText } from "../components/CustomText";
 import { ProductCard } from "../components/ProductCard";
-import { Btn } from "../components/Btn";
 import { GLOBAL_STYLES } from "../style/globalStyles";
+import { ActionModal } from "../components/ActionModal";
 
 const products = [
   {
@@ -133,17 +132,7 @@ export const SingleProductScreen = ({ product }) => {
           />
         </View>
       </ScrollView>
-      <View style={styles.btnBox}>
-        <Btn
-          btnName="Add to cart"
-          bgColor={COLORS.PRIMARY}
-          height={48}
-          width={343}
-          titleStyle={{ textTransform: "uppercase" }}
-        />
-
-        <View style={styles.line} />
-      </View>
+      <ActionModal btnName="Add to cart" />
     </>
   );
 };
@@ -158,20 +147,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  btnBox: {
-    height: 110,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  line: {
-    height: 5,
-    width: 135,
-    backgroundColor: COLORS.TEXT,
-    borderRadius: 100,
-    marginVertical: 18,
-  },
-
   bigText: {
     fontSize: 24,
   },
