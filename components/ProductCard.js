@@ -1,43 +1,40 @@
 import React from "react";
-import { View, StyleSheet, Image } from "react-native";
-import { CustomText } from "./CustomText";
-import { COLORS } from "../style/colors";
+import { View, StyleSheet, Image, Text } from "react-native";
+import { Star } from "./Star";
 
 export const ProductCard = ({
   product,
-  isRowView = true,
+  isRowView = false,
   isInCatalog = false,
   isInFavs,
 }) => {
   product = {
-    brandName: "Mango",
-    productType: "T-shirt",
-    price: "49$",
-    size: "S",
-    color: "white",
-    imageUrl: "https://www.iciw.com/bilder/artiklar/zoom/10162-033_1.jpg",
-    count: 5,
+    brandName: product.brandName,
+    productType: product.productType,
+    price: product.price,
+    imageUrl: product.imageUrl,
+    rating:product.rating
   };
 
   const columnStyles = {
     cardWrapper: {
       flexDirection: "column",
-      width: 164,
-      height: 280,
+      width: 140,
+      height: 200,
       borderRadius: 8,
       marginRight: 15,
-      backgroundColor: COLORS.DARK,
+      backgroundColor: '#1E1F28',
     },
     imgWrapper: {
       width: "100%",
-      height: 184,
+      height: 100,
       borderRadius: 8,
       overflow: "hidden",
     },
     productImg: {
       borderRadius: 8,
-      width: "100%",
-      height: "100%",
+      width: "90%",
+      height: "90%",
     },
   };
 
@@ -57,41 +54,56 @@ export const ProductCard = ({
     { opacity: count === 0 ? 0.5 : 1 },
   ];
 
+  const ratingRender=(ratingNumber)=>{
+    const ratingArray=[]; 
+    const rating=ratingNumber;
+    let maxRating=5;
+    let iterator=1;
+    while (iterator<=maxRating){
+        if (iterator<=rating) {
+            ratingArray.push('filled');
+        }else {
+            ratingArray.push('empty');
+        }
+        iterator++;
+    }
+    return ratingArray
+  }
+  const ratingContainer=ratingRender(rating);
   return (
     <View style={cardWrapperStyles}>
       <View style={isRowView ? styles.imgWrapper : columnStyles.imgWrapper}>
         <Image
-          source={{ uri: imageUrl }}
+          source={imageUrl}
           style={isRowView ? styles.productImg : columnStyles.productImg}
+          resizeMode="stretch"
         />
 
         {count === 0 && (
           <View style={styles.soldOut}>
-            <CustomText>Sorry, this item is currently sold out</CustomText>
+            <Text>Sorry, this item is currently sold out</Text>
           </View>
         )}
       </View>
 
       <View style={styles.description}>
-        <CustomText style={{ color: COLORS.GRAY }}>{brandName}</CustomText>
-        <CustomText weight="bold">{productType}</CustomText>
-
-        {isInCatalog ? null : (
-          <View style={styles.row}>
-            <View style={styles.row}>
-              <CustomText style={{ color: COLORS.GRAY }}>Color: </CustomText>
-              <CustomText> {color} </CustomText>
-            </View>
-
-            <View style={styles.row}>
-              <CustomText style={{ color: COLORS.GRAY }}>Size:</CustomText>
-              <CustomText>{size}</CustomText>
-            </View>
+          <View style={styles.ratingWrapper}>
+            {
+                ratingContainer.map(item=>{
+                    if (item==='filled'){
+                        return <Star width={13} height={12} filled={true} />
+                    }else if (item==='empty'){
+                        return <Star width={13} height={12} filled={false}/>
+                    }
+                })
+            }
           </View>
-        )}
+
+        <Text style={{ color: '#ABB4BD' }}>{brandName}</Text>
+        <Text style={{ color: '#F7F7F7' }}>{productType}</Text>
 
         <View style={styles.row}>
-          <CustomText weight="bold">{price}</CustomText>
+          <Text style={{ color: '#F7F7F7' }}>{price}</Text>
         </View>
       </View>
     </View>
@@ -101,16 +113,16 @@ export const ProductCard = ({
 const styles = StyleSheet.create({
   cardWrapper: {
     height: 110,
-    width: "90%",
+    width: "100%",
     borderRadius: 8,
     flexDirection: "row",
-    backgroundColor: COLORS.DARK,
+    backgroundColor: '#1E1F28',
     overflow: "hidden",
   },
 
   description: {
-    padding: 15,
-    width: "70%",
+    width: "100%",
+    paddingLeft:0
   },
 
   imgWrapper: {
@@ -132,6 +144,10 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     position: "absolute",
     bottom: 0,
-    backgroundColor: COLORS.DARK,
   },
+  ratingWrapper:{
+      flexDirection:'row',
+      justifyContent:'space-between',
+      alignItems:'center'
+  }
 });
