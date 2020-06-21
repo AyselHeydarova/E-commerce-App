@@ -11,6 +11,7 @@ import store from './store';
 import { Ionicons } from '@expo/vector-icons';
 import MyTabs from './navigation';
 import { AuthForm } from './navigation/screens/AuthForm';
+import Home from "./navigation/screens/Home";
 
 export default function App() {
     const [loaded, setLoaded] = useState(false);
@@ -23,7 +24,7 @@ export default function App() {
   return (
 		<Provider store={store}>
 			 <View style={styles.container}> 
-				<AuthForm/>
+				<Home/>
 			 </View>
 		</Provider>
   );
