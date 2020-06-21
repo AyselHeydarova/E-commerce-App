@@ -4,6 +4,8 @@ import {COLORS} from "../../style/colors";
 import {CustomText} from "../../components/CustomText";
 import {Forward} from "../../Icons/Forward";
 
+
+
 export const ProfileScreen = ({orderCount,shippingAddresses,paymentMethods}) => {
     const profileSections = [
         {
@@ -71,7 +73,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.BACKGROUND,
-
     },
     title: {
         color: COLORS.TEXT,
