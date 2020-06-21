@@ -11,6 +11,7 @@ export const Btn = ({
   borderColor,
   borderWidth,
   titleStyle,
+    onPress,
   ...rest
 }) => {
   return (
@@ -25,6 +26,7 @@ export const Btn = ({
           borderColor: borderColor,
         },
       ]}
+      onPress={onPress}
       rest={rest}
     >
       <CustomText

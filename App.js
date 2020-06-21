@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 import { COLORS } from "./style/colors";
 import { loadFonts } from "./style/fonts";
 import {GLOBAL_STYLES} from "./style/globalStyles";
-import {ProfileScreen} from "./Screens/ProfileScreen";
+import {PasswordChange} from "./Screens/ProfileScreens/PasswordChange";
 
 
 
@@ -17,7 +17,7 @@ export default function App() {
     }
 
   return (
-         <ProfileScreen orderCount={12} paymentMethods={"**34"} shippingAddresses={3}/>
+         <PasswordChange/>
   );
 }
 

@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, StatusBar, FlatList, TouchableOpacity, Image} from "react-native";
-import {COLORS} from "../style/colors";
-import {CustomText} from "../components/CustomText";
-import {Forward} from "../Icons/Forward";
+import {COLORS} from "../../style/colors";
+import {CustomText} from "../../components/CustomText";
+import {Forward} from "../../Icons/Forward";
 
 export const ProfileScreen = ({orderCount,shippingAddresses,paymentMethods}) => {
     const profileSections = [
@@ -110,12 +110,6 @@ const styles = StyleSheet.create({
     text: {
         marginTop: 10,
 
-    },
-    amountContainer: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 20
     },
     userInfoSection: {
         width: "100%",
