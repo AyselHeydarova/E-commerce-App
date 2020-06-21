@@ -3,7 +3,7 @@ import { AppLoading } from "expo";
 import { COLORS } from "./style/colors";
 import { loadFonts } from "./style/fonts";
 import {GLOBAL_STYLES} from "./style/globalStyles";
-import {ProfileScreen} from "./Screens/ProfileScreen";
+import {PasswordChange} from "./Screens/ProfileScreens/PasswordChange";
 
 import { StyleSheet, Text, View, Image } from 'react-native';
 import {Provider, connect} from 'react-redux';
@@ -21,10 +21,6 @@ export default function App() {
     }
 
   return (
-
-         //<ProfileScreen orderCount={12} paymentMethods={"**34"} shippingAddresses={3}/>
-		 
-		 //Shohrat added:
 		<Provider store={store}>
 			 <View style={styles.container}> 
 				<AuthForm/>

@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, StatusBar, FlatList, TouchableOpacity, Image} from "react-native";
-import {COLORS} from "../style/colors";
-import {CustomText} from "../components/CustomText";
-import {Forward} from "../Icons/Forward";
+import {COLORS} from "../../style/colors";
+import {CustomText} from "../../components/CustomText";
+import {Forward} from "../../Icons/Forward";
 
 
 
