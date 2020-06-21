@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { CustomText } from "../../components/CustomText";
 import { COLORS } from "../../style/colors";
 import { RatingRow } from "./RatingRow";
+import { GLOBAL_STYLES } from "../../style/globalStyles";
 
 const product = {
   brandName: "Mango",
@@ -17,7 +18,7 @@ const product = {
     two: 14,
     three: 6,
     four: 22,
-    five:158,
+    five: 158,
   },
 };
 
@@ -50,11 +51,31 @@ export const RatingReviews = () => {
           </CustomText>
         </View>
         <View style={styles.ratingColumn}>
-          <RatingRow starCount={5} ratingCount={product.ratings.five} totalRatingCount={totalRatingCount}/>
-          <RatingRow starCount={4} ratingCount={product.ratings.four} totalRatingCount={totalRatingCount} />
-          <RatingRow starCount={3} ratingCount={product.ratings.three}totalRatingCount={totalRatingCount} />
-          <RatingRow starCount={2} ratingCount={product.ratings.two} totalRatingCount={totalRatingCount}/>
-          <RatingRow starCount={1} ratingCount={product.ratings.one}totalRatingCount={totalRatingCount} />
+          <RatingRow
+            starCount={5}
+            ratingCount={product.ratings.five}
+            totalRatingCount={totalRatingCount}
+          />
+          <RatingRow
+            starCount={4}
+            ratingCount={product.ratings.four}
+            totalRatingCount={totalRatingCount}
+          />
+          <RatingRow
+            starCount={3}
+            ratingCount={product.ratings.three}
+            totalRatingCount={totalRatingCount}
+          />
+          <RatingRow
+            starCount={2}
+            ratingCount={product.ratings.two}
+            totalRatingCount={totalRatingCount}
+          />
+          <RatingRow
+            starCount={1}
+            ratingCount={product.ratings.one}
+            totalRatingCount={totalRatingCount}
+          />
         </View>
       </View>
     </View>
@@ -62,6 +83,9 @@ export const RatingReviews = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: GLOBAL_STYLES.PADDING,
+  },
   heading: {
     fontSize: 34,
     marginBottom: 30,

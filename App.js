@@ -35,7 +35,6 @@ export default function App() {
 
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
@@ -43,7 +42,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
 });
 {/*<View style={styles.container}>*/}
 {/*    <ProfileScreen/>*/}
