@@ -6,23 +6,27 @@ import {Forward} from "../../Icons/Forward";
 
 
 
-export const ProfileScreen = ({orderCount,shippingAddresses,paymentMethods}) => {
+export const ProfileScreen = ({orderCount,shippingAddresses,paymentMethods,navigation}) => {
     const profileSections = [
         {
             sectionName: "My Orders",
             dutyOfSection: `Already have ${orderCount} orders`,
+            screenTo:"MyOrders"
         },
         {
             sectionName: "Shipping addresses",
             dutyOfSection: `${shippingAddresses} addresses`,
+            screenTo:"OrderDetails"
         },
         {
             sectionName: "Payment methods",
             dutyOfSection: `Visa ${paymentMethods} `,
+            screenTo:"PasswordChange"
         },
         {
             sectionName: "Settings",
             dutyOfSection: "Notifications, password",
+            screenTo:"Settings"
         },
 
     ];
@@ -48,7 +52,7 @@ export const ProfileScreen = ({orderCount,shippingAddresses,paymentMethods}) => 
             <FlatList
                 data={profileSections}
                 renderItem={({item}) => (
-                    <TouchableOpacity style={styles.profileSection} key={`${item.sectionName}`}>
+                    <TouchableOpacity style={styles.profileSection} key={`${item.sectionName}`} onPress={()=>navigation.navigate(item.screenTo)}>
                         <View style={styles.text}>
                             <CustomText weight={'bold'} style={styles.name}>
                                 {item.sectionName}

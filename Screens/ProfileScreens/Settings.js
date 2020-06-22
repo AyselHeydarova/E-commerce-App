@@ -8,7 +8,7 @@ import {Order} from "../../components/Order";
 import {Input} from "../../components/Input";
 import {GLOBAL_STYLES} from "../../style/globalStyles";
 
-export const Settings = () => {
+export const Settings = ({navigation}) => {
 
     return (
         <KeyboardAvoidingView
@@ -34,7 +34,7 @@ export const Settings = () => {
                 <CustomText weight={"medium"} style={styles.infoTitle}>
                     Password
                 </CustomText>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>navigation.navigate("PasswordChange")}>
                     <CustomText  style={styles.btnText}>
                         Change
                     </CustomText>
