@@ -1,43 +1,45 @@
 import React from "react";
-import { View, StyleSheet, Image, Text } from "react-native";
-import { Star } from "./Star";
-import { products } from "../DummyData/products";
-
-
+import { View, StyleSheet, Image } from "react-native";
+import { CustomText } from "./CustomText";
+import { COLORS } from "../style/colors";
+import StarRating from "react-native-star-rating";
 
 export const ProductCard = ({
   product,
-  isRowView = false,
+  isRowView = true,
   isInCatalog = false,
   isInFavs,
 }) => {
   product = {
-    brandName: product.brandName,
-    productType: product.productType,
-    price: product.price,
-    imageUrl: product.imageUrl,
-    rating:product.rating
+    brandName: "Mango",
+    productType: "T-shirt",
+    price: "49$",
+    size: "S",
+    color: "white",
+    imageUrl: "https://www.iciw.com/bilder/artiklar/zoom/10162-033_1.jpg",
+    count: 4,
+    rating: 4,
   };
 
   const columnStyles = {
     cardWrapper: {
       flexDirection: "column",
-      width: 140,
-      height: 200,
+      width: 164,
+      height: 280,
       borderRadius: 8,
-      marginRight: 15,
-      backgroundColor: '#1E1F28',
+      backgroundColor: COLORS.DARK,
     },
+
     imgWrapper: {
       width: "100%",
-      height: 100,
+      height: 174,
       borderRadius: 8,
       overflow: "hidden",
     },
     productImg: {
       borderRadius: 8,
-      width: "90%",
-      height: "90%",
+      width: "100%",
+      height: "100%",
     },
   };
 
@@ -57,57 +59,53 @@ export const ProductCard = ({
     { opacity: count === 0 ? 0.5 : 1 },
   ];
 
-  const ratingRender=(ratingNumber)=>{
-    const ratingArray=[]; 
-    const rating=ratingNumber;
-    let maxRating=5;
-    let iterator=1;
-    while (iterator<=maxRating){
-        if (iterator<=rating) {
-            ratingArray.push('filled');
-        }else {
-            ratingArray.push('empty');
-        }
-        iterator++;
-    }
-    return ratingArray
-  }
-  const ratingContainer=ratingRender(rating);
   return (
     <View style={cardWrapperStyles}>
       <View style={isRowView ? styles.imgWrapper : columnStyles.imgWrapper}>
         <Image
-          source={imageUrl}
+          source={{ uri: imageUrl }}
           style={isRowView ? styles.productImg : columnStyles.productImg}
-          resizeMode="stretch"
         />
 
         {count === 0 && (
           <View style={styles.soldOut}>
-            <Text>Sorry, this item is currently sold out</Text>
+            <CustomText>Sorry, this item is currently sold out</CustomText>
           </View>
         )}
       </View>
 
       <View style={styles.description}>
-          <View style={styles.ratingWrapper}>
-            {
-                ratingContainer.map(item=>{
-                    if (item==='filled'){
-                        return <Star width={13} height={12} filled={true} />
-                    }else if (item==='empty'){
-                        return <Star width={13} height={12} filled={false}/>
-                    }
-                })
-            }
-          </View>
-
-        <Text style={{ color: '#ABB4BD' }}>{brandName}</Text>
-        <Text style={{ color: '#F7F7F7' }}>{productType}</Text>
-
         <View style={styles.row}>
-          <Text style={{ color: '#F7F7F7' }}>{price}</Text>
+          <StarRating
+            disabled={true}
+            fullStarColor={COLORS.STAR}
+            starSize={14}
+            starStyle={{ margin: 3 }}
+            containerStyle={{ marginTop: 0, width: 80 }}
+            maxStars={5}
+            rating={rating}
+          />
+          <CustomText style={{ color: COLORS.GRAY }}>(10)</CustomText>
         </View>
+
+        <CustomText style={{ color: COLORS.GRAY }}>{brandName}</CustomText>
+        <CustomText weight="bold">{productType}</CustomText>
+
+        {isInCatalog ? null : (
+          <View style={styles.row}>
+            <View style={styles.row}>
+              <CustomText style={{ color: COLORS.GRAY }}>Color: </CustomText>
+              <CustomText> {color} </CustomText>
+            </View>
+
+            <View style={styles.row}>
+              <CustomText style={{ color: COLORS.GRAY }}>Size:</CustomText>
+              <CustomText>{size}</CustomText>
+            </View>
+          </View>
+        )}
+
+        <CustomText weight="bold">{price}</CustomText>
       </View>
     </View>
   );
@@ -116,16 +114,19 @@ export const ProductCard = ({
 const styles = StyleSheet.create({
   cardWrapper: {
     height: 110,
-    width: "100%",
+    width: "90%",
     borderRadius: 8,
     flexDirection: "row",
-    backgroundColor: '#1E1F28',
+    backgroundColor: COLORS.DARK,
     overflow: "hidden",
   },
 
   description: {
-    width: "100%",
-    paddingLeft:0
+    padding: 15,
+    // width: "70%",
+    paddingTop: 0,
+    justifyContent: "space-between",
+    flex: 1,
   },
 
   imgWrapper: {
@@ -138,8 +139,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+
   row: {
     flexDirection: "row",
+    justifyContent: "space-between",
   },
 
   soldOut: {
@@ -147,10 +150,6 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     position: "absolute",
     bottom: 0,
+    backgroundColor: COLORS.DARK,
   },
-  ratingWrapper:{
-      flexDirection:'row',
-      justifyContent:'space-between',
-      alignItems:'center'
-  }
 });

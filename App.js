@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import MyTabs from './navigation';
 import { AuthForm } from './navigation/screens/AuthForm';
 import Home from "./navigation/screens/Home";
+import { ProductCard } from "./components/ProductCard";
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
@@ -22,11 +23,13 @@ export default function App() {
   }
 
   return (
-		<Provider store={store}>
-			 <View style={styles.container}> 
-				<Home/>
-			 </View>
-		</Provider>
+		// <Provider store={store}>
+		// 	 <View style={styles.container}> 
+		// 		<Home/>
+		// 	 </View>
+    // </Provider>
+    
+    <ProductCard/>
   );
 }
 
