@@ -8,22 +8,22 @@ import {Btn} from "../../components/Btn";
 import {Order} from "../../components/Order";
 import {GLOBAL_STYLES} from "../../style/globalStyles";
 
-export const MyOrders = () => {
-    const [isDeliveredClicked,setIsDeliveredClicked]=useState(true);
-    const [isProcessingClicked,setIsProcessingClicked]=useState(false);
-    const [isCancelledClicked,setIsCancelledClicked]=useState(false);
+export const MyOrders = ({navigation}) => {
+    const [isDeliveredClicked, setIsDeliveredClicked] = useState(true);
+    const [isProcessingClicked, setIsProcessingClicked] = useState(false);
+    const [isCancelledClicked, setIsCancelledClicked] = useState(false);
 
-    const handleDelivered=()=>{
+    const handleDelivered = () => {
         setIsDeliveredClicked(true);
         setIsProcessingClicked(false);
         setIsCancelledClicked(false);
     };
-    const handleProcessing=()=>{
+    const handleProcessing = () => {
         setIsDeliveredClicked(false);
         setIsProcessingClicked(true);
         setIsCancelledClicked(false);
     };
-    const handleCancelled=()=>{
+    const handleCancelled = () => {
         setIsDeliveredClicked(false);
         setIsProcessingClicked(false);
         setIsCancelledClicked(true);
@@ -38,38 +38,37 @@ export const MyOrders = () => {
                 My Orders
             </CustomText>
 
-           <View style={styles.btns}>
-               <Btn width={110}
+            <View style={styles.btns}>
+                <Btn width={110}
+                     height={34}
+                     btnName={'Delivered'}
+                     titleStyle={{color: isDeliveredClicked ? COLORS.DARK : COLORS.TEXT}}
+                     bgColor={isDeliveredClicked ? COLORS.TEXT : COLORS.BACKGROUND}
+                     onPress={handleDelivered}
+
+                />
+                <Btn
+                    btnName={'Processing'}
+                    width={110}
                     height={34}
-                    btnName={'Delivered'}
-                    titleStyle={{ color:isDeliveredClicked? COLORS.DARK:COLORS.TEXT}}
-                    bgColor={isDeliveredClicked?COLORS.TEXT:COLORS.BACKGROUND}
-                    onPress={handleDelivered}
+                    titleStyle={{color: isProcessingClicked ? COLORS.DARK : COLORS.TEXT}}
+                    bgColor={isProcessingClicked ? COLORS.TEXT : null}
+                    onPress={() => handleProcessing()}
 
-               />
-               <Btn
-                   btnName={'Processing'}
-                   width={110}
-                   height={34}
-                   titleStyle={{ color:isProcessingClicked? COLORS.DARK:COLORS.TEXT}}
-                   bgColor={isProcessingClicked?COLORS.TEXT:null}
-                   onPress={()=>handleProcessing()}
-
-               />
-               <Btn
-                   btnName={'Cancelled'}
-                   width={110}
-                   height={34}
-                   titleStyle={{ color:isCancelledClicked? COLORS.DARK:COLORS.TEXT}}
-                   bgColor={isCancelledClicked?COLORS.TEXT:null}
-                   onPress={handleCancelled }
-               />
-           </View>
+                />
+                <Btn
+                    btnName={'Cancelled'}
+                    width={110}
+                    height={34}
+                    titleStyle={{color: isCancelledClicked ? COLORS.DARK : COLORS.TEXT}}
+                    bgColor={isCancelledClicked ? COLORS.TEXT : null}
+                    onPress={handleCancelled}
+                />
+            </View>
             <FlatList
-                 data={["a","b","c"]}
+                data={["a", "b", "c"]}
                 renderItem={({item}) => (
-                 <Order />
-
+                    <Order onPress={()=>navigation.navigate("OrderDetails")}/>
                 )}
                 keyExtractor={item => item}
             />
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
         color: COLORS.TEXT,
         fontSize: 34,
         lineHeight: 34,
-        margin:  GLOBAL_STYLES.MARGIN_LEFT,
+        margin: GLOBAL_STYLES.MARGIN_LEFT,
 
     },
     backIcon: {
@@ -98,7 +97,10 @@ const styles = StyleSheet.create({
         marginLeft: GLOBAL_STYLES.MARGIN_LEFT,
     },
 
-
+    btns: {
+        flexDirection: "row",
+        marginBottom:GLOBAL_STYLES.MARGIN_LEFT
+    }
 
 
 });

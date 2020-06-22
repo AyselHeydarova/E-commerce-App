@@ -1,7 +1,8 @@
-import {CustomText} from "./CustomText";
-import {CustomBtn} from "./CustomBtn";
-import {Input} from "./Input";
-import {Order} from "./Order";
-import {Icon} from "../Icons/IconFacebook";
+export {CustomText} from "./CustomText";
+export {CustomBtn} from "./CustomBtn";
+export {Input} from "./Input";
+export {Order} from "./Order";
+export {SaleSlogan} from "./SaleSlogan";
+export {Icon} from "../Icons/IconFacebook";
 
 
