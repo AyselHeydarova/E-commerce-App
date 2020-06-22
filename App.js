@@ -2,47 +2,54 @@ import React, { useState } from "react";
 import { AppLoading } from "expo";
 import { COLORS } from "./style/colors";
 import { loadFonts } from "./style/fonts";
-import {GLOBAL_STYLES} from "./style/globalStyles";
-import {ProfileScreen} from "./Screens/ProfileScreen";
+import { GLOBAL_STYLES } from "./style/globalStyles";
+import { ProfileScreen } from "./Screens/ProfileScreen";
 
-import { StyleSheet, Text, View, Image } from 'react-native';
-import {Provider, connect} from 'react-redux';
-import store from './store';
-import { Ionicons } from '@expo/vector-icons';
-import MyTabs from './navigation';
-import { AuthForm } from './navigation/screens/AuthForm';
+import { StyleSheet, Text, View, Image } from "react-native";
+// import {Provider, connect} from 'react-redux';
+import store from "./store";
+import { Ionicons } from "@expo/vector-icons";
+import MyTabs from "./navigation";
+import { AuthForm } from "./navigation/screens/AuthForm";
+import { AddressCard } from "./Screens/AddressCard";
+import { ProductCard } from "./components/ProductCard";
 
 export default function App() {
-    const [loaded, setLoaded] = useState(false);
-    if (!loaded) {
-        return (
-            <AppLoading startAsync={loadFonts} onFinish={() => setLoaded(true)}/>
-        );
-    }
+  const [loaded, setLoaded] = useState(false);
+  if (!loaded) {
+    return (
+      <AppLoading startAsync={loadFonts} onFinish={() => setLoaded(true)} />
+    );
+  }
 
   return (
+    //<ProfileScreen orderCount={12} paymentMethods={"**34"} shippingAddresses={3}/>
 
-         //<ProfileScreen orderCount={12} paymentMethods={"**34"} shippingAddresses={3}/>
-		 
-		 //Shohrat added:
-		<Provider store={store}>
-			 <View style={styles.container}> 
-				<AuthForm/>
-			 </View>
-		</Provider>
+    //Shohrat added:
+    // <Provider store={store}>
+    // 	 <View style={styles.container}>
+    // 		<AuthForm/>
+    // 	 </View>
+    // </Provider>
+    <ProductCard />
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
     //paddingHorizontal: GLOBAL_STYLES.PADDING,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
-{/*<View style={styles.container}>*/}
-{/*    <ProfileScreen/>*/}
-{/*</View>*/}
+{
+  /*<View style={styles.container}>*/
+}
+{
+  /*    <ProfileScreen/>*/
+}
+{
+  /*</View>*/
+}

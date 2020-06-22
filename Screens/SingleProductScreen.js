@@ -9,57 +9,6 @@ import { ProductCard } from "../components/ProductCard";
 import { GLOBAL_STYLES } from "../style/globalStyles";
 import { ActionModal } from "../components/ActionModal";
 
-const products = [
-  {
-    brandName: "Mango",
-    productType: "T-shirt",
-    price: "49$",
-    size: "S",
-    color: "white",
-    imageUrl: "https://www.iciw.com/bilder/artiklar/zoom/10162-033_1.jpg",
-    count: 0,
-  },
-
-  {
-    brandName: "Mango",
-    productType: "T-shirt",
-    price: "49$",
-    size: "S",
-    color: "white",
-    imageUrl: "https://www.iciw.com/bilder/artiklar/zoom/10162-033_1.jpg",
-    count: 0,
-  },
-
-  {
-    brandName: "Mango",
-    productType: "T-shirt",
-    price: "49$",
-    size: "S",
-    color: "white",
-    imageUrl: "https://www.iciw.com/bilder/artiklar/zoom/10162-033_1.jpg",
-    count: 0,
-  },
-
-  {
-    brandName: "Mango",
-    productType: "T-shirt",
-    price: "49$",
-    size: "S",
-    color: "white",
-    imageUrl: "https://www.iciw.com/bilder/artiklar/zoom/10162-033_1.jpg",
-    count: 0,
-  },
-
-  {
-    brandName: "Mango",
-    productType: "T-shirt",
-    price: "49$",
-    size: "S",
-    color: "white",
-    imageUrl: "https://www.iciw.com/bilder/artiklar/zoom/10162-033_1.jpg",
-    count: 0,
-  },
-];
 
 export const SingleProductScreen = ({ product }) => {
   product = {

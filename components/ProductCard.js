@@ -1,6 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Image, Text } from "react-native";
 import { Star } from "./Star";
+import { products } from "../DummyData/products";
+
+
 
 export const ProductCard = ({
   product,
