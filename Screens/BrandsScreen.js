@@ -7,7 +7,7 @@ import {BrandContainer} from "../components/BrandContainer";
 import {SizeContainer} from "../components/SizeContainer";
 
 export const BrandsScreen = () => {
-    const brands = ["adidas", "adidas Originals", "Blend", "Boutique Moschino", "Mango", "Zara", "Diesel", "Jack & Jones", "s.Oliver", "Pull & Bear",]
+    const brands = ["adidas", "Gucci", "Gap", "H&M", "Mango", "Zara", "Diesel", "Nike", "Levis", "Pull & Bear",]
     return (
         <View style={styles.container}>
             <StatusBar/>
