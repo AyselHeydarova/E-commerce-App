@@ -1,14 +1,16 @@
+
 import React from "react";
 import { StyleSheet, TextInput, View, Dimensions } from "react-native";
 import { COLORS } from "../style/colors";
 import { CustomText } from "./CustomText";
 import { GLOBAL_STYLES } from "../style/globalStyles";
 
-export const Input = ({ name, style, ...rest }) => {
+export const Input = ({ name, style,secureTextEntry, ...rest }) => {
   return (
     <View style={styles.inputContainer}>
       <CustomText style={styles.inputLabel}>{name}</CustomText>
       <TextInput
+          secureTextEntry={secureTextEntry}
         weight={"medium"}
         style={{ ...styles.inputText, ...style }}
         {...rest}

@@ -1,35 +1,39 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import {CustomText} from "./CustomText";
 
 export const Btn = ({
-    btnName,
-    bgColor,
-    height,
-    width,
-    borderColor,
-    borderWidth,
-    titleStyle,
-    style
-  }) => {
-    return (
-      <TouchableOpacity
-        style={[
-          styles.btnContainer,
-          {
-            backgroundColor: bgColor,
-            height: height,
-            width: width,
-            borderWidth: borderWidth,
-            borderColor: borderColor,
-          },
-          {...style}
-        ]}
+  btnName,
+  bgColor,
+  height,
+  width,
+  borderColor,
+  borderWidth,
+  titleStyle,
+    onPress,
+  ...rest
+}) => {
+  return (
+    <TouchableOpacity
+      style={[
+        styles.btnContainer,
+        {
+          backgroundColor: bgColor,
+          height: height,
+          width: width,
+          borderWidth: borderWidth,
+          borderColor: borderColor,
+        },
+      ]}
+      onPress={onPress}
+      rest={rest}
+    >
+      <CustomText
+        weight={"medium"}
+        style={{ ...styles.btnText, ...titleStyle }}
       >
-        <Text
-          style={{ ...styles.btnText, ...titleStyle }}
-        >
           {btnName}
-        </Text>
+        </CustomText>
       </TouchableOpacity>
     );
   };
