@@ -6,11 +6,11 @@ import {
   SignUp,
   selectAuthData,
   SignIn
-} from "../../store/auth"
+} from "../store/auth"
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import { Input } from "../../components/Field";
-import rightIcon from '../../assets/rightArrow.png'
-import { Btn } from "../../components/Btn";
+import { Input } from "../components/Field";
+import rightIcon from '../assets/rightArrow.png'
+import { Btn } from "../components/Btn";
 
 
 const mapStateToProps = (state) => ({
@@ -49,6 +49,7 @@ export const AuthForm = connect(mapStateToProps, {
         {userID ? (
           <Text>authorized</Text>
         ) : forSignUp? (
+            <>
           <View style={styles.signUpContainer}>
             <Input name={'Name'} onChangeHandler={(value)=>fieldChangeHandler('name',value)} value={fields.name}/>
             <Input name={'Email'} onChangeHandler={(value)=>fieldChangeHandler('email',value)} value={fields.email}/>
@@ -57,10 +58,12 @@ export const AuthForm = connect(mapStateToProps, {
               <Text style={styles.toSignIntext}>Already have an account?</Text>
               <Image style={{width:15, height:6}} source={{uri:'../../assets/rightArrow.png'}}/>
             </TouchableOpacity>
+          </View>
             <TouchableOpacity onPress={submitSignUp}>
               <Btn btnName="SIGN UP" width={'100%'} height={48} bgColor={'#EF3651'} titleStyle={{color:'#F5F5F5'}} />
             </TouchableOpacity>
-          </View>
+
+          </>
         ):(
           <View style={styles.signInContainer}>
             <Input name={'Email'} onChangeHandler={(value)=>fieldChangeHandler('email',value)} value={fields.email}/>
@@ -82,6 +85,11 @@ export const AuthForm = connect(mapStateToProps, {
 const styles=StyleSheet.create({
   container:{
     paddingHorizontal:15
+  },
+  signUpContainer:{
+    width:'100%',
+    alignItems:'center',
+
   },
   redirectTo:{
     flexDirection:'row',

@@ -1,12 +1,12 @@
 import React from 'react';
-import {StyleSheet, View} from "react-native";
+import {StyleSheet, View,TouchableOpacity} from "react-native";
 import {COLORS} from "../style/colors";
 import {CustomText} from "./CustomText";
 import {Btn} from "./Btn";
 
-export const Order = ({orderNo, trackingNo, quantity, total, date, status}) => {
+export const Order = ({orderNo, trackingNo, quantity, total, date, status,onPress}) => {
     return (
-        <View style={styles.container} >
+        <TouchableOpacity style={styles.container} onPress={onPress}>
             <View style={styles.firstPart}>
                 <CustomText weight={"medium"} style={styles.orderNo}>
                     Order №1947034
@@ -54,7 +54,7 @@ export const Order = ({orderNo, trackingNo, quantity, total, date, status}) => {
                     Delivered
                 </CustomText>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 };
 

@@ -19,7 +19,7 @@ export const MyBag = () => {
                 data={clothes}
                 renderItem={({item}) => (
                     <View style={styles.card}>
-                        <ProductCard/>
+                        <ProductCard />
                     </View>
                 )}
                 keyExtractor={item => item}
