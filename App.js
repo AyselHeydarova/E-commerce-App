@@ -8,12 +8,12 @@ import store from './store';
 import MyTabs from "./navigation/MyTabs";
 
 export default function App() {
-    const [loaded, setLoaded] = useState(false);
-    if (!loaded) {
-        return (
-            <AppLoading startAsync={loadFonts} onFinish={() => setLoaded(true)}/>
-        );
-    }
+  const [loaded, setLoaded] = useState(false);
+  if (!loaded) {
+    return (
+      <AppLoading startAsync={loadFonts} onFinish={() => setLoaded(true)} />
+    );
+  }
 
   return (
 		<Provider store={store}>
@@ -24,16 +24,21 @@ export default function App() {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
     //paddingHorizontal: GLOBAL_STYLES.PADDING,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
-{/*<View style={styles.container}>*/}
-{/*    <ProfileScreen/>*/}
-{/*</View>*/}
+{
+  /*<View style={styles.container}>*/
+}
+{
+  /*    <ProfileScreen/>*/
+}
+{
+  /*</View>*/
+}
