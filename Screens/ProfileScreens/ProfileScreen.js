@@ -5,28 +5,35 @@ import {CustomText} from "../../components/CustomText";
 import {Forward} from "../../Icons/Forward";
 
 
-
-export const ProfileScreen = ({orderCount,shippingAddresses,paymentMethods,navigation}) => {
+export const ProfileScreen = ({
+                                  orderCount,
+                                  shippingAddresses,
+                                  paymentMethods,
+                                  navigation,
+                                  username = 'Matilda Brown',
+                                  email = "matildabrown@mail.com",
+                                  avatar="https://i1.sndcdn.com/avatars-000530040327-sk6iwk-t500x500.jpg"
+                              }) => {
     const profileSections = [
         {
             sectionName: "My Orders",
             dutyOfSection: `Already have ${orderCount} orders`,
-            screenTo:"MyOrders"
+            screenTo: "MyOrders"
         },
         {
             sectionName: "Shipping addresses",
             dutyOfSection: `${shippingAddresses} addresses`,
-            screenTo:"OrderDetails"
+            screenTo: "ShippingAddressesScreen"
         },
         {
             sectionName: "Payment methods",
             dutyOfSection: `Visa ${paymentMethods} `,
-            screenTo:"PasswordChange"
+            screenTo: "PasswordChange"
         },
         {
             sectionName: "Settings",
             dutyOfSection: "Notifications, password",
-            screenTo:"Settings"
+            screenTo: "Settings"
         },
 
     ];
@@ -39,20 +46,21 @@ export const ProfileScreen = ({orderCount,shippingAddresses,paymentMethods,navig
 
             <View style={styles.userInfoSection}>
                 <Image style={styles.avatar}
-                       source={{uri: "https://i1.sndcdn.com/avatars-000530040327-sk6iwk-t500x500.jpg"}}/>
+                       source={{uri: avatar}}/>
                 <View style={styles.text}>
                     <CustomText weight={'bold'} style={styles.name}>
-                        Matilda Brown
+                        {username}
                     </CustomText>
                     <CustomText weight={'medium'} style={styles.email}>
-                        matildabrown@mail.com
+                        {email}
                     </CustomText>
                 </View>
             </View>
             <FlatList
                 data={profileSections}
                 renderItem={({item}) => (
-                    <TouchableOpacity style={styles.profileSection} key={`${item.sectionName}`} onPress={()=>navigation.navigate(item.screenTo)}>
+                    <TouchableOpacity style={styles.profileSection} key={`${item.sectionName}`}
+                                      onPress={() => navigation.navigate(item.screenTo)}>
                         <View style={styles.text}>
                             <CustomText weight={'bold'} style={styles.name}>
                                 {item.sectionName}
@@ -103,13 +111,13 @@ const styles = StyleSheet.create({
     },
 
     profileSection: {
-        width:'100%',
-        borderBottomWidth:0.3,
-        borderColor:COLORS.GRAY,
+        width: '100%',
+        borderBottomWidth: 0.3,
+        borderColor: COLORS.GRAY,
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems:"center",
-        paddingRight:10,
+        alignItems: "center",
+        paddingRight: 10,
 
     },
     text: {

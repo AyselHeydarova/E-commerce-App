@@ -8,6 +8,8 @@ import {OrderDetails} from "../Screens/ProfileScreens/OrderDetails";
 import {PasswordChange} from "../Screens/ProfileScreens/PasswordChange";
 import {MyOrders} from "../Screens/ProfileScreens/MyOrders";
 import {Settings} from "../Screens/ProfileScreens/Settings";
+import {AddingShippingAddress} from "../Screens/AddingShippingAddress";
+import {ShippingAddressesScreen} from "../Screens/ShippingAddressesScreen";
 
 const {Navigator, Screen} = createStackNavigator();
 export const ProfileStack = () => {
@@ -16,23 +18,31 @@ export const ProfileStack = () => {
             <Screen
                 options={{headerShown: false}}
                 name="Profile"
-                component={ProfileScreen} />
+                component={ProfileScreen}/>
             <Screen
                 options={{headerShown: false}}
                 name="OrderDetails"
                 component={OrderDetails}/>
-                <Screen
+            <Screen
                 options={{headerShown: false}}
                 name="PasswordChange"
                 component={PasswordChange}/>
-                <Screen
+            <Screen
                 options={{headerShown: false}}
                 name="Settings"
                 component={Settings}/>
-                <Screen
+            <Screen
                 options={{headerShown: false}}
                 name="MyOrders"
                 component={MyOrders}/>
+            <Screen
+                options={{headerShown: false}}
+                name="AddingShippingAddress"
+                component={AddingShippingAddress}/>
+            <Screen
+                options={{headerShown: false}}
+                name="ShippingAddressesScreen"
+                component={ShippingAddressesScreen}/>
 
         </Navigator>
     );

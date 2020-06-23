@@ -1,4 +1,4 @@
-export const data = [
+export const data =
     {
         addedToCard: 0,
         categories: {
@@ -1576,4 +1576,4 @@ export const data = [
         },
         favorites: 0
     }
-];
+;

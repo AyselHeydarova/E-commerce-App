@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AuthForm } from '../Screens/AuthForm';
 import Home from '../Screens/Home';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import MyTabBar from '../components/TabBar';
 import {MyBag} from "../Screens/MyBag";
@@ -36,6 +35,6 @@ const styles=StyleSheet.create({
         flex:1,
         width:'100%',
     }
-})
+});
 
 export default MyTabs
