@@ -1084,7 +1084,7 @@ export const data =
                         ]
                     }
                 ],
-                Men: [
+                men: [
                     {
                         brandName: "Levi's",
                         colour: [
@@ -1469,7 +1469,7 @@ export const data =
                         ]
                     }
                 ],
-                Men: [
+                men: [
                     {
                         brandName: "Zara",
                         colour: [

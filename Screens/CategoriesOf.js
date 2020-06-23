@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, StatusBar, FlatList, TouchableOpacity, TouchableWithoutFeedback, Image} from "react-native";
 import {CustomText} from "../components/CustomText";
 import {Back} from "../Icons/Back";
@@ -9,29 +9,19 @@ import {data} from "../DummyData/data";
 
 export const CategoriesOf = ({navigation, route}) => {
     const {isWomanClicked} = route.params;
-    const categoriesWoman = [
-        // "T-Shirts", "Pants", "Skirts", "Dresses", "Shorts",
-    ];
-    const categoriesMan = [
-        // "T-Shirts", "Pants", "Shorts",
-    ];
-    const allCategories = Object.keys(data.categories);
-    console.log(Object.keys(data.categories)[1].men);
-    console.log(data.categories["Dresses"]);
-    const checkMen = () => {
-        for( let category of allCategories){
-            // console.log('category.men',category.men)
-            // console.log('isWomanClicked.men',isWomanClicked)
-        if (category.men !== undefined){
-            // console.log('category',data.categories[`${category}`])
-            // categoriesMan.push(category);
-        }
-            console.log('category',data.categories[`${category}`].men)
 
+    const categoriesMan = [];
+    const allCategories = Object.keys(data.categories);
+
+    const checkMen = () => {
+        for (let category of allCategories) {
+            if (data.categories[`${category}`].men !== undefined) {
+                categoriesMan.push(category);
+            }
         }
-        // console.log('categoriesMan',categoriesMan)
+
     };
-    useEffect(()=>{
+    useEffect(() => {
         checkMen();
     });
 
