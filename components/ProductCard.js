@@ -10,18 +10,6 @@ export const ProductCard = ({
   isInCatalog = false,
   isInFavs,
 }) => {
-  // product = {
-  //   brandName: "Mango",
-  //   productType: "T-shirt",
-  //   price: "49$",
-  //   size: "S",
-  //   color: "white",
-  //   imageUrl: "https://www.iciw.com/bilder/artiklar/zoom/10162-033_1.jpg",
-  //   count: 4,
-  //   rating: 4,
-  // };
-
-  console.log("product", product);
 
   const columnStyles = {
     cardWrapper: {
@@ -58,14 +46,14 @@ export const ProductCard = ({
     count,
   } = product;
 
-  console.log("brandName", brandName);
-  console.log("productType", name);
-  console.log("price", price);
-  console.log("color", Object.keys(colour[0])[0]);
-  console.log("rating", rating[0]);
-  // console.log("imagesUrls", imagesUrls[0])
-  console.log("count", count);
-  console.log("size", Object.keys(size[0])[0]);
+  // console.log("brandName", brandName);
+  // console.log("productType", name);
+  // console.log("price", price);
+  // console.log("color", Object.keys(colour[0])[0]);
+  // console.log("rating", rating[0]);
+  // // console.log("imagesUrls", imagesUrls[0])
+  // console.log("count", count);
+  // console.log("size", Object.keys(size[0])[0]);
 
   const cardWrapperStyles = [
     isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
