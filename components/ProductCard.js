@@ -6,20 +6,22 @@ import StarRating from "react-native-star-rating";
 
 export const ProductCard = ({
   product,
-  isRowView = true,
+  isRowView = false,
   isInCatalog = false,
   isInFavs,
 }) => {
-  product = {
-    brandName: "Mango",
-    productType: "T-shirt",
-    price: "49$",
-    size: "S",
-    color: "white",
-    imageUrl: "https://www.iciw.com/bilder/artiklar/zoom/10162-033_1.jpg",
-    count: 4,
-    rating: 4,
-  };
+  // product = {
+  //   brandName: "Mango",
+  //   productType: "T-shirt",
+  //   price: "49$",
+  //   size: "S",
+  //   color: "white",
+  //   imageUrl: "https://www.iciw.com/bilder/artiklar/zoom/10162-033_1.jpg",
+  //   count: 4,
+  //   rating: 4,
+  // };
+
+  console.log("product", product);
 
   const columnStyles = {
     cardWrapper: {
@@ -28,6 +30,8 @@ export const ProductCard = ({
       height: 280,
       borderRadius: 8,
       backgroundColor: COLORS.DARK,
+      marginRight: 20,
+      marginBottom: 20
     },
 
     imgWrapper: {
@@ -45,14 +49,23 @@ export const ProductCard = ({
 
   const {
     brandName,
-    productType,
+    name,
     price,
     size,
-    color,
+    colour,
     rating,
-    imageUrl,
+    imagesUrls,
     count,
   } = product;
+
+  console.log("brandName", brandName);
+  console.log("productType", name);
+  console.log("price", price);
+  console.log("color", Object.keys(colour[0])[0]);
+  console.log("rating", rating[0]);
+  // console.log("imagesUrls", imagesUrls[0])
+  console.log("count", count);
+  console.log("size", Object.keys(size[0])[0]);
 
   const cardWrapperStyles = [
     isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
@@ -63,7 +76,11 @@ export const ProductCard = ({
     <View style={cardWrapperStyles}>
       <View style={isRowView ? styles.imgWrapper : columnStyles.imgWrapper}>
         <Image
-          source={{ uri: imageUrl }}
+          source={{
+            uri: imagesUrls
+              ? imagesUrls[0]
+              : "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+          }}
           style={isRowView ? styles.productImg : columnStyles.productImg}
         />
 
@@ -83,24 +100,24 @@ export const ProductCard = ({
             starStyle={{ margin: 3 }}
             containerStyle={{ marginTop: 0, width: 80 }}
             maxStars={5}
-            rating={rating}
+            rating={rating[0]}
           />
           <CustomText style={{ color: COLORS.GRAY }}>(10)</CustomText>
         </View>
 
         <CustomText style={{ color: COLORS.GRAY }}>{brandName}</CustomText>
-        <CustomText weight="bold">{productType}</CustomText>
+        <CustomText weight="bold">{name}</CustomText>
 
         {isInCatalog ? null : (
           <View style={styles.row}>
             <View style={styles.row}>
               <CustomText style={{ color: COLORS.GRAY }}>Color: </CustomText>
-              <CustomText> {color} </CustomText>
+              <CustomText> {Object.keys(colour[0])[0]} </CustomText>
             </View>
 
             <View style={styles.row}>
               <CustomText style={{ color: COLORS.GRAY }}>Size:</CustomText>
-              <CustomText>{size}</CustomText>
+              <CustomText>{Object.keys(size[0])[0]}</CustomText>
             </View>
           </View>
         )}

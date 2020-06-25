@@ -1,127 +1,123 @@
-import React from 'react';
-import {StyleSheet, Text, View, Image, ImageBackground} from 'react-native';
-import homeImage from '../assets/homeImage.png';
-import {Btn} from '../components/Btn';
-import {ScrollView, TouchableOpacity, FlatList} from 'react-native-gesture-handler';
-import {ProductCard} from '../components/ProductCard';
-import product1 from '../assets/newProductImgs/product1.png'
-import product2 from '../assets/newProductImgs/product2.png'
-import product3 from '../assets/newProductImgs/product3.png'
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Image,
+  ScrollView,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
+import homeImage from "../assets/homeImage.png";
+import { Btn } from "../components/Btn";
+import { ProductCard } from "../components/ProductCard";
+import { COLORS } from "../style/colors";
+import { CustomText } from "../components/CustomText";
 
-const fakeProducts = [
-    {
-        brandName: "Mango",
-        productType: "Blouse",
-        price: "49$",
-        size: "S",
-        color: "white",
-        imageUrl: product1,
-        count: 0,
-        rating: 2
-    },
 
-    {
-        brandName: "Mongo DB",
-        productType: "T-shirt",
-        price: "39$",
-        size: "S",
-        color: "white",
-        imageUrl: product2,
-        count: 0,
-        rating: 3
-
-    },
-
-    {
-        brandName: "Mango",
-        productType: "Shirt",
-        price: "59$",
-        size: "S",
-        color: "white",
-        imageUrl: product3,
-        count: 0,
-        rating: 3
-
-    }
-];
 const Home = (props) => {
-    return (
-        <View style={styles.container}>
-            <View style={styles.imageWrapper}>
-                <ImageBackground imageStyle={{resizeMode: "stretch"}} source={homeImage}
-                                 style={{width: '100%', height: '100%'}}>
-                </ImageBackground>
-                <Text style={styles.title}>Fashion sale</Text>
-                <View style={styles.btn}>
-                    <Btn btnName="Check" bgColor="#EF3651" height={36} width={160} titleStyle={{color: '#F5F5F5'}}/>
-                </View>
-            </View>
-            <View style={styles.newItemsWrap}>
-                <Text style={styles.categoryTitle}>
-                    New
-                </Text>
-                <Text style={styles.description}>
-                    You've never seen it before
-                </Text>
-                    <View>
-                        <FlatList
-                            horizontal
-                            data={fakeProducts}
-                            renderItem={({item}) => (
-                                <TouchableOpacity >
-                                    <ProductCard product={item}/>
-                                </TouchableOpacity>
-                            )}
-                            keyExtractor={item => item.productType}
-                        />
-                    </View>
+  const [allData, setAllData] = useState([]);
 
-            </View>
+  useEffect(() => {
+    getdbData();
+  }, []);
+
+  const getdbData = async () => {
+    const allCategories = await fetch(
+      "https://my-project-aysel.firebaseio.com/categories.json",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then((data) => data.json());
+
+    let innerData = [];
+
+    for (let key in allCategories) {
+      let dividedByGender = allCategories[key];
+      for (let item in dividedByGender) {
+        innerData.push(...dividedByGender[item]);
+      }
+    }
+    setAllData(innerData);
+  };
+
+  const newProducts = allData.filter((product) => product.isNew === true);
+
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.imageWrapper}>
+        <Image source={homeImage} style={{ width: "100%", height: 480 }} />
+        <CustomText style={styles.title} weight="bold">Fashion sale</CustomText>
+        <View style={styles.btn}>
+          <Btn
+            btnName="Check"
+            bgColor= {COLORS.PRIMARY}
+            height={36}
+            width={160}
+          />
         </View>
-    )
-}
+      </View>
+      <View style={styles.newItemsWrap}>
+        <CustomText style={styles.categoryTitle} weight="bold">New</CustomText>
+        <CustomText style={styles.description}>
+          You've never seen it before
+        </CustomText>
+        <FlatList
+          horizontal
+          contentContainerStyle={{
+            paddingTop: 15,
+          }}
+          data={newProducts}
+          renderItem={({ item }) => (
+            <TouchableOpacity>
+              <ProductCard product={item} />
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.productType}
+        />
+      </View>
+    </ScrollView>
+  );
+};
 
-export default Home
+export default Home;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    imageWrapper: {
-        width: '100%',
-        height: '70%',
-    },
-    title: {
-        fontSize: 48,
-        lineHeight: 48,
-        position: 'absolute',
-        bottom: 88,
-        fontWeight: 'bold',
-        left: 15,
-        width: 190,
-        color: '#F7F7F7'
-    },
-    btn: {
-        position: 'absolute',
-        left: 15,
-        bottom: 34
-    },
-    newItemsWrap: {
-        backgroundColor: '#1E1F28',
-        height: '100%',
-        width: '100%',
-        paddingLeft: 15,
-        paddingTop: 20
-    },
-    categoryTitle: {
-        fontSize: 34,
-        color: '#F7F7F7',
-        lineHeight: 34,
-        fontWeight: 'bold'
-    },
-    description: {
-        color: '#ABB4BD',
-        fontSize: 11,
-        marginBottom: 10
-    }
+  container: {
+    flex: 1,
+  },
+  imageWrapper: {
+    width: "100%",
+  
+  },
+  title: {
+    fontSize: 48,
+    position: "absolute",
+    bottom: 88,
+    left: 15,
+    width: 190,
+    color: COLORS.TEXT,
+  },
+  btn: {
+    position: "absolute",
+    left: 15,
+    bottom: 34,
+  },
+  newItemsWrap: {
+    backgroundColor: COLORS.BACKGROUND,
+    paddingLeft: 15,
+    paddingTop: 20,
+    flex: 1,
+  },
+  categoryTitle: {
+    fontSize: 34,
+    color: COLORS.TEXT,
+  },
+  description: {
+    color: COLORS.GRAY,
+    fontSize: 11,
+    marginBottom: 10,
+  },
 });

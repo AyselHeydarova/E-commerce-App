@@ -77,7 +77,7 @@ export const SingleProductScreen = ({ product }) => {
           <FlatList
             data={products}
             horizontal={true}
-            renderItem={(item) => <ProductCard isRowView={false} />}
+            renderItem={({item}) => <ProductCard isRowView={false} />}
           />
         </View>
       </ScrollView>
