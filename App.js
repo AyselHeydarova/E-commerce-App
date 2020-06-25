@@ -34,12 +34,3 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-{
-  /*<View style={styles.container}>*/
-}
-{
-  /*    <ProfileScreen/>*/
-}
-{
-  /*</View>*/
-}
