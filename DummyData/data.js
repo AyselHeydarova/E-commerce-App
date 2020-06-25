@@ -1,31 +1,164 @@
-export const data = [
-  {
-    addedToCard: 0,
-    categories: {
-      Dresses: {
-        women: [
-          {
-            brandName: "ZARA",
-            colour: [
-              {
-                Black: 5,
-              },
-            ],
-            count: 10,
-            id: 12315538,
-            imagesUrls: [
-              "https://static.zara.net/photos///2020/V/0/1/p/4786/071/800/2/w/790/4786071800_2_4_1.jpg?ts=1581334472288",
-              "https://static.zara.net/photos///2020/V/0/1/p/4786/071/800/2/w/790/4786071800_2_1_1.jpg?ts=1581334456038",
-              "https://static.zara.net/photos///2020/V/0/1/p/4786/071/800/2/w/790/4786071800_2_2_1.jpg?ts=1581334465531",
-              "https://static.zara.net/photos///2020/V/0/1/p/4786/071/800/2/w/790/4786071800_2_3_1.jpg?ts=1581334455138",
-            ],
-            isNew: "false",
-            name: "TEXTURED DRESS",
-            about:
-              "Dress with a wide round neckline, elastic hem and short sleeves. Seams detail.",
-            onSale: {
-              isOnSale: true,
-              percentage: 20,
+
+export const data =
+    {
+        addedToCard: 0,
+        categories: {
+            Dresses: {
+                women: [
+                    {
+                        brandName: "ZARA",
+                        colour: [
+                            {
+                                "Black": 5
+                            }
+                        ],
+                        count: 10,
+                        id: 12315538,
+                        imagesUrls: [
+                            "https://static.zara.net/photos///2020/V/0/1/p/4786/071/800/2/w/790/4786071800_2_4_1.jpg?ts=1581334472288",
+                            "https://static.zara.net/photos///2020/V/0/1/p/4786/071/800/2/w/790/4786071800_2_1_1.jpg?ts=1581334456038",
+                            "https://static.zara.net/photos///2020/V/0/1/p/4786/071/800/2/w/790/4786071800_2_2_1.jpg?ts=1581334465531",
+                            "https://static.zara.net/photos///2020/V/0/1/p/4786/071/800/2/w/790/4786071800_2_3_1.jpg?ts=1581334455138"
+                        ],
+                        isNew: "false",
+                        name: "TEXTURED DRESS",
+                        about: "Dress with a wide round neckline, elastic hem and short sleeves. Seams detail.",
+                        onSale: {
+                            isOnSale: true,
+                            percentage: 20
+                        },
+                        price: " $86.99",
+                        rating: [
+                            3,
+                            2,
+                            9,
+                            10,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 1234,
+                                review_text: "I like this"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 4
+                            },
+                            {
+                                M: 5
+                            },
+                            {
+                                L: 2
+                            }
+                        ]
+                    },
+                    {
+                        brandName: "GUCCI",
+                        colour: [
+                            {
+                                Pink: 4
+                            }
+                        ],
+                        count: 10,
+                        id: 12315538,
+                        imagesUrls: [
+                            "https://media.gucci.com/style/DarkGray_Center_0_0_1200x1200/1586299505/626851_ZAD88_5229_002_100_0000_Light-Short-wool-silk-dress-with-Square-G.jpg",
+                            "https://media.gucci.com/style/DarkGray_Center_0_0_800x800/1586299505/626851_ZAD88_5229_001_100_0000_Light-Short-wool-silk-dress-with-Square-G.jpg",
+                            "https://media.gucci.com/style/DarkGray_Center_0_0_800x800/1586298604/626851_ZAD88_5229_005_100_0000_Light-Short-wool-silk-dress-with-Square-G.jpg"
+                        ],
+                        isNew: "true",
+                        name: "Short Pink dress",
+                        about: "Short wool silk dress with Square G",
+                        onSale: {
+                            isOnSale: false,
+                            percentage: 20
+                        },
+                        price: " $1699.99",
+                        rating: [
+                            3,
+                            2,
+                            9,
+                            10,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 1234,
+                                review_text: "I like this"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 4
+                            },
+                            {
+                                M: 5
+                            },
+                            {
+                                L: 8
+                            }
+                        ]
+                    },
+                    {
+                        brandName: "H&M",
+                        colour: [
+                            {
+                                Red: 4
+                            },
+                            {
+                                Black: 5
+                            },
+                            {
+                                Pink: 1
+                            },
+                            {
+                                Khaki: 8
+                            }
+                        ],
+                        count: 10,
+                        id: 12315538,
+                        imagesUrls: [
+                            "https://lp2.hm.com/hmgoepprod?set=quality[79],source[/d9/6f/d96ffb97f4294c17f68eb3e87d553e5ee207d009.jpg],origin[dam],category[ladies_dresses_shortdresses],type[LOOKBOOK],res[w],hmver[1]&call=url[file:/product/main]",
+                            "https://lp2.hm.com/hmgoepprod?set=quality[79],source[/ca/48/ca489632e5787a958b22eef680fb95c661c5848a.jpg],origin[dam],category[ladies_dresses_shortdresses],type[LOOKBOOK],res[m],hmver[1]&call=url[file:/product/main]",
+                            "https://lp2.hm.com/hmgoepprod?set=quality[79],source[/90/e0/90e01700ac4645a58bac54b94903151f27b5f2bc.jpg],origin[dam],category[ladies_dresses_shortdresses],type[LOOKBOOK],res[w],hmver[1]&call=url[file:/product/main]",
+                            "https://lp2.hm.com/hmgoepprod?set=quality[79],source[/d9/ff/d9ffef9d6039fffa1dc05f72a7d5e17c3f1cbdc2.jpg],origin[dam],category[ladies_dresses_shortdresses],type[LOOKBOOK],res[w],hmver[1]&call=url[file:/product/main]",
+                            "https://lp2.hm.com/hmgoepprod?set=quality[79],source[/4a/ce/4ace1a6f877f6d7736c59623a3533e70d3830914.jpg],origin[dam],category[ladies_dresses_shortdresses],type[LOOKBOOK],res[w],hmver[1]&call=url[file:/product/main]"
+                        ],
+                        isNew: "false",
+                        name: "Cotton T-shirt Dress",
+                        about: "Short, straight-cut T-shirt dress in thick cotton jersey with a round, ribbed neckline. Unlined.",
+                        onSale: {
+                            isOnSale: true,
+                            percentage: 20
+                        },
+                        price: " $17.99",
+                        rating: [
+                            3,
+                            2,
+                            9,
+                            10,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 1234,
+                                review_text: "I like this"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 4
+                            },
+                            {
+                                M: 6
+                            },
+                            {
+                                L: 8
+                            }
+                        ]
+                    }
+                ]
             },
             price: " $86.99",
             rating: [3, 2, 9, 10, 4],
@@ -172,61 +305,401 @@ export const data = [
               isOnSale: true,
               percentage: 20,
             },
-            price: " $88.99",
-            rating: [3, 2, 9, 10, 4],
-            reviews: [
-              {
-                authorId: 1234,
-                review_text: "I like this",
-              },
-            ],
-            size: [
-              {
-                S: 4,
-              },
-              {
-                M: 5,
-              },
-              {
-                L: 8,
-              },
-            ],
-          },
-          {
-            brandName: "Diesel",
-            colour: [
-              {
-                Gray: 4,
-              },
-              {
-                Black: 1,
-              },
-              {
-                Yellow: 3,
-              },
-              {
-                Blue: 11,
-              },
-              {
-                White: 8,
-              },
-            ],
-            count: 10,
-            id: 12315538,
-            imagesUrls: [
-              "https://shop.diesel.com/dw/image/v2/BBLG_PRD/on/demandware.static/-/Sites-diesel-master-catalog/default/dwd0ec6f52/images/large/Y02110_P2215_H7982_E.jpg?sw=837&sh=1116",
-              "https://shop.diesel.com/dw/image/v2/BBLG_PRD/on/demandware.static/-/Sites-diesel-master-catalog/default/dwda3e530b/images/large/Y02110_P2215_H7983_E.jpg?sw=837&sh=1116",
-              "https://shop.diesel.com/dw/image/v2/BBLG_PRD/on/demandware.static/-/Sites-diesel-master-catalog/default/dw29853e9e/images/large/Y02110_P2215_H7794_F.jpg?sw=837&sh=1116",
-              "https://shop.diesel.com/dw/image/v2/BBLG_PRD/on/demandware.static/-/Sites-diesel-master-catalog/default/dw747578c2/images/large/Y02110_P2215_H7983_A.jpg?sw=837&sh=1116",
-              "https://shop.diesel.com/on/demandware.static/-/Sites-diesel-master-catalog/default/dw8d3ffd5e/images/large/Y02110_P2215_H7982_R.jpg",
-              "https://shop.diesel.com/dw/image/v2/BBLG_PRD/on/demandware.static/-/Sites-diesel-master-catalog/default/dw12b71782/images/large/Y02110_P2215_H7795_B.jpg?sw=837&sh=1116",
-            ],
-            isNew: "false",
-            name: "S-KB ATHL LACE",
-            about: "Lace-up sock sneakers with knit upper",
-            onSale: {
-              isOnSale: false,
-              percentage: 20,
+
+            Trousers: {
+                women: [
+                    {
+                        brandName: "Levi's",
+                        colour: [
+                            {
+                                Red: 1
+                            },
+                            {
+                                White: 5
+                            },
+                            {
+                                Black: 6
+                            }
+                        ],
+                        id: 12315538,
+                        imageUrl: [
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/S20/67096711_05.jpg?ts=1583935502992&imwidth=534&imdensity=1",
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/outfit/S20/67096711_99-99999999_01.jpg?ts=1585132416947&imwidth=534&imdensity=1",
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/outfit/S20/67096711_70-99999999_01.jpg?ts=1583314458594&imwidth=534&imdensity=1"
+                        ],
+                        isNew: false,
+                        onSale: {
+                            isOnSale: false,
+                            percentage: null
+                        },
+                        name: "Palazzo trousers",
+                        about: "Long design. Palazzo design. Medium waist. Flowy fabric. Pleats detail. Invisible side zip fastening.",
+                        price: " $100",
+                        rating: [
+                            3,
+                            2,
+                            9,
+                            10,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 1233409,
+                                review_text: "Good"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 2
+                            },
+                            {
+                                M: 3
+                            },
+                            {
+                                L: 6
+                            }
+                        ]
+                    },
+                    {
+                        brandName: "Zara",
+                        colour: [
+                            {
+                                Pink: 1
+                            },
+
+                            {
+                                White: 5
+                            },
+
+                            {
+                                Black: 3
+                            }
+
+
+                        ],
+                        id: 12315538,
+                        imageUrl: [
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/S20/67080545_99.jpg?ts=1583310860154&imwidth=534&imdensity=1",
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/outfit/S20/67080545_99-99999999_01.jpg?ts=1583312674378&imwidth=534&imdensity=1",
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/outfit/S20/67080545_85-99999999_01.jpg?ts=1577178203588&imwidth=534&imdensity=1",
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/outfit/S20/67080545_01-99999999_01.jpg?ts=1579857579018&imwidth=534&imdensity=1"
+                        ],
+                        isNew: false,
+                        onSale: {
+                            isOnSale: false,
+                            percentage: null
+                        },
+                        name: "Belt suit trousers",
+                        about: "Straight design. Cropped design. Loops. Belt buckle fastening. Removable belt.",
+                        price: " $85",
+                        rating: [
+                            32,
+                            2,
+                            6,
+                            10,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 12334,
+                                review_text: "good pant"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 1
+                            },
+                            {
+                                M: 8
+                            },
+                            {
+                                L: 5
+                            }
+                        ]
+                    },
+                    {
+                        brandName: "Mango",
+                        colour: [
+                            {
+                                Black: 9
+                            }
+                        ],
+                        id: 123187938,
+                        imageUrl: [
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/S20/67043259_99.jpg?ts=1575286475737&imwidth=534&imdensity=1",
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/S20/67043259_99_D2.jpg?ts=1575286475737&imwidth=267&imdensity=1",
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/S20/67043259_99_B.jpg?ts=1574876043061&imwidth=267&imdensity=1"
+                        ],
+                        isNew: false,
+                        onSale: {
+                            isOnSale: true,
+                            percentage: 20
+                        },
+                        name: "Relaxed fit cropped trousers",
+                        about: "Two side pockets. Two welt pockets on the back.",
+                        price: " $50",
+                        rating: [
+                            3,
+                            2,
+                            2,
+                            0,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 124334,
+                                review_text: "Material is good"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 4
+                            },
+                            {
+                                M: 7
+                            },
+                            {
+                                L: 5
+                            }
+                        ]
+                    },
+                    {
+                        brandName: "Zara",
+                        colour: [
+                            {
+                                Pink: 5
+                            }
+                        ],
+                        id: 115538,
+                        imageUrl: [
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/S20/67045958_52.jpg?ts=1585307215384&imwidth=534&imdensity=1",
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/outfit/S20/67045958_43-99999999_01.jpg?ts=1585308818708&imwidth=534&imdensity=1",
+                            "https://st.mngbcn.com/rcs/pics/static/T6/fotos/S20/67045958_37_D2.jpg?ts=1584000303501&imwidth=267&imdensity=1"
+                        ],
+                        isNew: true,
+                        onSale: {
+                            isOnSale: false,
+                            percentage: null
+                        },
+                        name: "Pleat detail trousers",
+                        about: "Elastic waist. Zip and one button fastening.",
+                        price: " $40.99",
+                        rating: [
+                            3,
+                            2,
+                            9,
+                            1,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 1209384,
+                                review_text: "Material is real cotton"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 5
+                            },
+                            {
+                                M: 8
+                            },
+                            {
+                                L: 3
+                            }
+                        ]
+                    }
+                ],
+                men: [
+                    {
+                        brandName: "Levi's",
+                        colour: [
+                            {
+                                Black: 5
+                            },
+                            {
+                                White: 9
+                            },
+                            {
+                                Khaki: 3
+                            }
+
+                        ],
+                        id: 12315538,
+                        imageUrl: [
+                            "https://static.zara.net/photos///2020/V/0/2/p/7248/410/802/2/w/949/7248410802_1_1_1.jpg?ts=1585839374484",
+                            "https://static.zara.net/photos///2020/V/0/2/p/7248/410/505/2/w/949/7248410505_1_1_1.jpg?ts=1585751197398",
+                            "https://static.zara.net/photos///2020/V/0/2/p/7248/410/800/2/w/949/7248410800_1_1_1.jpg?ts=1585839374907"
+                        ],
+                        isNew: false,
+                        onSale: {
+                            isOnSale: true,
+                            percentage: 50
+                        },
+                        name: "COTTON/LINEN JOGGER WAIST TROUSERS",
+                        about: "Jogger fit trousers in a linen blend. Featuring an elastic waistband with adjustable drawstrings, front pockets and",
+                        price: " $49.99",
+                        rating: [
+                            3,
+                            2,
+                            9,
+                            10,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 12334,
+                                review_text: "Material is nice"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 4
+                            },
+                            {
+                                M: 1
+                            },
+                            {
+                                L: 5
+                            }
+                        ]
+                    },
+                    {
+                        brandName: "Mango",
+                        colour: [
+                            {
+                                Blue: 5
+                            }
+                        ],
+                        id: 12315538,
+                        imageUrl: [
+                            "https://static.zara.net/photos///2020/V/0/2/p/7380/651/401/2/w/949/7380651401_1_1_1.jpg?ts=1583774055753",
+                            "https://static.zara.net/photos///2020/V/0/2/p/7380/651/401/2/w/949/7380651401_2_2_1.jpg?ts=1583774050335",
+                            "https://static.zara.net/photos///2020/V/0/2/p/7380/651/401/2/w/949/7380651401_6_1_1.jpg?ts=1584368894842"
+                        ],
+                        isNew: false,
+                        onSale: {
+                            isOnSale: false,
+                            percentage: null
+                        },
+                        name: "BCHECK SEERSUCKER SUIT TROUSERS",
+                        about: "Cropped trousers with an elastic jogger waist and adjustable drawstrings. Featuring front pleats, side pockets and rear",
+                        price: " $35",
+                        rating: [
+                            35,
+                            22,
+                            9,
+                            10,
+                            12
+                        ],
+                        reviews: [
+                            {
+                                authorId: 1230034,
+                                review_text: "nice"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 4
+                            },
+                            {
+                                M: 11
+                            },
+                            {
+                                L: 5
+                            }
+                        ]
+                    },
+                    {
+                        brandName: "Pull&Bear",
+                        colour: [
+                            {
+                                Black: 9
+                            }
+                        ],
+                        id: 15538,
+                        imageUrl: [
+                            "https://static.zara.net/photos///2020/V/0/2/p/2740/404/800/2/w/949/2740404800_1_1_1.jpg?ts=1585665015805"
+                        ],
+                        isNew: true,
+                        onSale: {
+                            isOnSale: true,
+                            percentage: 25
+                        },
+                        name: "NEON CONTRAST CARGO TROUSERS",
+                        about: "Trousers made from a technical fabric, featuring an elastic waistband, front pockets and back welt pockets. Featuring",
+                        price: " $80",
+                        rating: [
+                            3,
+                            2,
+                            9,
+                            10,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 106334,
+                                review_text: "very nice"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 4
+                            },
+                            {
+                                M: 2
+                            },
+                            {
+                                L: 5
+                            }
+                        ]
+                    },
+                    {
+                        brandName: "Zara",
+                        colour: [
+                            {
+                                White: 5
+                            }
+                        ],
+                        id: 115538,
+                        imageUrl: [
+                            "https://static.zara.net/photos///2020/V/0/2/p/6688/405/250/2/w/949/6688405250_1_1_1.jpg?ts=1590399568605",
+                            "https://static.zara.net/photos///2020/V/0/2/p/6688/405/250/2/w/949/6688405250_2_3_1.jpg?ts=1591784846051"
+                        ],
+                        isNew: true,
+                        onSale: {
+                            isOnSale: false,
+                            percentage: null
+                        },
+                        name: "SLOUCHY CARGO TROUSERS",
+                        about: "Slouchy fit trousers with front and back pockets. Featuring patch pockets with flap on the legs. Zip fly and top button",
+                        price: " $48.99",
+                        rating: [
+                            3,
+                            2,
+                            3,
+                            1,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 110334,
+                                review_text: "very bad"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 7
+                            },
+                            {
+                                M: 9
+                            },
+                            {
+                                L: 2
+                            }
+                        ]
+                    }
+               
             },
             price: " $169",
             rating: [3, 2, 9, 8, 4],
@@ -838,9 +1311,152 @@ export const data = [
                 Pink: 1,
               },
 
-              {
-                White: 5,
-              },
+
+                        ],
+                        id: 123105538,
+                        imageUrl: [
+                            "https://static.zara.net/photos///2020/V/0/1/p/4661/155/800/2/w/949/4661155800_1_1_1.jpg?ts=1582801115323",
+                            "https://static.zara.net/photos//mkt/misc/watermarks/joinlife-ss19-v2/joinlife-large.svg?ts=1587055628000",
+                            "https://static.zara.net/photos///2020/V/0/1/p/4661/155/800/2/w/949/4661155800_2_4_1.jpg?ts=1582801150045"
+                        ],
+                        isNew: true,
+                        onSale: {
+                            isOnSale: false,
+                            percentage: null
+                        },
+                        name: "FLOWING SHORTS",
+                        about: "High-waist Bermuda shorts with a paperbag waistband. Side pockets. Tie belt. Zip fly fastening.",
+                        price: " $25",
+                        rating: [
+                            2,
+                            2,
+                            6,
+                            10,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 1020134,
+                                review_text: "good pant"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 1
+                            },
+                            {
+                                M: 1
+                            },
+                            {
+                                L: 4
+                            }
+                        ]
+                    },
+                    {
+                        brandName: "Mango",
+                        colour: [
+                            {
+                                Black: 9
+                            }
+                        ],
+                        id: 123187938,
+                        imageUrl: [
+                            "https://static.zara.net/photos///2020/V/0/1/p/4432/152/800/2/w/949/4432152800_1_1_1.jpg?ts=1576154620757",
+                            "https://static.zara.net/photos///2020/V/0/1/p/4432/152/800/2/w/949/4432152800_2_2_1.jpg?ts=1576154749570"
+                        ],
+                        isNew: true,
+                        onSale: {
+                            isOnSale: true,
+                            percentage: 60
+                        },
+                        name: "FAUX LEATHER BERMUDA SHORTS",
+                        about: "High-waist Bermuda shorts with an elastic paperbag waist. Featuring front and back patch pockets, turn-up hems and",
+                        price: " $70",
+                        rating: [
+                            3,
+                            2,
+                            2,
+                            9,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 100334,
+                                review_text: "Material is good"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 4
+                            },
+                            {
+                                M: 7
+                            },
+                            {
+                                L: 5
+                            }
+                        ]
+                    },
+                    {
+                        brandName: "Zara",
+                        colour: [
+                            {
+                                White: 5
+                            }
+                        ],
+                        id: 115538,
+                        "imageUrl": [
+                            "https://static.zara.net/photos///2020/V/0/3/p/5854/525/250/2/w/949/5854525250_1_1_1.jpg?ts=1591640792517",
+                            "https://static.zara.net/photos//mkt/misc/watermarks/joinlife-ss19-v2/joinlife-kids-large.svg?ts=1587055628000"
+                        ],
+                        isNew: true,
+                        onSale: {
+                            isOnSale: false,
+                            percentage: null
+                        },
+                        name: "SHORT DUNGAREES",
+                        about: "EDungarees with a straight-cut neckline and adjustable straps with metal buckle fastening. Featuring snap-button fastening",
+                        price: " $50.99",
+                        rating: [
+                            3,
+                            2,
+                            9,
+                            1,
+                            4
+                        ],
+                        reviews: [
+                            {
+                                authorId: 1129384,
+                                review_text: "I loved it"
+                            }
+                        ],
+                        size: [
+                            {
+                                S: 5
+                            },
+                            {
+                                M: 8
+                            },
+                            {
+                                L: 3
+                            }
+                        ]
+                    }
+                ],
+                men: [
+                    {
+                        brandName: "Zara",
+                        colour: [
+                            {
+                                Black: 5
+                            },
+                            {
+                                Blue: 9
+                            },
+                            {
+                                Grey: 3
+                            }
+
 
               {
                 Black: 3,
@@ -1398,5 +2014,8 @@ export const data = [
     favorites: 0,
   },
 ];
-
+        },
+        favorites: 0
+    }
+;
 

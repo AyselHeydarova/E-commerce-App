@@ -1,27 +1,35 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, StatusBar, FlatList, TouchableOpacity, TouchableWithoutFeedback, Image} from "react-native";
 import {CustomText} from "../components/CustomText";
 import {Back} from "../Icons/Back";
 import {COLORS} from "../style/colors";
 import {Btn} from "../components/Btn";
+import {data} from "../DummyData/data";
 
 
-export const CategoriesOf = ({navigation,route}) => {
-    const {isWomanClicked}=route.params;
-    const categoriesWoman = ["T-Shirts", "Pants", "Skirts", "Dresses", "Shorts",];
-    const categoriesMan = ["T-Shirts", "Pants", "Shorts",];
+export const CategoriesOf = ({navigation, route}) => {
+    const {isWomanClicked} = route.params;
 
-    // const [isWomanClicked, setIsWomanClicked] = useState(false);//params vasitesi ile oturulmelidi
-    // const handleCategory = () => {
-    //     setIsWomanClicked(!isWomanClicked)
-    // };
+    const categoriesMan = [];
+    const allCategories = Object.keys(data.categories);
 
+    const checkMen = () => {
+        for (let category of allCategories) {
+            if (data.categories[`${category}`].men !== undefined) {
+                categoriesMan.push(category);
+            }
+        }
+
+    };
+    useEffect(() => {
+        checkMen();
+    });
 
     return (
         <View style={styles.container}>
             <StatusBar/>
             <View style={styles.header}>
-                <TouchableOpacity style={styles.backIcon} onPress={()=>navigation.goBack()}>
+                <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
                     <Back/>
                 </TouchableOpacity>
                 <CustomText weight={'bold'} style={styles.title}>
@@ -40,7 +48,8 @@ export const CategoriesOf = ({navigation,route}) => {
             </CustomText>
             <View style={{marginTop: 60}}>
                 <FlatList
-                    data={isWomanClicked ? categoriesWoman : categoriesMan}
+                    data={isWomanClicked ? allCategories : categoriesMan}
+                    // data={allCategories}
                     renderItem={({item}) => (
                         <TouchableOpacity style={styles.category}>
                             <CustomText style={styles.categoryText}>
@@ -103,8 +112,8 @@ const styles = StyleSheet.create({
         borderColor: COLORS.GRAY
     },
     categoryText: {
-        fontSize:16,
-        lineHeight:16,
+        fontSize: 16,
+        lineHeight: 16,
 
     },
 
