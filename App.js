@@ -8,6 +8,7 @@ import store from './store';
 import MyTabs from "./navigation/MyTabs";
 
 export default function App() {
+
   const [loaded, setLoaded] = useState(false);
   if (!loaded) {
     return (

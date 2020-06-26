@@ -5,10 +5,6 @@ import {Icon} from './Icon';
 
 function MyTabBar({state, descriptors, navigation}) {
     const focusedOptions = descriptors[state.routes[state.index].key].options;
-    console.log('state:', state);
-    console.log('descriptors:', descriptors);
-    console.log('navigation:', navigation);
-
 
     if (focusedOptions.tabBarVisible === false) {
         return null;
@@ -19,7 +15,6 @@ function MyTabBar({state, descriptors, navigation}) {
             {state.routes.map((route, index) => {
                 const {options} = descriptors[route.key];
                 const {name} = route;
-                console.log('name: ', name)
                 const label =
                     options.tabBarLabel !== undefined
                         ? options.tabBarLabel
@@ -27,7 +22,6 @@ function MyTabBar({state, descriptors, navigation}) {
                         ? options.title
                         : route.name;
                 const icon = options.tabBarIcon;
-                console.log('icon: ', icon);
                 const isFocused = state.index === index;
 
                 const onPress = () => {

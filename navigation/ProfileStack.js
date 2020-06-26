@@ -8,6 +8,8 @@ import { OrderDetails } from "../Screens/ProfileScreens/OrderDetails";
 import { PasswordChange } from "../Screens/ProfileScreens/PasswordChange";
 import { MyOrders } from "../Screens/ProfileScreens/MyOrders";
 import { Settings } from "../Screens/ProfileScreens/Settings";
+import { AddingShippingAddress } from "../Screens/AddingShippingAddress";
+import { ShippingAddressesScreen } from "../Screens/ShippingAddressesScreen";
 
 const { Navigator, Screen } = createStackNavigator();
 export const ProfileStack = () => {
@@ -37,6 +39,16 @@ export const ProfileStack = () => {
         options={{ headerShown: false }}
         name="MyOrders"
         component={MyOrders}
+      />
+      <Screen
+        options={{ headerShown: false }}
+        name="AddingShippingAddress"
+        component={AddingShippingAddress}
+      />
+      <Screen
+        options={{ headerShown: false }}
+        name="ShippingAddressesScreen"
+        component={ShippingAddressesScreen}
       />
     </Navigator>
   );
