@@ -12,75 +12,117 @@ import { Btn } from "../components/Btn";
 import { ProductCard } from "../components/ProductCard";
 import { COLORS } from "../style/colors";
 import { CustomText } from "../components/CustomText";
+import { getAllProductData, getAllData } from "../store/products";
+import { connect } from "react-redux";
+
+import banner from "../assets/Small_banner.png";
+import store from "../store";
+const mapStateToProps = (state) => ({
+  allProducts: getAllProductData(state),
+});
 
 
-const Home = (props) => {
-  const [allData, setAllData] = useState([]);
 
-  useEffect(() => {
-    getdbData();
-  }, []);
+export const withoutCategories = [];
 
-  const getdbData = async () => {
-    const allCategories = await fetch(
-      "https://my-project-aysel.firebaseio.com/categories.json",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    ).then((data) => data.json());
+const Home = connect(mapStateToProps, { getAllData })(
+  ({ getAllData, allProducts }) => {
+    const [showSale, setShowSale] = useState(false);
 
-    let innerData = [];
+    useEffect(() => {
+      getAllData();
+    }, []);
 
-    for (let key in allCategories) {
-      let dividedByGender = allCategories[key];
+
+    const everything = store.getState();
+
+    console.log("everything", everything.products.categories)
+
+    for (let key in allProducts.categories) {
+      let dividedByGender = allProducts.categories[key];
       for (let item in dividedByGender) {
-        innerData.push(...dividedByGender[item]);
+        withoutCategories.push(...dividedByGender[item]);
       }
     }
-    setAllData(innerData);
-  };
 
-  const newProducts = allData.filter((product) => product.isNew === true);
+    const newProducts = withoutCategories.filter(
+      (product) => product.isNew === true
+    );
+    const onSale = withoutCategories.filter(
+      (product) => product.onSale.isOnSale === true
+    );
 
-  return (
-    <ScrollView style={styles.container}>
-      <View style={styles.imageWrapper}>
-        <Image source={homeImage} style={{ width: "100%", height: 480 }} />
-        <CustomText style={styles.title} weight="bold">Fashion sale</CustomText>
-        <View style={styles.btn}>
-          <Btn
-            btnName="Check"
-            bgColor= {COLORS.PRIMARY}
-            height={36}
-            width={160}
+    return (
+      <ScrollView style={styles.container}>
+        {showSale ? (
+          <>
+            <Image source={banner} style={{ width: "100%", height: 196 }} />
+            <View style={styles.newItemsWrap}>
+              <CustomText style={styles.categoryTitle} weight="bold">
+                Sale
+              </CustomText>
+              <CustomText style={styles.description}>
+                Super Summer Sale
+              </CustomText>
+              <FlatList
+                horizontal
+                contentContainerStyle={{
+                  paddingTop: 15,
+                }}
+                data={onSale}
+                renderItem={({ item }) => (
+                  <TouchableOpacity>
+                    <ProductCard product={item} />
+                  </TouchableOpacity>
+                )}
+                keyExtractor={(item) => item.productType}
+              />
+            </View>
+          </>
+        ) : (
+          <View style={styles.imageWrapper}>
+            <Image source={homeImage} style={{ width: "100%", height: 480 }} />
+            <CustomText style={styles.title} weight="bold">
+              Fashion sale
+            </CustomText>
+            <View style={styles.btn}>
+              <Btn
+                btnName="Check"
+                bgColor={COLORS.PRIMARY}
+                height={36}
+                width={160}
+                onPress={() => setShowSale(true)}
+              />
+            </View>
+          </View>
+        )}
+
+        <View style={styles.newItemsWrap}>
+          <CustomText style={styles.categoryTitle} weight="bold">
+            New
+          </CustomText>
+          <CustomText style={styles.description}>
+            You've never seen it before
+          </CustomText>
+
+          <FlatList
+            horizontal
+            contentContainerStyle={{
+              paddingTop: 15,
+            }}
+            data={newProducts}
+            renderItem={({ item }) => (
+              <TouchableOpacity>
+                <ProductCard product={item} />
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item) => item.productType}
           />
         </View>
-      </View>
-      <View style={styles.newItemsWrap}>
-        <CustomText style={styles.categoryTitle} weight="bold">New</CustomText>
-        <CustomText style={styles.description}>
-          You've never seen it before
-        </CustomText>
-        <FlatList
-          horizontal
-          contentContainerStyle={{
-            paddingTop: 15,
-          }}
-          data={newProducts}
-          renderItem={({ item }) => (
-            <TouchableOpacity>
-              <ProductCard product={item} />
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.productType}
-        />
-      </View>
-    </ScrollView>
-  );
-};
+      </ScrollView>
+    );
+  }
+);
 
 export default Home;
 
@@ -90,7 +132,6 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     width: "100%",
-  
   },
   title: {
     fontSize: 48,
