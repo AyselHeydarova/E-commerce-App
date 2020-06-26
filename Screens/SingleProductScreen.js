@@ -9,40 +9,15 @@ import { ProductCard } from "../components/ProductCard";
 import { GLOBAL_STYLES } from "../style/globalStyles";
 import { ActionModal } from "../components/ActionModal";
 
+export const SingleProductScreen = ({ route }) => {
 
-export const SingleProductScreen = ({ product }) => {
-  product = {
-    brandName: "Mango",
-    productType: "T-shirt",
-    price: "49$",
-    size: "S",
-    color: "white",
-    imageUrl: "https://www.iciw.com/bilder/artiklar/zoom/10162-033_1.jpg",
-    count: 0,
-  };
-
-  const {
-    brandName,
-    productType,
-    price,
-    size,
-    color,
-    rating,
-    imageUrl,
-    count,
-  } = product;
-  const imagesArr = [
-    "https://www.iciw.com/bilder/artiklar/zoom/10162-033_1.jpg",
-    "https://www.iciw.com/bilder/artiklar/zoom/10162-033_2.jpg",
-    "https://www.iciw.com/bilder/artiklar/zoom/10162-033_3.jpg",
-    "https://www.iciw.com/bilder/artiklar/zoom/10162-033_4.jpg",
-  ];
+  const { about, brandName, price , imagesUrls, name} = route.params.product;
 
   return (
     <>
       <ScrollView>
         <SliderBox
-          images={imagesArr}
+          images={imagesUrls}
           sliderBoxHeight={400}
           circleLoop={true}
           dotColor={COLORS.PRIMARY}
@@ -59,29 +34,24 @@ export const SingleProductScreen = ({ product }) => {
               {brandName}
             </CustomText>
             <CustomText style={styles.bigText} weight="bold">
-              {price}
+              {`${price}$`}
             </CustomText>
           </View>
 
-          <CustomText style={styles.typeText}>{productType}</CustomText>
-          <CustomText style={styles.descText}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </CustomText>
+          <CustomText style={styles.typeText}>{name}</CustomText>
+          <CustomText style={styles.descText}>{about}</CustomText>
 
           <CustomText style={styles.suggestionText} weight="bold">
             You can also like this
           </CustomText>
-          <FlatList
+          {/* <FlatList
             data={products}
             horizontal={true}
-            renderItem={({item}) => <ProductCard isRowView={false} />}
-          />
+            renderItem={({ item }) => <ProductCard isRowView={false} />}
+          /> */}
         </View>
       </ScrollView>
-      <ActionModal btnName="Add to cart" />
+      {/* <ActionModal btnName="Add to cart" /> */}
     </>
   );
 };
@@ -89,6 +59,7 @@ export const SingleProductScreen = ({ product }) => {
 const styles = StyleSheet.create({
   main: {
     paddingHorizontal: GLOBAL_STYLES.PADDING,
+    backgroundColor: COLORS.BACKGROUND
   },
   row: {
     flexDirection: "row",
