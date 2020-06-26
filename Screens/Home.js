@@ -36,7 +36,7 @@ const Home = connect(mapStateToProps, { getAllData })(
 
     const everything = store.getState();
 
-    console.log("everything", everything.products.categories)
+    // console.log("everything", everything.products.categories)
 
     for (let key in allProducts.categories) {
       let dividedByGender = allProducts.categories[key];
@@ -44,7 +44,7 @@ const Home = connect(mapStateToProps, { getAllData })(
         withoutCategories.push(...dividedByGender[item]);
       }
     }
-
+      console.log("withoutCategories/Home",withoutCategories)
     const newProducts = withoutCategories.filter(
       (product) => product.isNew === true
     );

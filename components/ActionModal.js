@@ -14,14 +14,14 @@ export const ActionModal = ({ btnName }) => {
         width={"100%"}
         titleStyle={{ textTransform: "uppercase" }}
       />
-      <View style={styles.line} />
+      {/*<View style={styles.line} />*/}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   btnBox: {
-    height: 110,
+    height: 90,
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
