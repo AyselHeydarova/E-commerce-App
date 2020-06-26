@@ -9,6 +9,7 @@ import {getAllData, getAllProductData} from "../store/products";
 import {connect} from "react-redux";
 import store from "../store";
 
+
 const mapStateToProps = (state) => ({
     allProducts: getAllProductData(state),
 });
@@ -16,14 +17,22 @@ export const CategoriesOf = connect(mapStateToProps, {getAllData})(
     ({getAllData, allProducts, route, navigation}) => {
         const {isWomanClicked} = route.params;
 
+        const {categoryName} = route.params;
+
         const categoriesMan = [];
-        // const allCategories = Object.keys(data.categories);
+
 
         const everything = store.getState();
         const allCategories = everything.products.categories;
         const allCategoryNames = Object.keys(allCategories);
 
-        console.log("everything", everything.products.categories)
+        const newProducts = withoutCategories.filter(
+            (product) => product.isNew === true
+        );
+        const onSale = withoutCategories.filter(
+            (product) => product.onSale.isOnSale === true
+        );
+
 
         const checkMen = () => {
             for (let category of allCategoryNames) {
@@ -64,7 +73,14 @@ export const CategoriesOf = connect(mapStateToProps, {getAllData})(
                         // data={allCategories}
                         renderItem={({item}) => (
                             <TouchableOpacity style={styles.category}
-                                              onPress={()=>navigation.navigate("")}>
+
+                                              onPress={() => navigation.navigate("Catalog", {
+                                                  name: item,
+                                                  isWomanClicked: isWomanClicked,
+                                                  products: allCategories[`${item}`]
+                                              })}
+                            >
+
                                 <CustomText style={styles.categoryText}>
                                     {item}
                                 </CustomText>
