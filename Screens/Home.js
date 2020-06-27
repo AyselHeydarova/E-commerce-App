@@ -12,45 +12,20 @@ import { Btn } from "../components/Btn";
 import { ProductCard } from "../components/ProductCard";
 import { COLORS } from "../style/colors";
 import { CustomText } from "../components/CustomText";
-import { getAllProductData, getAllData } from "../store/products";
+import { getAllData } from "../store/products";
 import { connect } from "react-redux";
 
 import banner from "../assets/Small_banner.png";
-import store from "../store";
-const mapStateToProps = (state) => ({
-  allProducts: getAllProductData(state),
-});
+import {newProducts, onSale } from "../Utils/DataSelection";
 
 
-
-export const withoutCategories = [];
-
-const Home = connect(mapStateToProps, { getAllData })(
-  ({ getAllData, allProducts }) => {
+const Home = connect(null, { getAllData })(
+  ({ getAllData, navigation }) => {
     const [showSale, setShowSale] = useState(false);
 
     useEffect(() => {
       getAllData();
     }, []);
-
-
-    const everything = store.getState();
-
-    // console.log("everything", everything.products.categories)
-
-    for (let key in allProducts.categories) {
-      let dividedByGender = allProducts.categories[key];
-      for (let item in dividedByGender) {
-        withoutCategories.push(...dividedByGender[item]);
-      }
-    }
-      console.log("withoutCategories/Home",withoutCategories)
-    const newProducts = withoutCategories.filter(
-      (product) => product.isNew === true
-    );
-    const onSale = withoutCategories.filter(
-      (product) => product.onSale.isOnSale === true
-    );
 
     return (
       <ScrollView style={styles.container}>
@@ -71,8 +46,17 @@ const Home = connect(mapStateToProps, { getAllData })(
                 }}
                 data={onSale}
                 renderItem={({ item }) => (
-                  <TouchableOpacity>
-                    <ProductCard product={item} />
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("SingleProduct", { product: item })
+                    }
+                  >
+                    <ProductCard
+                      product={item}
+                      isOnSale={true}
+                      isInCatalog={true}
+                      navigation={navigation}
+                    />
                   </TouchableOpacity>
                 )}
                 keyExtractor={(item) => item.productType}
@@ -112,8 +96,17 @@ const Home = connect(mapStateToProps, { getAllData })(
             }}
             data={newProducts}
             renderItem={({ item }) => (
-              <TouchableOpacity>
-                <ProductCard product={item} />
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("SingleProduct", { product: item })
+                }
+              >
+                <ProductCard
+                  product={item}
+                  isNew={true}
+                  isInCatalog={true}
+                  navigation={navigation}
+                />
               </TouchableOpacity>
             )}
             keyExtractor={(item) => item.productType}

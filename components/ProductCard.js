@@ -3,14 +3,16 @@ import { View, StyleSheet, Image } from "react-native";
 import { CustomText } from "./CustomText";
 import { COLORS } from "../style/colors";
 import StarRating from "react-native-star-rating";
+import { ProductTag } from "../commons/ProductTag";
 
 export const ProductCard = ({
   product,
   isRowView = false,
   isInCatalog = false,
   isInFavs,
+  isNew,
+  isOnSale,
 }) => {
-
   const columnStyles = {
     cardWrapper: {
       flexDirection: "column",
@@ -19,7 +21,7 @@ export const ProductCard = ({
       borderRadius: 8,
       backgroundColor: COLORS.DARK,
       marginRight: 20,
-      marginBottom: 20
+      marginBottom: 20,
     },
 
     imgWrapper: {
@@ -27,6 +29,7 @@ export const ProductCard = ({
       height: 174,
       borderRadius: 8,
       overflow: "hidden",
+      position: "relative",
     },
     productImg: {
       borderRadius: 8,
@@ -41,33 +44,48 @@ export const ProductCard = ({
     price,
     size,
     colour,
-    rating,
+    ratings,
     imagesUrls,
     count,
+    onSale,
   } = product;
 
-  // console.log("brandName", brandName);
-  // console.log("productType", name);
-  // console.log("price", price);
-  // console.log("color", Object.keys(colour[0])[0]);
-  // console.log("rating", rating[0]);
-  // // console.log("imagesUrls", imagesUrls[0])
-  // console.log("count", count);
-  // console.log("size", Object.keys(size[0])[0]);
+  const allRatingsArray = Object.values(ratings);
+  const totalRatingCount = allRatingsArray.reduce(function (a, b) {
+    return a + b;
+  });
+
+  let totalStarCount = 0;
+  for (let i = 0; i <= 4; i++) {
+    totalStarCount += allRatingsArray[i] * (i + 1);
+  }
+
+  const averageRating =
+    Math.round((totalStarCount / totalRatingCount) * 10) / 10;
 
   const cardWrapperStyles = [
     isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
     { opacity: count === 0 ? 0.5 : 1 },
   ];
 
+  const salePrice = Math.floor((+price * (100 - +onSale.percentage)) / 100);
+
   return (
     <View style={cardWrapperStyles}>
       <View style={isRowView ? styles.imgWrapper : columnStyles.imgWrapper}>
+        {isNew ? <ProductTag style={styles.tag} title="new" /> : null}
+
+        {isOnSale ? (
+          <ProductTag
+            style={{ ...styles.tag, backgroundColor: COLORS.PRIMARY }}
+            title={`${onSale.percentage}%`}
+          />
+        ) : null}
         <Image
           source={{
-            uri: imagesUrls
-              ? imagesUrls[0]
-              : "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+            uri:
+              imagesUrls[0] ||
+              "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
           }}
           style={isRowView ? styles.productImg : columnStyles.productImg}
         />
@@ -88,13 +106,16 @@ export const ProductCard = ({
             starStyle={{ margin: 3 }}
             containerStyle={{ marginTop: 0, width: 80 }}
             maxStars={5}
+            rating={averageRating}
 
           />
-          <CustomText style={{ color: COLORS.GRAY }}>(10)</CustomText>
+          <CustomText style={{ color: COLORS.GRAY }}>
+            {`(${totalRatingCount})`}
+          </CustomText>
         </View>
 
         <CustomText style={{ color: COLORS.GRAY }}>{brandName}</CustomText>
-        <CustomText weight="bold">{name}</CustomText>
+        <CustomText weight="medium">{name.toLowerCase()}</CustomText>
 
         {isInCatalog ? null : (
           <View style={styles.row}>
@@ -110,7 +131,25 @@ export const ProductCard = ({
           </View>
         )}
 
-        <CustomText weight="bold">${price}</CustomText>
+
+        <View style={styles.priceRow}>
+          <CustomText
+            weight="bold"
+            style={{
+              color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
+              textDecorationLine: isOnSale ? "line-through" : null,
+            }}
+          >
+            {`${price}$`}
+          </CustomText>
+          {isOnSale ? (
+            <CustomText
+              weight="bold"
+              style={{ color: COLORS.SALE, marginLeft: 10 }}
+            >{`${salePrice}$`}</CustomText>
+          ) : null}
+        </View>
+
       </View>
     </View>
   );
@@ -119,13 +158,20 @@ export const ProductCard = ({
 const styles = StyleSheet.create({
   cardWrapper: {
     height: 110,
-    width: "90%",
+    width: 343,
     borderRadius: 8,
     flexDirection: "row",
     backgroundColor: COLORS.DARK,
     overflow: "hidden",
+    marginLeft: 10,
   },
 
+  tag: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    zIndex: 3,
+  },
   description: {
     padding: 15,
     // width: "70%",
@@ -135,9 +181,10 @@ const styles = StyleSheet.create({
   },
 
   imgWrapper: {
-    width: "30%",
+    width: 110,
     height: 110,
     overflow: "hidden",
+    position: "relative",
   },
 
   productImg: {
@@ -156,5 +203,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     backgroundColor: COLORS.DARK,
+  },
+
+  priceRow: {
+    flexDirection: "row",
   },
 });

@@ -9,6 +9,7 @@ import {MyBag} from "../Screens/MyBag";
 import {Favorites} from "../Screens/Favorites";
 
 import {ProfileStack,ShopStack} from "./index";
+import { HomeStack } from './HomeStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,7 +18,7 @@ function MyTabs() {
       <View style={styles.container}>
           <NavigationContainer>
               <Tab.Navigator  initialRouteName={Home} tabBar={props => <MyTabBar {...props}/>} tabBarOptions={{labelPosition:'below-icon', style:{...styles.tabBar}}}>
-                  <Tab.Screen name="Home" component={Home}/>
+                  <Tab.Screen name="Home" component={HomeStack}/>
                   <Tab.Screen name="Shop" component={ShopStack} />
                   <Tab.Screen name="Bag" component={MyBag} />
                   <Tab.Screen name="Favorites" component={Favorites} />
