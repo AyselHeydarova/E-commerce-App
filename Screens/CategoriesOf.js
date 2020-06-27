@@ -4,10 +4,11 @@ import {CustomText} from "../components/CustomText";
 import {Back} from "../Icons/Back";
 import {COLORS} from "../style/colors";
 import {Btn} from "../components/Btn";
+import {data} from "../DummyData/data";
 import {getAllData, getAllProductData} from "../store/products";
 import {connect} from "react-redux";
 import store from "../store";
-import {withoutCategories} from "./Home";
+
 
 const mapStateToProps = (state) => ({
     allProducts: getAllProductData(state),
@@ -29,9 +30,11 @@ export const checkMen = () => {
 export const CategoriesOf = connect(mapStateToProps, {getAllData})(
     ({getAllData, allProducts, route, navigation}) => {
         const {isWomanClicked} = route.params;
+
         const {categoryName} = route.params;
 
         const categoriesMan = [];
+
 
         const everything = store.getState();
         const allCategories = everything.products.categories;
@@ -75,6 +78,7 @@ export const CategoriesOf = connect(mapStateToProps, {getAllData})(
                         data={isWomanClicked ? allCategoryNames : categoriesMan}
                         renderItem={({item}) => (
                             <TouchableOpacity style={styles.category}
+
                                               onPress={() => navigation.navigate("Catalog", {
                                                   name: item,
                                                   isWomanClicked: isWomanClicked,
@@ -82,6 +86,7 @@ export const CategoriesOf = connect(mapStateToProps, {getAllData})(
                                                   categoryName: categoryName
                                               })}
                             >
+
                                 <CustomText style={styles.categoryText}>
                                     {item}
                                 </CustomText>
