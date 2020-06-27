@@ -88,8 +88,9 @@ export const Categories = ({navigation}) => {
                         <View style={styles.card}>
                             <Category categoryName={item.categoryName}
                                       imageSrc={item.imageSrc}
-                                      onPress={() => navigation.navigate('CategoriesOf',{
-                                          isWomanClicked:isWomanClicked
+                                      onPress={(categoryName) => navigation.navigate('CategoriesOf',{
+                                          isWomanClicked:isWomanClicked,
+                                          categoryName:categoryName,
                                       })}
                             />
                         </View>

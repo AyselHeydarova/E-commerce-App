@@ -1,3 +1,4 @@
+
 {
   "addedToCard": 0,
   "categories": {
@@ -69,6 +70,7 @@
           "size": [{ "S": 4 }, { "M": 6 }, { "L": 8 }]
         }
       ]
+
     },
     "Shoes": {
       "men": [

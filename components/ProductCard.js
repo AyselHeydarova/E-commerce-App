@@ -107,6 +107,7 @@ export const ProductCard = ({
             containerStyle={{ marginTop: 0, width: 80 }}
             maxStars={5}
             rating={averageRating}
+
           />
           <CustomText style={{ color: COLORS.GRAY }}>
             {`(${totalRatingCount})`}
@@ -130,6 +131,7 @@ export const ProductCard = ({
           </View>
         )}
 
+
         <View style={styles.priceRow}>
           <CustomText
             weight="bold"
@@ -147,6 +149,7 @@ export const ProductCard = ({
             >{`${salePrice}$`}</CustomText>
           ) : null}
         </View>
+
       </View>
     </View>
   );

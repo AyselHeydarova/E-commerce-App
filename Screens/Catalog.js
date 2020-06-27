@@ -9,34 +9,41 @@ import {ListViewChanger} from "../Icons/ListViewChanger";
 import {ProductCard} from "../components/ProductCard";
 import {CardView} from "../Icons/CardView";
 import {Back} from "../Icons/Back";
+import {withoutCategories} from "./Home";
 
-export const Favorites = () => {
-    const clothes = ["T-Shirt", "Shirt", "Skirt", "Shoes", "Short",];
+export const Catalog = ({route,navigation}) => {
+    const {name} = route.params;
+    const {products} = route.params;
+    const {isWomanClicked} = route.params;
+    const chosenProducts=isWomanClicked?products.women:products.men
+
     const [isListView, setIsListView] = useState(true);
     return (
         <View style={styles.container}>
             <StatusBar/>
-
+            <TouchableOpacity style={styles.backIcon} onPress={()=>navigation.goBack()}>
+                <Back/>
+            </TouchableOpacity>
             <CustomText weight={'bold'} style={styles.title}>
-                Favorites
+                {name}
             </CustomText>
-            <View style={styles.btns}>
-                <FlatList
-                    horizontal={true}
-                    data={clothes}
-                    renderItem={({item}) => (
-                        <View style={styles.btn}>
-                            <Btn
-                                width={100}
-                                height={30}
-                                bgColor={COLORS.TEXT}
-                                btnName={item}
-                                titleStyle={{color: COLORS.BACKGROUND}}/>
-                        </View>
-                    )}
-                    keyExtractor={item => item}
-                />
-            </View>
+            {/*<View style={styles.btns}>*/}
+            {/*    <FlatList*/}
+            {/*        horizontal={true}*/}
+            {/*        data={clothes}*/}
+            {/*        renderItem={({item}) => (*/}
+            {/*            <View style={styles.btn}>*/}
+            {/*                <Btn*/}
+            {/*                    width={100}*/}
+            {/*                    height={30}*/}
+            {/*                    bgColor={COLORS.TEXT}*/}
+            {/*                    btnName={item}*/}
+            {/*                    titleStyle={{color: COLORS.BACKGROUND}}/>*/}
+            {/*            </View>*/}
+            {/*        )}*/}
+            {/*        keyExtractor={item => item}*/}
+            {/*    />*/}
+            {/*</View>*/}
             <View style={styles.filters}>
                 <TouchableOpacity style={styles.filter}>
                     <Filter width={20} height={20}/>
@@ -60,21 +67,34 @@ export const Favorites = () => {
             </View>
             {isListView ?
                 <FlatList
-                    data={clothes}
+                    data={chosenProducts}
                     renderItem={({item}) => (
-                        <View style={styles.card}>
-                            <ProductCard/>
-                        </View>
+                        <TouchableOpacity
+                            onPress={()=>navigation.navigate("SingleProductScreen",{
+                                product:item,
+                                products:chosenProducts
+                            })}
+                            activeOpacity={0.9}
+                            style={styles.card}>
+                            <ProductCard product={item} isInCatalog={true}/>
+                        </TouchableOpacity>
                     )}
-                    keyExtractor={item => item}
+                    keyExtractor={item => item.name}
                 />
                 :
                 <View style={styles.cardContainer}>
-                <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                        {clothes.map((name) => (
-                            <View style={{marginLeft:1,marginBottom: 15}} key={`${name}-${Date.now()}`}>
-                                <ProductCard isRowView={isListView}/>
-                            </View>
+                    <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                        {chosenProducts.map((item) => (
+                            <TouchableOpacity
+                                onPress={()=>navigation.navigate("SingleProductScreen",{
+                                    product:item,
+                                    products:chosenProducts
+                                })}
+                                activeOpacity={0.9}
+                                style={{marginLeft:1,marginBottom: 15}}
+                                key={`${item.name}-${Date.now()}`}>
+                                <ProductCard isInCatalog={true} product={item} isRowView={isListView}/>
+                            </TouchableOpacity>
                         ))}
                     </ScrollView>
                 </View>
@@ -127,5 +147,8 @@ const styles = StyleSheet.create({
         display:"flex",
         justifyContent:"space-around",
     },
-
+    backIcon: {
+        marginTop: 10,
+        marginLeft: 20,
+    },
 });

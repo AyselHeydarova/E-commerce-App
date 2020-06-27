@@ -6,7 +6,7 @@ import {Back} from "../../Icons/Back";
 import {Btn} from "../../components/Btn";
 import {ProductCard} from "../../components/ProductCard";
 
-export const OrderDetails = ({orderCount, trackingNumber, orderNo, date, status}) => {
+export const OrderDetails = ({orderCount, trackingNumber, orderNo, date, status,navigation}) => {
     const orderInfo = [
         {
             infoTitle: "Shipping Address:",
@@ -35,7 +35,7 @@ export const OrderDetails = ({orderCount, trackingNumber, orderNo, date, status}
         <View style={styles.container}>
             <StatusBar/>
             <View style={[styles.header, {justifyContent: "flex-start",marginBottom:40}]}>
-                <TouchableOpacity style={styles.backIcon}>
+                <TouchableOpacity style={styles.backIcon} onPress={()=>navigation.goBack()}>
                     <Back/>
                 </TouchableOpacity>
                 <CustomText weight={'bold'} style={styles.title}>
