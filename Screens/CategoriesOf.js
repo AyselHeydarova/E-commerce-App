@@ -12,6 +12,20 @@ import {withoutCategories} from "./Home";
 const mapStateToProps = (state) => ({
     allProducts: getAllProductData(state),
 });
+export const categoriesMan = [];
+
+export const everything = store.getState();
+export const allCategories = everything.products.categories;
+export const allCategoryNames = Object.keys(allCategories);
+
+export const checkMen = () => {
+    for (let category of allCategoryNames) {
+        if (allCategories[`${category}`].men !== undefined) {
+            categoriesMan.push(category);
+        }
+    }
+
+};
 export const CategoriesOf = connect(mapStateToProps, {getAllData})(
     ({getAllData, allProducts, route, navigation}) => {
         const {isWomanClicked} = route.params;
@@ -22,12 +36,6 @@ export const CategoriesOf = connect(mapStateToProps, {getAllData})(
         const everything = store.getState();
         const allCategories = everything.products.categories;
         const allCategoryNames = Object.keys(allCategories);
-        const newProducts = withoutCategories.filter(
-            (product) => product.isNew === true
-        );
-        const onSale = withoutCategories.filter(
-            (product) => product.onSale.isOnSale === true
-        );
 
         const checkMen = () => {
             for (let category of allCategoryNames) {
@@ -65,13 +73,13 @@ export const CategoriesOf = connect(mapStateToProps, {getAllData})(
                 <View style={{marginTop: 60}}>
                     <FlatList
                         data={isWomanClicked ? allCategoryNames : categoriesMan}
-                        // data={allCategories}
                         renderItem={({item}) => (
                             <TouchableOpacity style={styles.category}
                                               onPress={() => navigation.navigate("Catalog", {
                                                   name: item,
                                                   isWomanClicked: isWomanClicked,
-                                                  products: allCategories[`${item}`]
+                                                  products: allCategories[`${item}`],
+                                                  categoryName: categoryName
                                               })}
                             >
                                 <CustomText style={styles.categoryText}>

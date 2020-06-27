@@ -15,8 +15,17 @@ export const Catalog = ({route,navigation}) => {
     const {name} = route.params;
     const {products} = route.params;
     const {isWomanClicked} = route.params;
-    const chosenProducts=isWomanClicked?products.women:products.men
-
+    const {categoryName} = route.params;
+    const {isOnSale} = route.params;
+    console.log(isOnSale);
+    const newProducts = withoutCategories.filter(
+        (product) => product.isNew === true
+    );
+    const chosenProducts=
+        // isOnSale?newProducts:
+        isWomanClicked?products.women:products.men;
+    console.log('chosenProducts',chosenProducts);
+    console.log('products',products);
     const [isListView, setIsListView] = useState(true);
     return (
         <View style={styles.container}>
@@ -25,25 +34,8 @@ export const Catalog = ({route,navigation}) => {
                 <Back/>
             </TouchableOpacity>
             <CustomText weight={'bold'} style={styles.title}>
-                {name}
+                {isOnSale?"Sale":name}
             </CustomText>
-            {/*<View style={styles.btns}>*/}
-            {/*    <FlatList*/}
-            {/*        horizontal={true}*/}
-            {/*        data={clothes}*/}
-            {/*        renderItem={({item}) => (*/}
-            {/*            <View style={styles.btn}>*/}
-            {/*                <Btn*/}
-            {/*                    width={100}*/}
-            {/*                    height={30}*/}
-            {/*                    bgColor={COLORS.TEXT}*/}
-            {/*                    btnName={item}*/}
-            {/*                    titleStyle={{color: COLORS.BACKGROUND}}/>*/}
-            {/*            </View>*/}
-            {/*        )}*/}
-            {/*        keyExtractor={item => item}*/}
-            {/*    />*/}
-            {/*</View>*/}
             <View style={styles.filters}>
                 <TouchableOpacity style={styles.filter}>
                     <Filter width={20} height={20}/>
@@ -93,7 +85,12 @@ export const Catalog = ({route,navigation}) => {
                                 activeOpacity={0.9}
                                 style={{marginLeft:1,marginBottom: 15}}
                                 key={`${item.name}-${Date.now()}`}>
-                                <ProductCard isInCatalog={true} product={item} isRowView={isListView}/>
+                                {isOnSale?item.onSale.isOnSale?
+                                    <ProductCard isInCatalog={true} product={item} isRowView={isListView}/>:null
+                                    :
+                                    <ProductCard isInCatalog={true} product={item} isRowView={isListView}/>
+                                }
+
                             </TouchableOpacity>
                         ))}
                     </ScrollView>

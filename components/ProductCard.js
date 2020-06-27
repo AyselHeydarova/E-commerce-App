@@ -46,14 +46,6 @@ export const ProductCard = ({
     count,
   } = product;
 
-  // console.log("brandName", brandName);
-  // console.log("productType", name);
-  // console.log("price", price);
-  // console.log("color", Object.keys(colour[0])[0]);
-  // console.log("rating", rating[0]);
-  // // console.log("imagesUrls", imagesUrls[0])
-  // console.log("count", count);
-  // console.log("size", Object.keys(size[0])[0]);
 
   const cardWrapperStyles = [
     isRowView ? styles.cardWrapper : columnStyles.cardWrapper,

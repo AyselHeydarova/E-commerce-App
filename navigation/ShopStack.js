@@ -22,6 +22,7 @@ export const ShopStack = () => {
                 options={{headerShown: false}}
                 name="Catalog"
                 component={Catalog}/>
+
                 <Screen
                 options={{headerShown: false}}
                 name="SingleProductScreen"

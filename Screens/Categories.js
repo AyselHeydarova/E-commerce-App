@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {StyleSheet, View, StatusBar, FlatList, TouchableOpacity, TouchableWithoutFeedback, Image} from "react-native";
 import {CustomText} from "../components/CustomText";
 import {Back} from "../Icons/Back";
@@ -8,9 +8,12 @@ import {Btn} from "../components/Btn";
 import {GLOBAL_STYLES} from "../style/globalStyles";
 import {SaleSlogan} from "../components/SaleSlogan";
 import {Category} from "../components/Category";
+import {withoutCategories} from "./Home";
+import {allCategories, checkMen} from "./CategoriesOf";
 
 
 export const Categories = ({navigation}) => {
+
     const categoriesWoman = [
         {
             categoryName: "New",
@@ -49,12 +52,22 @@ export const Categories = ({navigation}) => {
         },
 
     ];
-
+    const onSale = withoutCategories.filter(
+        (product) => product.onSale.isOnSale === true
+    );
     const [isWomanClicked, setIsWomanClicked] = useState(true);
+    const [isOnSale, setIsOnSale] = useState(false);
     const handleCategory = () => {
         setIsWomanClicked(!isWomanClicked)
     };
-
+    const handleSaleSlogan = () => {
+        setIsOnSale(true);
+        navigation.navigate('Catalog', {
+            isOnSale: true,
+            products:allCategories
+        });
+        console.log(allCategories)
+    };
     return (
         <View style={styles.container}>
             <StatusBar/>
@@ -81,19 +94,19 @@ export const Categories = ({navigation}) => {
                 </TouchableOpacity>
 
             </View>
-            <SaleSlogan discount={50} onPress={() => navigation.navigate('CategoriesOf')}/>
+            <SaleSlogan discount={50} onPress={() =>handleSaleSlogan() }/>
             <FlatList
                 data={isWomanClicked ? categoriesWoman : categoriesMan}
                 renderItem={({item}) => (
-                        <View style={styles.card}>
-                            <Category categoryName={item.categoryName}
-                                      imageSrc={item.imageSrc}
-                                      onPress={(categoryName) => navigation.navigate('CategoriesOf',{
-                                          isWomanClicked:isWomanClicked,
-                                          categoryName:categoryName,
-                                      })}
-                            />
-                        </View>
+                    <View style={styles.card}>
+                        <Category categoryName={item.categoryName}
+                                  imageSrc={item.imageSrc}
+                                  onPress={(categoryName) => navigation.navigate('CategoriesOf', {
+                                      isWomanClicked: isWomanClicked,
+                                      categoryName: categoryName,
+                                  })}
+                        />
+                    </View>
 
                 )}
                 keyExtractor={item => item.categoryName}
