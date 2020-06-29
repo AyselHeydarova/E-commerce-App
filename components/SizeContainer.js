@@ -5,18 +5,14 @@ import { CustomText } from "./CustomText";
 
 
 
-export const SizeContainer = ({width, name,key}) => {
-    const [isClicked, setIsClicked] = useState(false);
-    const handleSize = () => {
-        setIsClicked(!isClicked);
+export const SizeContainer = ({width, name,onPress,bgColor,borderWidth}) => {
 
-    }
     return (
         <TouchableOpacity style={[styles.container, {width: width,
-            backgroundColor: isClicked ? COLORS.PRIMARY : null,
-            borderWidth: isClicked ? 0 : 0.4}
+            backgroundColor: bgColor,
+            borderWidth:borderWidth }
         ]}
-                          onPress={() => handleSize()}
+                          onPress={onPress}
         >
             <CustomText
                 style={styles.containerText}>{name}</CustomText>

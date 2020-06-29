@@ -4,7 +4,6 @@ import {CustomText} from "../components/CustomText";
 import {Back} from "../Icons/Back";
 import {COLORS} from "../style/colors";
 import {Btn} from "../components/Btn";
-import {data} from "../DummyData/data";
 import {getAllData, getAllProductData} from "../store/products";
 import {connect} from "react-redux";
 import store from "../store";
@@ -13,45 +12,27 @@ import store from "../store";
 const mapStateToProps = (state) => ({
     allProducts: getAllProductData(state),
 });
-export const categoriesMan = [];
-
-export const everything = store.getState();
-export const allCategories = everything.products.categories;
-export const allCategoryNames = Object.keys(allCategories);
-
-export const checkMen = () => {
+export const checkMen = (allCategories, allCategoryNames) => {
+    const categoriesMan = [];
     for (let category of allCategoryNames) {
         if (allCategories[`${category}`].men !== undefined) {
             categoriesMan.push(category);
         }
     }
-
+    return categoriesMan;
 };
 export const CategoriesOf = connect(mapStateToProps, {getAllData})(
     ({getAllData, allProducts, route, navigation}) => {
-        const {isWomanClicked} = route.params;
-
-        const {categoryName} = route.params;
-
-        const categoriesMan = [];
+        const {isWomanClicked, isOnSale, categoryName} = route.params;
 
 
         const everything = store.getState();
         const allCategories = everything.products.categories;
         const allCategoryNames = Object.keys(allCategories);
 
-        const checkMen = () => {
-            for (let category of allCategoryNames) {
-                if (allCategories[`${category}`].men !== undefined) {
-                    categoriesMan.push(category);
-                }
-            }
-
-        };
         useEffect(() => {
-            checkMen();
+            checkMen(allCategories, allCategoryNames);
         });
-
         return (
             <View style={styles.container}>
                 <StatusBar/>
@@ -75,7 +56,7 @@ export const CategoriesOf = connect(mapStateToProps, {getAllData})(
                 </CustomText>
                 <View style={{marginTop: 60}}>
                     <FlatList
-                        data={isWomanClicked ? allCategoryNames : categoriesMan}
+                        data={isWomanClicked ? allCategoryNames : checkMen(allCategories, allCategoryNames)}
                         renderItem={({item}) => (
                             <TouchableOpacity style={styles.category}
 
@@ -83,7 +64,8 @@ export const CategoriesOf = connect(mapStateToProps, {getAllData})(
                                                   name: item,
                                                   isWomanClicked: isWomanClicked,
                                                   products: allCategories[`${item}`],
-                                                  categoryName: categoryName
+                                                  categoryName: categoryName,
+                                                  isOnSale: isOnSale
                                               })}
                             >
 
