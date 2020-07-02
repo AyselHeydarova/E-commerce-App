@@ -6,13 +6,11 @@ import Slider from "../components/Slider";
 import {ColorContainer} from "../components/ColorContainer";
 import {SizeContainer} from "../components/SizeContainer";
 import {Forward} from "../Icons/Forward";
-import {Btn} from "../components/Btn";
 import {Buttons} from "../components/Buttons";
-import {color} from "react-native-reanimated";
 
 
-export const Filters = ({navigation}) => {
-
+export const Filters = ({navigation, route}) => {
+    const {finalProducts} = route.params;
     const [categories, setCategories] = useState([
             {
                 size: "All",
@@ -110,28 +108,39 @@ export const Filters = ({navigation}) => {
 
         ]
     );
-    const handleSize = (size,state,index) => {
+    const handleSize = (size, state, index) => {
         let updatedSizes = [...sizes];
-        updatedSizes[index]=  {
-            size:size,
-            state: !state ,
+        updatedSizes[index] = {
+            size: size,
+            state: !state,
         };
         setSizes(updatedSizes);
-        console.log('color', size)
-        console.log('updatedColors', updatedSizes)
-        console.log('state', state)
+
     };
-    const handleColor = (color,state,index) => {
+    const handleColor = (color, state, index) => {
         let updatedColors = [...colors];
-        updatedColors[index]=  {
-            color:color,
-            state: !state ,
+        updatedColors[index] = {
+            color: color,
+            state: !state,
         };
         setColors(updatedColors);
-
+        console.log('color', color)
+        console.log('updatedColors', updatedColors)
+        console.log('state', state)
 
     };
-
+    const handleFilter = () => {
+        console.log(finalProducts)
+        finalProducts.forEach((item)=>{
+            console.log('item.colour',item.colour);
+            Object.keys(item.colour).forEach((color)=>{
+                console.log('color',color)
+            // if (color==="red"){
+            //     console.log(item)
+            // }
+            })
+        })
+    };
     return (
         <View style={styles.container}>
             <StatusBar/>
@@ -156,11 +165,11 @@ export const Filters = ({navigation}) => {
                             <ColorContainer
                                 onPress={
                                     () => {
-                                        handleColor(item.color,item.state,index),
-                                            console.log(index)
+                                        console.log('item.state', item.state),
+                                            handleColor(item.color, item.state, index)
                                     }}
                                 bgColor={item.color}
-                                borderColor={item.state ? COLORS.PRIMARY : null}
+                                borderColor={item.state ? COLORS.PRIMARY : COLORS.TEXT}
                             />
                         )}
                         keyExtractor={item => item.color}
@@ -176,9 +185,9 @@ export const Filters = ({navigation}) => {
                     <FlatList
                         horizontal={true}
                         data={sizes}
-                        renderItem={({item,index}) => (
+                        renderItem={({item, index}) => (
                             <SizeContainer
-                                onPress={() => handleSize(item.size,item.state,index)
+                                onPress={() => handleSize(item.size, item.state, index)
                                 }
                                 bgColor={item.state ? COLORS.PRIMARY : null}
                                 borderWidth={item.state ? 0 : 0.4}
@@ -221,12 +230,14 @@ export const Filters = ({navigation}) => {
                 <View style={styles.sliderContainer}>
                     <CustomText style={styles.brands}>adidas Originals, Jack & Jones, s.Oliver</CustomText>
 
-                    <TouchableOpacity style={styles.rightIcon} onPress={() => navigation.navigate("BrandsScreen")}>
+                    <TouchableOpacity style={styles.rightIcon} onPress={() => navigation.navigate("BrandsScreen",{
+                        finalProducts:finalProducts
+                    })}>
                         <Forward height={15} width={20}/>
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>
-            <Buttons/>
+            <Buttons onPressApply={()=>handleFilter()}/>
         </View>
     );
 };

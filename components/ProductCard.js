@@ -51,25 +51,25 @@ export const ProductCard = ({
   } = product;
 
 
-  const allRatingsArray = Object.values(ratings);
-  const totalRatingCount = allRatingsArray.reduce(function (a, b) {
-    return a + b;
-  });
-
-  let totalStarCount = 0;
-  for (let i = 0; i <= 4; i++) {
-    totalStarCount += allRatingsArray[i] * (i + 1);
-  }
-
-  const averageRating =
-    Math.round((totalStarCount / totalRatingCount) * 10) / 10;
+  // const allRatingsArray = Object.values(ratings);
+  // const totalRatingCount = allRatingsArray.reduce(function (a, b) {
+  //   return a + b;
+  // });
+  //
+  // let totalStarCount = 0;
+  // for (let i = 0; i <= 4; i++) {
+  //   totalStarCount += allRatingsArray[i] * (i + 1);
+  // }
+  //
+  // const averageRating =
+  //   Math.round((totalStarCount / totalRatingCount) * 10) / 10;
 
   const cardWrapperStyles = [
     isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
     { opacity: count === 0 ? 0.5 : 1 },
   ];
 
-  const salePrice = Math.floor((+price * (100 - +onSale.percentage)) / 100);
+  // const salePrice = Math.floor((+price * (100 - +onSale.percentage)) / 100);
 
   return (
     <View style={cardWrapperStyles}>
@@ -79,7 +79,7 @@ export const ProductCard = ({
         {isOnSale ? (
           <ProductTag
             style={{ ...styles.tag, backgroundColor: COLORS.PRIMARY }}
-            title={`${onSale.percentage}%`}
+            // title={`${onSale.percentage}%`}
           />
         ) : null}
         <Image
@@ -107,11 +107,11 @@ export const ProductCard = ({
             starStyle={{ margin: 3 }}
             containerStyle={{ marginTop: 0, width: 80 }}
             maxStars={5}
-            rating={averageRating}
+            // rating={averageRating}
 
           />
           <CustomText style={{ color: COLORS.GRAY }}>
-            {`(${totalRatingCount})`}
+            {/*{`(${totalRatingCount})`}*/}
           </CustomText>
         </View>
 
@@ -122,12 +122,12 @@ export const ProductCard = ({
           <View style={styles.row}>
             <View style={styles.row}>
               <CustomText style={{ color: COLORS.GRAY }}>Color: </CustomText>
-              <CustomText> {Object.keys(colour[0])[0]} </CustomText>
+              {/*<CustomText> {Object.keys(colour[0])[0]} </CustomText>*/}
             </View>
 
             <View style={styles.row}>
               <CustomText style={{ color: COLORS.GRAY }}>Size:</CustomText>
-              <CustomText>{Object.keys(size[0])[0]}</CustomText>
+              {/*<CustomText>{Object.keys(size[0])[0]}</CustomText>*/}
             </View>
           </View>
         )}
@@ -138,17 +138,18 @@ export const ProductCard = ({
             weight="bold"
             style={{
               color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
-              textDecorationLine: isOnSale ? "line-through" : null,
+              // textDecorationLine: isOnSale ? "line-through" : null,
             }}
           >
             {`${price}$`}
           </CustomText>
-          {isOnSale ? (
-            <CustomText
-              weight="bold"
-              style={{ color: COLORS.SALE, marginLeft: 10 }}
-            >{`${salePrice}$`}</CustomText>
-          ) : null}
+          {/*{isOnSale ? (*/}
+          {/*  <CustomText*/}
+          {/*    weight="bold"*/}
+          {/*    style={{ color: COLORS.SALE, marginLeft: 10 }}*/}
+          {/*  >{`${salePrice}$`}*/}
+          {/*  </CustomText>*/}
+          {/*) : null}*/}
         </View>
 
       </View>
