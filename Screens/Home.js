@@ -12,15 +12,23 @@ import { Btn } from "../components/Btn";
 import { ProductCard } from "../components/ProductCard";
 import { COLORS } from "../style/colors";
 import { CustomText } from "../components/CustomText";
-import { getAllData } from "../store/products";
+import {
+  getAllData,
+  selectNewProducts,
+  selectOnSale,
+  selectCategory,
+} from "../store/products";
 import { connect } from "react-redux";
 
 import banner from "../assets/Small_banner.png";
-import {newProducts, onSale } from "../Utils/DataSelection";
 
+const mapStateToProps = (state) => ({
+  newProducts: selectNewProducts(state),
+  onSale: selectOnSale(state),
+});
 
-const Home = connect(null, { getAllData })(
-  ({ getAllData, navigation }) => {
+const Home = connect(mapStateToProps, { getAllData })(
+  ({ getAllData, navigation, newProducts, onSale, dresses }) => {
     const [showSale, setShowSale] = useState(false);
 
     useEffect(() => {
@@ -48,7 +56,10 @@ const Home = connect(null, { getAllData })(
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() =>
-                      navigation.navigate("SingleProduct", { product: item })
+                      navigation.navigate("SingleProduct", {
+                        product: item,
+                        products: onSale,
+                      })
                     }
                   >
                     <ProductCard
@@ -98,7 +109,10 @@ const Home = connect(null, { getAllData })(
             renderItem={({ item }) => (
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("SingleProduct", { product: item })
+                  navigation.navigate("SingleProduct", {
+                    product: item,
+                    products: newProducts,
+                  })
                 }
               >
                 <ProductCard

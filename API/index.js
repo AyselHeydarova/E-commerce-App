@@ -1,22 +1,23 @@
 export const domain = "https://my-project-aysel.firebaseio.com/";
 
 export const getdbData = async () => {
-const allData = await fetch(`${domain}/categories.json`, {
+  const allData = await fetch(`${domain}/categories.json`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
   }).then((data) => data.json());
 
+  console.log("allData db", allData);
+  return allData;
 
-return allData
-//   let innerData = [];
+  //   let innerData = [];
 
-//   for (let key in allCategories) {
-//     let dividedByGender = allCategories[key];
-//     for (let item in dividedByGender) {
-//       innerData.push(...dividedByGender[item]);
-//     }
-//   }
-//   setAllData(innerData);
+  //   for (let key in allCategories) {
+  //     let dividedByGender = allCategories[key];
+  //     for (let item in dividedByGender) {
+  //       innerData.push(...dividedByGender[item]);
+  //     }
+  //   }
+  //   setAllData(innerData);
 };

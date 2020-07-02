@@ -51,4 +51,5 @@ store.subscribe(() => {
 });
 AsyncStorage.clear();
 
+
 export default store;
