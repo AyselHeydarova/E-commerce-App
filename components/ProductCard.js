@@ -50,6 +50,7 @@ export const ProductCard = ({
     onSale,
   } = product;
 
+
   const allRatingsArray = Object.values(ratings);
   const totalRatingCount = allRatingsArray.reduce(function (a, b) {
     return a + b;
