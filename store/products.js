@@ -1,4 +1,4 @@
-import { getdbData } from "../API";
+import {getData, getdbData} from "../API";
 
 const SET_APP_PRODUCTS = "SET_APP_PRODUCTS";
 
@@ -47,9 +47,9 @@ export const setAppProducts = (payload) => ({
   payload,
 });
 
-export const getAllData = () => async (dispatch, getState) => {
+export const getAllData = (value) => async (dispatch, getState) => {
   try {
-    const categories = await getdbData();
+    const categories = await getData(value);
     dispatch(setAppProducts(categories));
   } catch (error) {
     console.log("getAllData", error);

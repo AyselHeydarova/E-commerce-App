@@ -4,10 +4,9 @@ import {CustomText} from "../components/CustomText";
 import {Back} from "../Icons/Back";
 import {COLORS} from "../style/colors";
 import {Btn} from "../components/Btn";
-import {data} from "../DummyData/data";
 import {getAllData, getAllProductData} from "../store/products";
 import {connect} from "react-redux";
-import store from "../store";
+import {getData} from "../API";
 
 
 const mapStateToProps = (state) => ({
@@ -15,37 +14,23 @@ const mapStateToProps = (state) => ({
 });
 export const CategoriesOf = connect(mapStateToProps, {getAllData})(
     ({getAllData, allProducts, route, navigation}) => {
-        const {isWomanClicked} = route.params;
+        const {isWomanClicked, isOnSale, categoryName} = route.params;
+        const categoriesMen = ["Shorts", "Trousers", "T-shirts", "Shoes"];
+        const categoriesWomen = ["Dresses", "Shorts", "Skirts", "Trousers", "T-shirts", "Shoes"];
 
-        const {categoryName} = route.params;
-
-        const categoriesMan = [];
-
-
-        const everything = store.getState();
-        const allCategories = everything.products.categories;
-        const allCategoryNames = Object.keys(allCategories);
-
-        const newProducts = withoutCategories.filter(
-            (product) => product.isNew === true
-        );
-        const onSale = withoutCategories.filter(
-            (product) => product.onSale.isOnSale === true
-        );
-
-
-        const checkMen = () => {
-            for (let category of allCategoryNames) {
-                if (allCategories[`${category}`].men !== undefined) {
-                    categoriesMan.push(category);
+        const handleCategory = async (category) => {
+                try {
+                    await getAllData(category);
+                } catch (error) {
+                    console.log("getAllData", error);
                 }
-            }
-
+            navigation.navigate("Catalog", {
+                name: category,
+                isWomanClicked: isWomanClicked,
+                categoryName: categoryName,
+                isOnSale: isOnSale
+            })
         };
-        useEffect(() => {
-            checkMen();
-        });
-
         return (
             <View style={styles.container}>
                 <StatusBar/>
@@ -69,16 +54,13 @@ export const CategoriesOf = connect(mapStateToProps, {getAllData})(
                 </CustomText>
                 <View style={{marginTop: 60}}>
                     <FlatList
-                        data={isWomanClicked ? allCategoryNames : categoriesMan}
-                        // data={allCategories}
+                        data={isWomanClicked ? categoriesWomen : categoriesMen}
                         renderItem={({item}) => (
                             <TouchableOpacity style={styles.category}
 
-                                              onPress={() => navigation.navigate("Catalog", {
-                                                  name: item,
-                                                  isWomanClicked: isWomanClicked,
-                                                  products: allCategories[`${item}`]
-                                              })}
+                                              onPress={() => handleCategory(item)
+
+                                              }
                             >
 
                                 <CustomText style={styles.categoryText}>

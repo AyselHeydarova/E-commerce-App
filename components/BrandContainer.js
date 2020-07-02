@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from "react-native";
+import {StyleSheet, TouchableOpacity, View, TouchableWithoutFeedback} from "react-native";
 import {COLORS} from "../style/colors";
 import {CustomText} from "./CustomText";
 import {AcceptIcon} from "../Icons/AcceptIcon";
@@ -8,7 +8,13 @@ export const BrandContainer = ({brandName}) => {
     const [isIconClicked, setIsIconClicked] = useState(false);
     return (
         <View style={styles.container}>
-            <CustomText style={styles.brandName}>{brandName}</CustomText>
+            <TouchableWithoutFeedback onPress={() => setIsIconClicked(!isIconClicked)}>
+                <CustomText style={{
+                    color: isIconClicked?COLORS.PRIMARY:COLORS.TEXT,
+                    fontSize: 16,
+                    lineHeight: 20,
+                }}>{brandName}</CustomText>
+            </TouchableWithoutFeedback>
             <TouchableOpacity style={[styles.iconContainer, {
                 borderWidth: isIconClicked ? 0 : 2,
                 backgroundColor: isIconClicked ? COLORS.PRIMARY : null
@@ -30,11 +36,6 @@ export const styles = StyleSheet.create({
         justifyContent: "space-between",
         marginTop: 30,
 
-    },
-    brandName: {
-        color: COLORS.TEXT,
-        fontSize: 16,
-        lineHeight: 20,
     },
     iconContainer: {
         width: 20,

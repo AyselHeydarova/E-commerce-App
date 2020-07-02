@@ -1,16 +1,20 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {StyleSheet, View, StatusBar, FlatList, TouchableOpacity, TouchableWithoutFeedback, Image} from "react-native";
 import {CustomText} from "../components/CustomText";
 import {Back} from "../Icons/Back";
-import {ProductCard} from "../components/ProductCard";
 import {COLORS} from "../style/colors";
-import {Btn} from "../components/Btn";
 import {GLOBAL_STYLES} from "../style/globalStyles";
 import {SaleSlogan} from "../components/SaleSlogan";
 import {Category} from "../components/Category";
+import {allProducts} from "../Utils/DataSelection";
+import {getAllData, getAllProductData} from "../store/products";
+import {connect} from "react-redux";
+const mapStateToProps = (state) => ({
+    allProducts: getAllProductData(state),
+});
 
-
-export const Categories = ({navigation}) => {
+export const Categories = connect(mapStateToProps, {getAllData})(
+    ({getAllData, allProducts, route, navigation}) => {
     const categoriesWoman = [
         {
             categoryName: "New",
@@ -54,6 +58,12 @@ export const Categories = ({navigation}) => {
     const handleCategory = () => {
         setIsWomanClicked(!isWomanClicked)
     };
+    const handleSaleSlogan = () => {
+        navigation.navigate('CategoriesOf', {
+            isOnSale: true,
+            isWomanClicked:isWomanClicked
+        });
+    };
 
     return (
         <View style={styles.container}>
@@ -81,19 +91,21 @@ export const Categories = ({navigation}) => {
                 </TouchableOpacity>
 
             </View>
-            <SaleSlogan discount={50} onPress={() => navigation.navigate('CategoriesOf')}/>
+            <SaleSlogan discount={50} onPress={() =>handleSaleSlogan() }/>
             <FlatList
                 data={isWomanClicked ? categoriesWoman : categoriesMan}
                 renderItem={({item}) => (
-                        <View style={styles.card}>
-                            <Category categoryName={item.categoryName}
-                                      imageSrc={item.imageSrc}
-                                      onPress={(categoryName) => navigation.navigate('CategoriesOf',{
-                                          isWomanClicked:isWomanClicked,
-                                          categoryName:categoryName,
-                                      })}
-                            />
-                        </View>
+                    <View style={styles.card}>
+                        <Category categoryName={item.categoryName}
+                                  imageSrc={item.imageSrc}
+                                  onPress={() => navigation.navigate('CategoriesOf', {
+                                      isWomanClicked: isWomanClicked,
+                                      categoryName: item.categoryName,
+
+
+                                  })}
+                        />
+                    </View>
 
                 )}
                 keyExtractor={item => item.categoryName}
@@ -102,7 +114,7 @@ export const Categories = ({navigation}) => {
 
         </View>
     );
-};
+});
 
 const styles = StyleSheet.create({
 

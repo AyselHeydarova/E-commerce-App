@@ -1,13 +1,65 @@
-import React from 'react';
+import React,{useState} from 'react';
 import {StyleSheet, TextInput, View, FlatList, StatusBar} from 'react-native';
 import {GLOBAL_STYLES} from "../style/globalStyles";
 import {COLORS} from "../style/colors";
 import {Search} from "../Icons/Search";
 import {BrandContainer} from "../components/BrandContainer";
 import {SizeContainer} from "../components/SizeContainer";
+import {Buttons} from "../components/Buttons";
 
-export const BrandsScreen = () => {
-    const brands = ["adidas", "Gucci", "Gap", "H&M", "Mango", "Zara", "Diesel", "Nike", "Levis", "Pull & Bear",]
+export const BrandsScreen = ({navigation}) => {
+    const {finalProducts} = route.params;
+    // const brands = ["ADIDAS", "GUCCI", "GAP", "H&M", "Mango", "ZARA", "Diesel", "NIKE", "Levi's", "Pull&Bear","HERMES"]
+    const [brands, setBrands] = useState([
+            {
+                brand: "ADIDAS",
+                state: false
+            },
+            {
+                brand: "GUCCI",
+                state: false
+            },
+            {
+                brand: "GAP",
+                state: false
+            },
+            {
+                brand: "H&M",
+                state: false
+            },
+            {
+                brand: "Mango",
+                state: false
+            },
+            {
+                brand: "ZARA",
+                state: false
+            },
+            {
+                brand: "Diesel",
+                state: false
+            },
+            {
+                brand: "NIKE",
+                state: false
+            },
+            {
+                brand: "Levi's",
+                state: false
+            },
+            {
+                brand: "Pull&Bear",
+                state: false
+            },
+            {
+                brand: "HERMES",
+                state: false
+            },
+           ]
+    );
+    const handleBrand=()=>{
+
+    };
     return (
         <View style={styles.container}>
             <StatusBar/>
@@ -18,11 +70,11 @@ export const BrandsScreen = () => {
             <FlatList
                 data={brands}
                 renderItem={({item}) => (
-                    <BrandContainer brandName={item} />
+                    <BrandContainer brandName={item.brand} />
                 )}
-                keyExtractor={item => item}
+                keyExtractor={item => item.brand}
             />
-
+            <Buttons/>
         </View>
     );
 };
