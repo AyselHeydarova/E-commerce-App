@@ -6,6 +6,7 @@ import {
   ScrollView,
   FlatList,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import homeImage from "../assets/homeImage.png";
 import { Btn } from "../components/Btn";
@@ -21,15 +22,35 @@ import {
 import { connect } from "react-redux";
 
 import banner from "../assets/Small_banner.png";
+import { filterDataByTag } from "../API";
 
 const mapStateToProps = (state) => ({
-  newProducts: selectNewProducts(state),
-  onSale: selectOnSale(state),
+  // newProducts: selectNewProducts(state),
+  // onSale: selectOnSale(state),
 });
 
 const Home = connect(mapStateToProps, { getAllData })(
   ({ getAllData, navigation, newProducts, onSale, dresses }) => {
     const [showSale, setShowSale] = useState(false);
+
+    // const newHandle = async (data) => {
+    //   try {
+    //     const newwss = await getAllData(data);
+    //     console.log("newwss", newwss);
+    //   } catch (error) {
+    //     console.log("newww err", error);
+    //   }
+    // };
+
+    // const womenNew = async () => await filterDataByTag(["new", "women"]);
+    // const New = async () => await filterDataByTag("new");
+    // const women = async () => await filterDataByTag("women");
+    // const alllData = async (value) => await getAllData("new");
+
+    // console.log("womenNew", womenNew);
+    // console.log("New", New);
+    // console.log("women", women);
+    // console.log("alllData", alllData);
 
     useEffect(() => {
       getAllData();
@@ -47,7 +68,9 @@ const Home = connect(mapStateToProps, { getAllData })(
               <CustomText style={styles.description}>
                 Super Summer Sale
               </CustomText>
-              <FlatList
+
+              <Button title="show new" onPress={() => newHandle("new")} />
+              {/* <FlatList
                 horizontal
                 contentContainerStyle={{
                   paddingTop: 15,
@@ -71,7 +94,7 @@ const Home = connect(mapStateToProps, { getAllData })(
                   </TouchableOpacity>
                 )}
                 keyExtractor={(item) => item.productType}
-              />
+              /> */}
             </View>
           </>
         ) : (
@@ -100,7 +123,7 @@ const Home = connect(mapStateToProps, { getAllData })(
             You've never seen it before
           </CustomText>
 
-          <FlatList
+          {/* <FlatList
             horizontal
             contentContainerStyle={{
               paddingTop: 15,
@@ -124,7 +147,7 @@ const Home = connect(mapStateToProps, { getAllData })(
               </TouchableOpacity>
             )}
             keyExtractor={(item) => item.productType}
-          />
+          /> */}
         </View>
       </ScrollView>
     );

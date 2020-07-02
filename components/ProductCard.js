@@ -4,6 +4,7 @@ import { CustomText } from "./CustomText";
 import { COLORS } from "../style/colors";
 import StarRating from "react-native-star-rating";
 import { ProductTag } from "../commons/ProductTag";
+import { Heart } from "../Icons/Heart";
 
 export const ProductCard = ({
   product,
@@ -16,7 +17,7 @@ export const ProductCard = ({
   const columnStyles = {
     cardWrapper: {
       flexDirection: "column",
-      width: 164,
+      width: 150,
       height: 280,
       borderRadius: 8,
       backgroundColor: COLORS.DARK,
@@ -44,25 +45,31 @@ export const ProductCard = ({
     price,
     size,
     colour,
-    ratings,
+    rating,
     imagesUrls,
     count,
     onSale,
   } = product;
 
+  console.log("product firestore", product);
 
-  // const allRatingsArray = Object.values(ratings);
-  // const totalRatingCount = allRatingsArray.reduce(function (a, b) {
-  //   return a + b;
-  // });
-  //
-  // let totalStarCount = 0;
-  // for (let i = 0; i <= 4; i++) {
-  //   totalStarCount += allRatingsArray[i] * (i + 1);
-  // }
-  //
-  // const averageRating =
-  //   Math.round((totalStarCount / totalRatingCount) * 10) / 10;
+  const allRatingsArray = rating.map((obj) => {
+    for (let key in obj) {
+      const value = obj[key];
+      return value;
+    }
+  });
+  const totalRatingCount = allRatingsArray.reduce(function (a, b) {
+    return a + b;
+  });
+
+  let totalStarCount = 0;
+  for (let i = 0; i <= 4; i++) {
+    totalStarCount += allRatingsArray[i] * (i + 1);
+  }
+
+  const averageRating =
+    Math.round((totalStarCount / totalRatingCount) * 10) / 10;
 
   const cardWrapperStyles = [
     isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
@@ -105,13 +112,12 @@ export const ProductCard = ({
             fullStarColor={COLORS.STAR}
             starSize={14}
             starStyle={{ margin: 3 }}
-            containerStyle={{ marginTop: 0, width: 80 }}
+            containerStyle={{ marginTop: 10, width: 80 }}
             maxStars={5}
-            // rating={averageRating}
-
+            rating={averageRating}
           />
-          <CustomText style={{ color: COLORS.GRAY }}>
-            {/*{`(${totalRatingCount})`}*/}
+          <CustomText style={{ color: COLORS.GRAY, marginTop: 10 }}>
+            {`(${totalRatingCount})`}
           </CustomText>
         </View>
 
@@ -132,7 +138,6 @@ export const ProductCard = ({
           </View>
         )}
 
-
         <View style={styles.priceRow}>
           <CustomText
             weight="bold"
@@ -151,8 +156,9 @@ export const ProductCard = ({
           {/*  </CustomText>*/}
           {/*) : null}*/}
         </View>
-
       </View>
+
+      <Heart width={12} height={12} color={COLORS.GRAY} />
     </View>
   );
 };
@@ -160,12 +166,12 @@ export const ProductCard = ({
 const styles = StyleSheet.create({
   cardWrapper: {
     height: 110,
-    width: 343,
+    width: "100%",
     borderRadius: 8,
     flexDirection: "row",
     backgroundColor: COLORS.DARK,
-    overflow: "hidden",
-    marginLeft: 10,
+    marginBottom: 25,
+    position: "relative",
   },
 
   tag: {
