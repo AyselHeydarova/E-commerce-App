@@ -7,7 +7,8 @@ import {BrandContainer} from "../components/BrandContainer";
 import {SizeContainer} from "../components/SizeContainer";
 import {Buttons} from "../components/Buttons";
 
-export const BrandsScreen = () => {
+export const BrandsScreen = ({navigation}) => {
+    const {finalProducts} = route.params;
     // const brands = ["ADIDAS", "GUCCI", "GAP", "H&M", "Mango", "ZARA", "Diesel", "NIKE", "Levi's", "Pull&Bear","HERMES"]
     const [brands, setBrands] = useState([
             {
@@ -47,15 +48,18 @@ export const BrandsScreen = () => {
                 state: false
             },
             {
-                color: "Pull&Bear",
+                brand: "Pull&Bear",
                 state: false
             },
             {
-                color: "HERMES",
+                brand: "HERMES",
                 state: false
             },
            ]
     );
+    const handleBrand=()=>{
+
+    };
     return (
         <View style={styles.container}>
             <StatusBar/>

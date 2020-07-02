@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 7,
         borderColor: '#ABB4BD',
-        marginRight:10,
-        marginLeft:10,
+        marginHorizontal:10,
+
     },
     containerText: {
         fontSize: 16,

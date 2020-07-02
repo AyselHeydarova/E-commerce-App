@@ -6,33 +6,31 @@ import {COLORS} from "../style/colors";
 import {Btn} from "../components/Btn";
 import {getAllData, getAllProductData} from "../store/products";
 import {connect} from "react-redux";
-import store from "../store";
+import {getData} from "../API";
 
 
 const mapStateToProps = (state) => ({
     allProducts: getAllProductData(state),
 });
-export const checkMen = (allCategories, allCategoryNames) => {
-    const categoriesMan = [];
-    for (let category of allCategoryNames) {
-        if (allCategories[`${category}`].men !== undefined) {
-            categoriesMan.push(category);
-        }
-    }
-    return categoriesMan;
-};
 export const CategoriesOf = connect(mapStateToProps, {getAllData})(
     ({getAllData, allProducts, route, navigation}) => {
         const {isWomanClicked, isOnSale, categoryName} = route.params;
+        const categoriesMen = ["Shorts", "Trousers", "T-shirts", "Shoes"];
+        const categoriesWomen = ["Dresses", "Shorts", "Skirts", "Trousers", "T-shirts", "Shoes"];
 
-
-        const everything = store.getState();
-        const allCategories = everything.products.categories;
-        const allCategoryNames = Object.keys(allCategories);
-
-        useEffect(() => {
-            checkMen(allCategories, allCategoryNames);
-        });
+        const handleCategory = async (category) => {
+                try {
+                    await getAllData(category);
+                } catch (error) {
+                    console.log("getAllData", error);
+                }
+            navigation.navigate("Catalog", {
+                name: category,
+                isWomanClicked: isWomanClicked,
+                categoryName: categoryName,
+                isOnSale: isOnSale
+            })
+        };
         return (
             <View style={styles.container}>
                 <StatusBar/>
@@ -56,17 +54,13 @@ export const CategoriesOf = connect(mapStateToProps, {getAllData})(
                 </CustomText>
                 <View style={{marginTop: 60}}>
                     <FlatList
-                        data={isWomanClicked ? allCategoryNames : checkMen(allCategories, allCategoryNames)}
+                        data={isWomanClicked ? categoriesWomen : categoriesMen}
                         renderItem={({item}) => (
                             <TouchableOpacity style={styles.category}
 
-                                              onPress={() => navigation.navigate("Catalog", {
-                                                  name: item,
-                                                  isWomanClicked: isWomanClicked,
-                                                  products: allCategories[`${item}`],
-                                                  categoryName: categoryName,
-                                                  isOnSale: isOnSale
-                                              })}
+                                              onPress={() => handleCategory(item)
+
+                                              }
                             >
 
                                 <CustomText style={styles.categoryText}>

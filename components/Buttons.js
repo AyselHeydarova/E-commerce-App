@@ -14,12 +14,14 @@ export const Buttons = ({ onPressDiscard,onPressApply }) => {
                 height={40}
                 width={160}
 
+
             />
             <Btn
                 btnName={"Apply"}
                 bgColor={COLORS.PRIMARY}
                 height={40}
                 width={160}
+                onPress={onPressApply}
             />
 
         </View>
