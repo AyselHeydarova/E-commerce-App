@@ -1,23 +1,35 @@
-import {getData, getdbData} from "../API";
+import { getData, getdbData } from "../API";
 
 const SET_APP_PRODUCTS = "SET_APP_PRODUCTS";
 
 export const MODULE_NAME = "products";
 
-export const getAllProductData = (state) => state[MODULE_NAME]; 
-export const getAllProductDataCat = (state) => state[MODULE_NAME].categories; 
+export const selectAllProductData = (state) => state[MODULE_NAME];
 
+export const selectCategory = (state, category) =>
+  state[MODULE_NAME].categories[category];
 
-//   for (let key in allCategories) {
-//     let dividedByGender = allCategories[key];
+// export const selectAllwithoutCategories = (state) => {
+//   const withoutCategories = [];
+//   for (let key in state[MODULE_NAME].categories) {
+//     let dividedByGender = state[MODULE_NAME].categories[key];
 //     for (let item in dividedByGender) {
-//       innerData.push(...dividedByGender[item]);
+//       withoutCategories.push(...dividedByGender[item]);
 //     }
 //   }
-//   setAllData(innerData);
+//   return withoutCategories;
+// };
+
+// export const selectNewProducts = (state) => {
+//  return  selectAllwithoutCategories(state).filter((product) => product.isNew === true);
+// }
+
+// export const selectOnSale = (state) => {
+//   return  selectAllwithoutCategories(state).filter((product) => product.onSale.isOnSale === true);
+// }
 
 const initialState = {
-    categories: {}
+  categories: {},
 };
 export function productsReducer(state = initialState, { type, payload }) {
   switch (type) {
@@ -40,6 +52,8 @@ export const getAllData = (value) => async (dispatch, getState) => {
   try {
     const categories = await getData(value);
     dispatch(setAppProducts(categories));
+
+    console.log("heyey categories", categories);
   } catch (error) {
     console.log("getAllData", error);
   }

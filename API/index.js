@@ -1,5 +1,5 @@
 import * as firebase from "firebase";
-import './firebase'
+import "./firebase";
 // import {products} from "../DummyData/data";
 
 // export const domain = "https://my-project-aysel.firebaseio.com/";
@@ -12,6 +12,8 @@ import './firebase'
 //     },
 //   }).then((data) => data.json());
 
+//   console.log("allData db", allData);
+//   return allData;
 
 // return allData
 //   let innerData = [];
@@ -25,25 +27,49 @@ import './firebase'
 //   setAllData(innerData);
 // };
 export const getData = async (value) => {
-    const products = [];
-    try {
+  const products = [];
+  try {
+    const ref = firebase
+      .firestore()
+      .collection("products")
+      .where("tags", "array-contains", `${value}`);
 
-        const ref = firebase.firestore().collection("products").
-        where("tags", "array-contains", `${value}`);
+    const productsSnap = await ref.get();
+    productsSnap.forEach((product) => {
+      const data = product.data();
+      products.push({
+        id: product.id,
+        ...data,
+      });
+    });
+    console.log(products);
+  } catch (e) {
+    console.log("error", e);
+  }
+  return products;
+};
 
-        const productsSnap = await ref.get();
-        productsSnap.forEach((product) => {
-            const data = product.data();
-            products.push({
-                id: product.id,
-                ...data
-            })
-        });
-        console.log(products);
-    } catch (e) {
-        console.log('error', e)
-    }
-    return products;
+export const filterDataByTag = async (value) => {
+  const products = [];
+  try {
+    const ref = firebase
+      .firestore()
+      .collection("products")
+      .where("tags", "array-contains-any", `${value}`);
+
+    const productsSnap = await ref.get();
+    productsSnap.forEach((product) => {
+      const data = product.data();
+      products.push({
+        id: product.id,
+        ...data,
+      });
+    });
+    console.log("filterDataByTag", products);
+  } catch (e) {
+    console.log(" filterDataByTag error", e);
+  }
+  return products;
 };
 
 // let  db = firebase.firestore();
