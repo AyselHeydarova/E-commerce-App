@@ -31,76 +31,56 @@ export const Catalog = connect(mapStateToProps, {getAllData})(
         lowestToHigh: false,
         highestToLow: false,
     });
-    const [isSortingType, setIsSortingType] = useState("Popular");
-    const handleSorting = (name, sortOptionBool) => {
+        const sortOptions = [
+            {
+                sortingName: "Popular",
+                sortOptionBool: "Popular",
+            },
+            {
+                sortingName: "Newest",
+                sortOptionBool: "Newest",
+            },
+            {
+                sortingName: "Customer review",
+                sortOptionBool: "Customer_review",
+            },
+            {
+                sortingName: "Price: lowest to high",
+                sortOptionBool: "lowestToHigh",
+            },
+            {
+                sortingName: "Price: highest to low",
+                sortOptionBool: "highestToLow",
+            },
+
+        ];
+        const gender = isWomanClicked ?  "women" : "men";
+        const productsSortedByGender = products.filter((product)=>product.tags.includes(gender));
+        const [isSortingType, setIsSortingType] = useState("Popular");
+        const handleSorting = (name, sortOptionBool) => {
         setIsSortingType(name);
         setSortOption({...false, [sortOptionBool]: !sortOption[`${sortOptionBool}`]})
     };
-    const sortOptions = [
-        {
-            sortingName: "Popular",
-            sortOptionBool: "Popular",
-        },
-        {
-            sortingName: "Newest",
-            sortOptionBool: "Newest",
-        },
-        {
-            sortingName: "Customer review",
-            sortOptionBool: "Customer_review",
-        },
-        {
-            sortingName: "Price: lowest to high",
-            sortOptionBool: "lowestToHigh",
-        },
-        {
-            sortingName: "Price: highest to low",
-            sortOptionBool: "highestToLow",
-        },
 
-    ];
-    // const saleProducts = [];
-    // const everything = store.getState();
-    // const allCategories = everything.products.categories;
-    // const allCategoryNames = Object.keys(allCategories);
-    // if (isWomanClicked) {
-    //     for (let category of allCategoryNames) {
-    //         const products = allCategories[`${category}`].women;
-    //         for (let product of products) {
-    //             saleProducts.push(product);
-    //         }
-    //     }
-    // } else {
-    //     for (let category of checkMen(allCategories, allCategoryNames)) {
-    //         const products = allCategories[`${category}`].men;
-    //         for (let product of products) {
-    //             saleProducts.push(product);
-    //         }
-    //     }
-    // }
-    // const onSale = saleProducts.filter(
+
+
+
+    const newProducts = productsSortedByGender.filter(
+        (product) => product.tags.includes("new") || product.tags.includes("isNew")
+    );
+        console.log(newProducts);
+    // const onSale = products.filter(
     //     (product) => product.onSale.isOnSale === true
     // );
-    // const chosenProducts = isWomanClicked ? products.women : products.men;
-    //
-    // const newProducts = chosenProducts.filter(
-    //     (product) => {
-    //         console.log('typeof product.isNew', product.isNew)
-    //         console.log(product.isNew === true)
-    //         return product.isNew === true
-    //     }
-    // );
-    // const onSale = chosenProducts.filter(
-    //     (product) => product.onSale.isOnSale === true
-    // );
-    // const finalProducts = isOnSale ? onSale : categoryName === "New" ? newProducts : chosenProducts;
 
-    console.log('products',products)
+     const finalProducts =  categoryName === "New" ? newProducts : productsSortedByGender;
+
+
     const [isListView, setIsListView] = useState(true);
     const handleProductCard = (item) => {
         navigation.navigate("SingleProductScreen", {
             product: item,
-            products: products
+            products: finalProducts
         })
     };
     return (
@@ -138,12 +118,12 @@ export const Catalog = connect(mapStateToProps, {getAllData})(
             </View>
             {isListView ?
                 <FlatList
-                    data={products}
+                    data={finalProducts}
                     renderItem={({item}) => (
                         <TouchableOpacity
-                            onPress={console.log(item)
-                                // () =>
-                                // handleProductCard(item)
+                            onPress={
+                                () =>
+                                handleProductCard(item)
                             }
                             activeOpacity={0.9}
                             style={styles.card}>
@@ -156,7 +136,7 @@ export const Catalog = connect(mapStateToProps, {getAllData})(
                 :
                 <View style={styles.cardContainer}>
                     <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                        {products.map((item) => (
+                        {finalProducts.map((item) => (
                             <TouchableOpacity
                                 onPress={() => handleProductCard(item)}
                                 activeOpacity={0.9}

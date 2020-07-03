@@ -1,35 +1,14 @@
 import * as firebase from "firebase";
 import './firebase'
-// import {products} from "../DummyData/data";
-
-// export const domain = "https://my-project-aysel.firebaseio.com/";
-//
-// export const getdbData = async () => {
-// const allData = await fetch(`${domain}/categories.json`, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   }).then((data) => data.json());
 
 
-// return allData
-//   let innerData = [];
-
-//   for (let key in allCategories) {
-//     let dividedByGender = allCategories[key];
-//     for (let item in dividedByGender) {
-//       innerData.push(...dividedByGender[item]);
-//     }
-//   }
-//   setAllData(innerData);
-// };
-export const getData = async (value) => {
+export const getData = async (category="isNew") => {
     const products = [];
     try {
-
-        const ref = firebase.firestore().collection("products").
-        where("tags", "array-contains", `${value}`);
+        const ref = firebase.firestore().collection("products")
+            .where("tags", 'array-contains', "isNew");
+        //   .where(`${gender}`,'in',["new","women"]   );
+        //    .where("tags",'array-contains', `${gender}`);
 
         const productsSnap = await ref.get();
         productsSnap.forEach((product) => {
@@ -39,12 +18,12 @@ export const getData = async (value) => {
                 ...data
             })
         });
-        console.log(products);
     } catch (e) {
         console.log('error', e)
     }
     return products;
 };
+
 
 // let  db = firebase.firestore();
 // products.forEach(function(product) {

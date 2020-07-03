@@ -16,7 +16,7 @@ export const SingleProductScreen = ({route, navigation}) => {
 const [isSizeClicked,setIsSizeClicked] = useState(false);
 const [isColorClicked,setIsColorClicked] = useState(false);
 
-    const {about, brandName, price, imagesUrls, name,size} = route.params.product;
+    const {id,about, brandName, price, imagesUrls, name,size} = route.params.product;
     const {products} = route.params;
     console.log(route.params.product);
     return (
@@ -83,12 +83,12 @@ const [isColorClicked,setIsColorClicked] = useState(false);
                                 })}>
                                 <View>
                                     {
-                                        about !== item.about ?
+                                        id !== item.id ?
                                             <ProductCard isInCatalog={true} product={item} isRowView={false}/>
                                             : null}
                                 </View>
                             </TouchableWithoutFeedback>}
-                        keyExtractor={item => item.name}
+                        keyExtractor={item => item.id}
                     />
                 </View>
             </ScrollView>
