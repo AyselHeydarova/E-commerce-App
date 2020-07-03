@@ -22,6 +22,65 @@ export const getData = async (category="isNew") => {
         console.log('error', e)
     }
     return products;
+}
+//   console.log("allData db", allData);
+//   return allData;
+
+// return allData
+//   let innerData = [];
+
+//   for (let key in allCategories) {
+//     let dividedByGender = allCategories[key];
+//     for (let item in dividedByGender) {
+//       innerData.push(...dividedByGender[item]);
+//     }
+//   }
+//   setAllData(innerData);
+// };
+export const getData = async (value) => {
+  const products = [];
+  try {
+    const ref = firebase
+      .firestore()
+      .collection("products")
+      .where("tags", "array-contains", `${value}`);
+
+    const productsSnap = await ref.get();
+    productsSnap.forEach((product) => {
+      const data = product.data();
+      products.push({
+        id: product.id,
+        ...data,
+      });
+    });
+    console.log(products);
+  } catch (e) {
+    console.log("error", e);
+  }
+  return products;
+};
+
+export const filterDataByTag = async (value) => {
+    const products = [];
+    try {
+        const ref = firebase
+            .firestore()
+            .collection("products")
+            .where("tags", "array-contains-any", `${value}`);
+
+        const productsSnap = await ref.get();
+        productsSnap.forEach((product) => {
+            const data = product.data();
+            products.push({
+                id: product.id,
+                ...data,
+            });
+        });
+        console.log("filterDataByTag", products);
+    } catch (e) {
+        console.log(" filterDataByTag error", e);
+    }
+    return products
 };
 
 

@@ -97,8 +97,7 @@ const Home = connect(mapStateToProps, {getAllData})(
                         </View>
                     </View>
                 )}
-
-                <View style={styles.newItemsWrap}>
+  <View style={styles.newItemsWrap}>
                     <CustomText style={styles.categoryTitle} weight="bold">
                         New
                     </CustomText>
@@ -145,10 +144,11 @@ const Home = connect(mapStateToProps, {getAllData})(
                     {/*  )}*/}
                     {/*  keyExtractor={(item) => item.productType}*/}
                     {/*/>*/}
-                </View>
-            </ScrollView>
-        );
-    }
+
+        </View>
+      </ScrollView>
+    );
+  }
 );
 
 export default Home;
