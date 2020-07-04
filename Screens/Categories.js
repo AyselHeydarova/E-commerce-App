@@ -78,7 +78,7 @@ export const Categories = connect(mapStateToProps, { getAllData })(
         isWomanClicked: isWomanClicked,
       });
     };
-
+        console.log(allProducts)
     return (
       <View style={styles.container}>
         <StatusBar />

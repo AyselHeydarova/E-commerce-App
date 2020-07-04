@@ -8,9 +8,13 @@ export const BottomModal = ({name,children,height}) => {
 
     return (
         <View style={[styles.container,{height:height||400,}]}>
-            <View style={styles.line}/>
-            <CustomText weight={'bold'} style={styles.title}>{name} </CustomText>
-            {children}
+           <View style={styles.headerContainer}>
+               <View style={styles.line}/>
+               <CustomText weight={'bold'} style={styles.title}>{name} </CustomText>
+           </View>
+            <View style={styles.bodyContainer}>
+                {children}
+            </View>
 
         </View>
     );
@@ -28,6 +32,17 @@ const styles = StyleSheet.create({
         position:"absolute",
         bottom:0
 
+    },
+    bodyContainer:{
+        width: '100%',
+        alignItems: "center",
+
+    },
+    headerContainer:{
+        width: '100%',
+        alignItems: "center",
+        position:"absolute",
+        top:20
     },
     line: {
         width: 70,

@@ -1,31 +1,68 @@
 import * as firebase from "firebase";
-import "./firebase";
-// import {products} from "../DummyData/data";
+import './firebase'
 
-// export const domain = "https://my-project-aysel.firebaseio.com/";
+
+export const getData = async (category,gender) => {
+    const products = [];
+    try {
+        const ref = firebase.firestore().collection("products")
+            .where("tags", 'array-contains', category)
+            .where("gender" , gender===undefined?"in":"==" , gender===undefined?["men","women"]:gender)
+
+
+        const productsSnap = await ref.get();
+        productsSnap.forEach((product) => {
+            const data = product.data();
+            products.push({
+                id: product.id,
+                ...data
+            })
+        });
+    } catch (e) {
+        console.log('error', e)
+    }
+    return products;
+};
+export const getOnSaleData = async (sale) => {
+    const saleProducts = [];
+    try {
+        const ref = firebase.firestore().collection("products")
+            .where("tags", 'array-contains', sale);
+
+        const productsSnap = await ref.get();
+        productsSnap.forEach((product) => {
+            const data = product.data();
+            saleProducts.push({
+                id: product.id,
+                ...data
+            })
+        });
+    } catch (e) {
+        console.log('error', e)
+    }
+    return saleProducts;
+};
+// export const getNewData = async (isNew) => {
+//     const newProducts = [];
+//     try {
+//         const ref = firebase.firestore().collection("products")
+//             .where("tags", 'array-contains', isNew);
 //
-// export const getdbData = async () => {
-// const allData = await fetch(`${domain}/categories.json`, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   }).then((data) => data.json());
-
-//   console.log("allData db", allData);
-//   return allData;
-
-// return allData
-//   let innerData = [];
-
-//   for (let key in allCategories) {
-//     let dividedByGender = allCategories[key];
-//     for (let item in dividedByGender) {
-//       innerData.push(...dividedByGender[item]);
+//         const productsSnap = await ref.get();
+//         productsSnap.forEach((product) => {
+//             const data = product.data();
+//             newProducts.push({
+//                 id: product.id,
+//                 ...data
+//             })
+//         });
+//     } catch (e) {
+//         console.log('error', e)
 //     }
-//   }
-//   setAllData(innerData);
+//     return newProducts;
 // };
+<<<<<<< HEAD
+=======
 export const getData = async (value) => {
   const products = [];
   try {
@@ -48,6 +85,7 @@ export const getData = async (value) => {
   }
   return products;
 };
+>>>>>>> master
 
 export const setUserFB = async () => {
   const data = {
@@ -80,31 +118,33 @@ export const setUserFB = async () => {
 };
 
 export const filterDataByTag = async (value) => {
+
   const products = [];
   try {
     const ref = firebase
       .firestore()
       .collection("products")
       .where("tags", "array-contains", `${value}`);
-
-    const productsSnap = await ref.get();
-    productsSnap.forEach((product) => {
-      const data = product.data();
-      products.push({
-        id: product.id,
-        ...data,
-      });
-    });
-    console.log("filterDataByTag", products);
-  } catch (e) {
-    console.log(" filterDataByTag error", e);
-  }
-  return products;
+  
+        const productsSnap = await ref.get();
+        productsSnap.forEach((product) => {
+            const data = product.data();
+            products.push({
+                id: product.id,
+                ...data,
+            });
+        });
+        console.log("filterDataByTag", products);
+    } catch (e) {
+        console.log(" filterDataByTag error", e);
+    }
+    return products
 };
+
 
 filterDataByTag("new");
 
-// console.log("filtered", filtered);
+
 
 // let  db = firebase.firestore();
 // products.forEach(function(product) {
