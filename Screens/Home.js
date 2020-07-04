@@ -16,7 +16,7 @@ import {getAllData, getAllProductData, getAllProductDataCat} from "../store/prod
 import {connect} from "react-redux";
 
 import banner from "../assets/Small_banner.png";
-import {newProducts, onSale} from "../Utils/DataSelection";
+
 
 const mapStateToProps = (state) => ({
     allProducts: getAllProductDataCat(state),
@@ -27,6 +27,25 @@ const Home = connect(mapStateToProps, {getAllData})(
         // const [newwProducts, setNewwProducts] = useState([]);
         const newwProducts = Object.entries(allProducts);
 
+
+const Home = connect(mapStateToProps, { getAllData })(
+  ({ getAllData, navigation, newProducts, onSale, dresses }) => {
+    const [showSale, setShowSale] = useState(false);
+    const [newAysel, setNewProducts] = useState([]);
+
+    // const newHandle = async (data) => {
+    //   try {
+    //     const newwss = await getAllData(data);
+    //     console.log("newwss", newwss);
+    //   } catch (error) {
+    //     console.log("newww err", error);
+    //   }
+    // };
+
+    // const womenNew = async () => await filterDataByTag(["new", "women"]);
+    // const New = async () => await filterDataByTag("new");
+    // const women = async () => await filterDataByTag("women");
+    // const alllData = async (value) => await getAllData("new");
         const handleNewProducts = async () => {
             try {
                 const response = await getAllData();
@@ -37,13 +56,7 @@ const Home = connect(mapStateToProps, {getAllData})(
             }
         }
 
-        useEffect(() => {
 
-            handleNewProducts();
-
-        }, []);
-
-        console.log('newProducts', newwProducts[0]);
         return (
             <ScrollView style={styles.container}>
                 {showSale ? (
