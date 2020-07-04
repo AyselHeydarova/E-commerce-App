@@ -1,2 +1,2 @@
-export {ProfileStack} from "./ProfileStack";
-export {ShopStack} from "./ShopStack";
+export { ProfileStack } from "./ProfileStack";
+export { ShopStack } from "./ShopStack";

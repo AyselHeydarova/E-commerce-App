@@ -3,14 +3,16 @@ import { AsyncStorage } from "react-native";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 
-import { authReducer, MODULE_NAME as authModuleName } from "./auth";
+// import { authReducer, MODULE_NAME as authModuleName } from "./auth";
 import { listsReducer, updateListContent } from "./lists";
 import { productsReducer } from "./products";
+import { authReducer } from "./users";
 
 AsyncStorage.clear();
+
 const rootReducer = combineReducers({
   lists: listsReducer,
-  [authModuleName]: authReducer,
+  auth: authReducer,
   products: productsReducer,
 });
 
@@ -50,6 +52,5 @@ store.subscribe(() => {
   console.log(store.getState());
 });
 AsyncStorage.clear();
-
 
 export default store;
