@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import { View, StyleSheet, Image } from "react-native";
 import { CustomText } from "./CustomText";
 import { COLORS } from "../style/colors";
@@ -51,8 +51,7 @@ export const ProductCard = ({
     onSale,
   } = product;
 
-  console.log("product firestore", product);
-
+  // const [salePrice,setSalePrice]=useState(0);
   const allRatingsArray = rating.map((obj) => {
     for (let key in obj) {
       const value = obj[key];
@@ -76,7 +75,10 @@ export const ProductCard = ({
     { opacity: count === 0 ? 0.5 : 1 },
   ];
 
-  // const salePrice = Math.floor((+price * (100 - +onSale.percentage)) / 100);
+
+
+    const salePrice =isOnSale? Math.floor((+price * (100 - +onSale.discount)) / 100):null;
+
 
   return (
     <View style={cardWrapperStyles}>
@@ -86,7 +88,7 @@ export const ProductCard = ({
         {isOnSale ? (
           <ProductTag
             style={{ ...styles.tag, backgroundColor: COLORS.PRIMARY }}
-            // title={`${onSale.percentage}%`}
+            title={`${onSale.discount}%`}
           />
         ) : null}
         <Image
@@ -116,7 +118,7 @@ export const ProductCard = ({
             maxStars={5}
             rating={averageRating}
           />
-          <CustomText style={{ color: COLORS.GRAY, marginTop: 10 }}>
+          <CustomText style={styles.ratingCount}>
             {`(${totalRatingCount})`}
           </CustomText>
         </View>
@@ -143,18 +145,18 @@ export const ProductCard = ({
             weight="bold"
             style={{
               color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
-              // textDecorationLine: isOnSale ? "line-through" : null,
+              textDecorationLine: isOnSale ? "line-through" : null,
             }}
           >
             {`${price}$`}
           </CustomText>
-          {/*{isOnSale ? (*/}
-          {/*  <CustomText*/}
-          {/*    weight="bold"*/}
-          {/*    style={{ color: COLORS.SALE, marginLeft: 10 }}*/}
-          {/*  >{`${salePrice}$`}*/}
-          {/*  </CustomText>*/}
-          {/*) : null}*/}
+          {isOnSale ? (
+            <CustomText
+              weight="bold"
+              style={{ color: COLORS.SALE, marginLeft: 10 }}
+            >{`${salePrice}$`}
+            </CustomText>
+          ) : null}
         </View>
       </View>
 
@@ -181,7 +183,7 @@ const styles = StyleSheet.create({
     zIndex: 3,
   },
   description: {
-    padding: 15,
+    padding: 10,
     // width: "70%",
     paddingTop: 0,
     justifyContent: "space-between",
@@ -216,4 +218,9 @@ const styles = StyleSheet.create({
   priceRow: {
     flexDirection: "row",
   },
+  ratingCount:{
+    color: COLORS.GRAY,
+    marginTop: 10,
+    marginLeft:15
+  }
 });

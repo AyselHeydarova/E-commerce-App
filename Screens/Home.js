@@ -12,38 +12,51 @@ import {Btn} from "../components/Btn";
 import {ProductCard} from "../components/ProductCard";
 import {COLORS} from "../style/colors";
 import {CustomText} from "../components/CustomText";
-import {getAllData, getAllProductData, getAllProductDataCat} from "../store/products";
+import {
+    getAllData,
+    selectAllProductData,
+    selectSaleProductData,
+    getOnSaleProducts,
+    selectNewProductData,
+    getNewData
+} from "../store/products";
 import {connect} from "react-redux";
 
 import banner from "../assets/Small_banner.png";
-import {newProducts, onSale} from "../Utils/DataSelection";
+// import {newProducts, onSale} from "../Utils/DataSelection";
 
 const mapStateToProps = (state) => ({
-    allProducts: getAllProductDataCat(state),
+    allProducts: selectAllProductData(state),
+    saleProducts: selectSaleProductData(state),
+    newProducts: selectNewProductData(state),
 });
-const Home = connect(mapStateToProps, {getAllData})(
-    ({getAllData, allProducts, navigation}) => {
+const Home = connect(mapStateToProps, {getAllData,getOnSaleProducts,getNewData})(
+    ({getAllData,getNewData,newProducts, allProducts,saleProducts,getOnSaleProducts, navigation}) => {
         const [showSale, setShowSale] = useState(false);
-        // const [newwProducts, setNewwProducts] = useState([]);
-        const newwProducts = Object.entries(allProducts);
+
+
 
         const handleNewProducts = async () => {
             try {
-                const response = await getAllData();
-                console.log(response)
-                // setNewwProducts(allProducts);
+                await getNewData("isNew");
+            } catch (error) {
+                console.log("getNewData", error);
+            }
+        };
+       const handleOnSaleProducts = async () => {
+           setShowSale(true);
+            try {
+                await getOnSaleProducts("sale");
             } catch (error) {
                 console.log("getAllData", error);
             }
-        }
+           console.log(saleProducts)
+        };
 
         useEffect(() => {
-
             handleNewProducts();
 
         }, []);
-
-        console.log('newProducts', newwProducts[0]);
         return (
             <ScrollView style={styles.container}>
                 {showSale ? (
@@ -61,7 +74,7 @@ const Home = connect(mapStateToProps, {getAllData})(
                                 contentContainerStyle={{
                                     paddingTop: 15,
                                 }}
-                                data={onSale}
+                                data={saleProducts}
                                 renderItem={({item}) => (
                                     <TouchableOpacity
                                         onPress={() =>
@@ -92,7 +105,7 @@ const Home = connect(mapStateToProps, {getAllData})(
                                 bgColor={COLORS.PRIMARY}
                                 height={36}
                                 width={160}
-                                onPress={() => setShowSale(true)}
+                                onPress={() => handleOnSaleProducts()}
                             />
                         </View>
                     </View>
@@ -104,46 +117,31 @@ const Home = connect(mapStateToProps, {getAllData})(
                     <CustomText style={styles.description}>
                         You've never seen it before
                     </CustomText>
-                    {
-                        newwProducts.map((item) => (
-                                <TouchableOpacity
-                                    onPress={() =>
-                                        navigation.navigate("SingleProduct", {product: item[1]})
-                                    }
-                                >
-                                    <ProductCard
-                                        product={item[1]}
-                                        isNew={true}
-                                        isInCatalog={true}
-                                        navigation={navigation}
-                                    />
-                                </TouchableOpacity>
 
-                            )
-                        )
-                    }
-                    {/*<FlatList*/}
-                    {/*  horizontal*/}
-                    {/*  contentContainerStyle={{*/}
-                    {/*    paddingTop: 15,*/}
-                    {/*  }}*/}
-                    {/*  data={newwProducts}*/}
-                    {/*  renderItem={({ item }) => (*/}
-                    {/*    <TouchableOpacity*/}
-                    {/*      onPress={() =>*/}
-                    {/*        navigation.navigate("SingleProduct", { product: item })*/}
-                    {/*      }*/}
-                    {/*    >*/}
-                    {/*      <ProductCard*/}
-                    {/*        product={item}*/}
-                    {/*        isNew={true}*/}
-                    {/*        isInCatalog={true}*/}
-                    {/*        navigation={navigation}*/}
-                    {/*      />*/}
-                    {/*    </TouchableOpacity>*/}
-                    {/*  )}*/}
-                    {/*  keyExtractor={(item) => item.productType}*/}
-                    {/*/>*/}
+                    <FlatList
+                      horizontal
+                      contentContainerStyle={{
+                        paddingTop: 15,
+                      }}
+                      data={newProducts}
+                      renderItem={({ item }) => (
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate("SingleProduct", { product:item
+
+                            })
+                          }
+                        >
+                          <ProductCard
+                            product={item}
+                            isNew={true}
+                            isInCatalog={true}
+                            navigation={navigation}
+                          />
+                        </TouchableOpacity>
+                      )}
+                      keyExtractor={item => item.id}
+                    />
 
         </View>
       </ScrollView>

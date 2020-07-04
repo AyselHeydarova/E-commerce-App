@@ -4,10 +4,11 @@ import { View, StyleSheet } from "react-native";
 import { Btn } from "./Btn";
 import { GLOBAL_STYLES } from "../style/globalStyles";
 
-export const ActionModal = ({ btnName }) => {
+export const ActionModal = ({ btnName, onPress }) => {
   return (
     <View style={styles.btnBox}>
       <Btn
+          onPress={onPress}
         btnName={btnName}
         bgColor={COLORS.PRIMARY}
         height={48}

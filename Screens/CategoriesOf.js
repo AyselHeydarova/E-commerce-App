@@ -24,9 +24,10 @@ export const CategoriesOf = connect(mapStateToProps, {getAllData})(
         const {isWomanClicked, isOnSale, categoryName} = route.params;
         const categoriesMen = ["Shorts", "Trousers", "T-shirts", "Shoes"];
         const categoriesWomen = ["Dresses", "Shorts", "Skirts", "Trousers", "T-shirts", "Shoes"];
+        const gender = isWomanClicked ?  "women" : "men";
         const handleCategory = async (category) => {
             try {
-                await getAllData(category);
+                await getAllData(category,gender);
             } catch (error) {
                 console.log("getAllData", error);
             }

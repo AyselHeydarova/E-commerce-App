@@ -13,12 +13,10 @@ export const SelectSize = ({sizes}) => {
         XL: false,
     });
     const handleSize = (size) => {
-        setIsClicked({...false, [size]:!isClicked[`${size}`]});
+        setIsClicked({...false, [size]: !isClicked[`${size}`]});
 
     };
-    console.log(Object.keys(sizes))
-    // const sizeNames=
-     const sizess = ["XS", "S", "M", "L", "XL"];
+    const sizess = [ "S", "M", "L"];
     return (
         <View style={styles.container}>
             <View style={styles.line}/>
