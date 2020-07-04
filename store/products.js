@@ -48,7 +48,7 @@ export const setAppProducts = (payload) => ({
   payload,
 });
 
-export const getAllData = (value) => async (dispatch, getState) => {
+export const getAllData = (value="isNew") => async (dispatch, getState) => {
   try {
     const categories = await getData(value);
     dispatch(setAppProducts(categories));

@@ -39,103 +39,151 @@ export const Catalog = connect(mapStateToProps, { getAllData })(
       lowestToHigh: false,
       highestToLow: false,
     });
-    const [isSortingType, setIsSortingType] = useState("Popular");
-    const handleSorting = (name, sortOptionBool) => {
-      setIsSortingType(name);
-      setSortOption({
-        ...false,
-        [sortOptionBool]: !sortOption[`${sortOptionBool}`],
-      });
-    };
-    const sortOptions = [
-      {
-        sortingName: "Popular",
-        sortOptionBool: "Popular",
-      },
-      {
-        sortingName: "Newest",
-        sortOptionBool: "Newest",
-      },
-      {
-        sortingName: "Customer review",
-        sortOptionBool: "Customer_review",
-      },
-      {
-        sortingName: "Price: lowest to high",
-        sortOptionBool: "lowestToHigh",
-      },
-      {
-        sortingName: "Price: highest to low",
-        sortOptionBool: "highestToLow",
-      },
-    ];
-    // const saleProducts = [];
-    // const everything = store.getState();
-    // const allCategories = everything.products.categories;
-    // const allCategoryNames = Object.keys(allCategories);
-    // if (isWomanClicked) {
-    //     for (let category of allCategoryNames) {
-    //         const products = allCategories[`${category}`].women;
-    //         for (let product of products) {
-    //             saleProducts.push(product);
-    //         }
-    //     }
-    // } else {
-    //     for (let category of checkMen(allCategories, allCategoryNames)) {
-    //         const products = allCategories[`${category}`].men;
-    //         for (let product of products) {
-    //             saleProducts.push(product);
-    //         }
-    //     }
-    // }
-    // const onSale = saleProducts.filter(
-    //     (product) => product.onSale.isOnSale === true
-    // );
-    // const chosenProducts = isWomanClicked ? products.women : products.men;
-    //
-    // const newProducts = chosenProducts.filter(
-    //     (product) => {
-    //         console.log('typeof product.isNew', product.isNew)
-    //         console.log(product.isNew === true)
-    //         return product.isNew === true
-    //     }
-    // );
-    // const onSale = chosenProducts.filter(
-    //     (product) => product.onSale.isOnSale === true
-    // );
-    // const finalProducts = isOnSale ? onSale : categoryName === "New" ? newProducts : chosenProducts;
+        const sortOptions = [
+            {
+                sortingName: "Popular",
+                sortOptionBool: "Popular",
+            },
+            {
+                sortingName: "Newest",
+                sortOptionBool: "Newest",
+            },
+            {
+                sortingName: "Customer review",
+                sortOptionBool: "Customer_review",
+            },
+            {
+                sortingName: "Price: lowest to high",
+                sortOptionBool: "lowestToHigh",
+            },
+            {
+                sortingName: "Price: highest to low",
+                sortOptionBool: "highestToLow",
+            },
 
-    console.log("products", products);
+        ];
+        const gender = isWomanClicked ?  "women" : "men";
+        const productsSortedByGender = products.filter((product)=>product.tags.includes(gender));
+        const [isSortingType, setIsSortingType] = useState("Popular");
+        const handleSorting = (name, sortOptionBool) => {
+        setIsSortingType(name);
+        setSortOption({...false, [sortOptionBool]: !sortOption[`${sortOptionBool}`]})
+    };
+
+
+
+
+    const newProducts = productsSortedByGender.filter(
+        (product) => product.tags.includes("new") || product.tags.includes("isNew")
+    );
+        console.log(newProducts);
+    // const onSale = products.filter(
+
+     const finalProducts =  categoryName === "New" ? newProducts : productsSortedByGender;
+
     const [isListView, setIsListView] = useState(true);
 
     const numberOfColums = isListView ? 1 : 2;
     const handleProductCard = (item) => {
-      navigation.navigate("SingleProductScreen", {
-        product: item,
-        products: products,
-      });
+        navigation.navigate("SingleProductScreen", {
+            product: item,
+            products: finalProducts
+        })
     };
     return (
-      <View style={styles.container}>
-        <StatusBar />
-        <TouchableOpacity
-          style={styles.backIcon}
-          onPress={() => navigation.goBack()}
-        >
-          <Back />
-        </TouchableOpacity>
-        <CustomText weight={"bold"} style={styles.title}>
-          {isOnSale ? "Sale" : name}
-        </CustomText>
-        <View style={styles.filters}>
-          <TouchableOpacity
-            style={styles.filter}
-            onPress={() =>
-              navigation.navigate("Filters", {
-                finalProducts: finalProducts,
-              })
-            }
-          >
+        <View style={styles.container}>
+            <StatusBar/>
+            <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
+                <Back/>
+            </TouchableOpacity>
+            <CustomText weight={'bold'} style={styles.title}>
+                {isOnSale ? "Sale" : name}
+            </CustomText>
+            <View style={styles.filters}>
+                <TouchableOpacity style={styles.filter}
+                                  onPress={() => navigation.navigate("Filters", {
+                                      finalProducts: finalProducts
+                                  })}>
+{/*                    <Filter width={20} height={20}/>*/}
+{/*                    <CustomText>*/}
+{/*                        Filters*/}
+{/*                    </CustomText>*/}
+{/*                </TouchableOpacity>*/}
+{/*                <TouchableOpacity style={styles.filter} onPress={() => setIsBottomModalOpen(!isBottomModalOpen)}>*/}
+{/*                    <PriceArrows width={20} height={20}/>*/}
+{/*                    <CustomText>*/}
+{/*                        {isSortingType}*/}
+{/*                    </CustomText>*/}
+{/*                </TouchableOpacity>*/}
+{/*                <TouchableOpacity style={styles.filter} onPress={() => setIsListView(!isListView)}>*/}
+{/*                    {isListView ?*/}
+{/*                        <ListViewChanger width={20} height={20}/>*/}
+{/*                        :*/}
+{/*                        <CardView width={20} height={20}/>*/}
+{/*                    }*/}
+{/*                </TouchableOpacity>*/}
+{/*            </View>*/}
+{/*            {isListView ?*/}
+{/*                <FlatList*/}
+{/*                    data={finalProducts}*/}
+{/*                    renderItem={({item}) => (*/}
+{/*                        <TouchableOpacity*/}
+{/*                            onPress={*/}
+{/*                                () =>*/}
+{/*                                handleProductCard(item)*/}
+{/*                            }*/}
+{/*                            activeOpacity={0.9}*/}
+{/*                            style={styles.card}>*/}
+{/*                            <ProductCard product={item} isInCatalog={true}/>*/}
+
+{/*                        </TouchableOpacity>*/}
+{/*                    )}*/}
+{/*                    keyExtractor={item => item.name}*/}
+{/*                />*/}
+{/*                :*/}
+{/*                <View style={styles.cardContainer}>*/}
+{/*                    <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>*/}
+{/*                        {finalProducts.map((item) => (*/}
+{/*                            <TouchableOpacity*/}
+{/*                                onPress={() => handleProductCard(item)}*/}
+{/*                                activeOpacity={0.9}*/}
+{/*                                style={{marginLeft: 1, marginBottom: 15}}*/}
+{/*                                key={`${item.name}-${Date.now()}`}>*/}
+
+{/*                                <ProductCard isInCatalog={true} product={item} isRowView={isListView}/>*/}
+
+{/*                            </TouchableOpacity>*/}
+{/*                        ))}*/}
+{/*                    </ScrollView>*/}
+{/*                </View>*/}
+{/*=======*/}
+{/*      navigation.navigate("SingleProductScreen", {*/}
+{/*        product: item,*/}
+{/*        products: products,*/}
+{/*      });*/}
+{/*    };*/}
+{/*    return (*/}
+{/*      <View style={styles.container}>*/}
+{/*        <StatusBar />*/}
+{/*        <TouchableOpacity*/}
+{/*          style={styles.backIcon}*/}
+{/*          onPress={() => navigation.goBack()}*/}
+{/*        >*/}
+{/*          <Back />*/}
+{/*        </TouchableOpacity>*/}
+{/*        <CustomText weight={"bold"} style={styles.title}>*/}
+{/*          {isOnSale ? "Sale" : name}*/}
+{/*        </CustomText>*/}
+{/*        <View style={styles.filters}>*/}
+{/*          <TouchableOpacity*/}
+{/*            style={styles.filter}*/}
+{/*            onPress={() =>*/}
+{/*              navigation.navigate("Filters", {*/}
+{/*                finalProducts: finalProducts,*/}
+{/*              })*/}
+{/*>>>>>>> master*/}
+{/*            }*/}
+{/*          >*/}
             <Filter width={20} height={20} />
             <CustomText>Filters</CustomText>
           </TouchableOpacity>

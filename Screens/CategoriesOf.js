@@ -19,76 +19,70 @@ import { getData } from "../API";
 const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),
 });
-export const CategoriesOf = connect(mapStateToProps, { getAllData })(
-  ({ getAllData, allProducts, route, navigation }) => {
-    const { isWomanClicked, isOnSale, categoryName } = route.params;
-    const categoriesMen = ["Shorts", "Trousers", "T-shirts", "Shoes"];
-    const categoriesWomen = [
-      "Dresses",
-      "Shorts",
-      "Skirts",
-      "Trousers",
-      "T-shirts",
-      "Shoes",
-    ];
+export const CategoriesOf = connect(mapStateToProps, {getAllData})(
+    ({getAllData, allProducts, route, navigation}) => {
+        const {isWomanClicked, isOnSale, categoryName} = route.params;
+        const categoriesMen = ["Shorts", "Trousers", "T-shirts", "Shoes"];
+        const categoriesWomen = ["Dresses", "Shorts", "Skirts", "Trousers", "T-shirts", "Shoes"];
+        const handleCategory = async (category) => {
+            try {
+                await getAllData(category);
+            } catch (error) {
+                console.log("getAllData", error);
+            }
+            navigation.navigate("Catalog", {
+                name: category,
+                isWomanClicked: isWomanClicked,
+                categoryName: categoryName,
+                isOnSale: isOnSale
+            })
+        };
+        return (
+            <View style={styles.container}>
+                <StatusBar/>
+                <View style={styles.header}>
+                    <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
+                        <Back/>
+                    </TouchableOpacity>
+                    <CustomText weight={'bold'} style={styles.title}>
+                        Categories
+                    </CustomText>
+                </View>
+                <Btn
+                    height={50}
+                    width={335}
+                    bgColor={COLORS.PRIMARY}
+                    btnName={"VIEW ALL ITEMS"}
+                    titleStyle={{fontSize: 18}}
+                />
+                <CustomText weight={'bold'} style={styles.choose}>
+                    Choose Category
+                </CustomText>
+                <View style={{marginTop: 60}}>
+                    <FlatList
+                        data={isWomanClicked ? categoriesWomen : categoriesMen}
+                        renderItem={({item}) => (
+                            <TouchableOpacity style={styles.category}
 
-    const handleCategory = async (category) => {
-      try {
-        await getAllData(category);
-      } catch (error) {
-        console.log("getAllData", error);
-      }
-      navigation.navigate("Catalog", {
-        name: category,
-        isWomanClicked: isWomanClicked,
-        categoryName: categoryName,
-        isOnSale: isOnSale,
-      });
-    };
+                                              onPress={() => handleCategory(item)
 
-    return (
-      <View style={styles.container}>
-        <StatusBar />
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backIcon}
-            onPress={() => navigation.goBack()}
-          >
-            <Back />
-          </TouchableOpacity>
-          <CustomText weight={"bold"} style={styles.title}>
-            Categories
-          </CustomText>
-        </View>
-        <Btn
-          height={50}
-          width={335}
-          bgColor={COLORS.PRIMARY}
-          btnName={"VIEW ALL ITEMS"}
-          titleStyle={{ fontSize: 18 }}
-        />
-        <CustomText weight={"bold"} style={styles.choose}>
-          Choose Category
-        </CustomText>
-        <View style={{ marginTop: 60 }}>
-          <FlatList
-            data={isWomanClicked ? categoriesWomen : categoriesMen}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.category}
-                onPress={() => handleCategory(item)}
-              >
-                <CustomText style={styles.categoryText}>{item}</CustomText>
-              </TouchableOpacity>
-            )}
-            keyExtractor={(item) => item}
-          />
-        </View>
-      </View>
-    );
-  }
-);
+                                              }
+                            >
 
+                                <CustomText style={styles.categoryText}>
+                                    {item}
+                                </CustomText>
+                            </TouchableOpacity>
+
+                        )}
+                        keyExtractor={item => item}
+                    />
+                </View>
+
+
+            </View>
+        );
+    });
 const styles = StyleSheet.create({
   container: {
     flex: 1,
