@@ -42,11 +42,41 @@ export const getData = async (value) => {
         ...data,
       });
     });
-    console.log(products);
+    console.log("products getData", products);
   } catch (e) {
     console.log("error", e);
   }
   return products;
+};
+
+export const setUserFB = async () => {
+  const data = {
+    name: "aysel",
+    email: "aysel.mail",
+    password: "345",
+  };
+  try {
+    const ref = firebase
+      .firestore()
+      .collection("users")
+      .doc("12345")
+      .set({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      })
+      .catch((error) => {
+        console.log(
+          "Something went wrong with added user to firestore: ",
+          error
+        );
+      });
+
+    // const userSnap = await ref.get();
+    // console.log("userSnap getData", userSnap);
+  } catch (e) {
+    console.log("error", e);
+  }
 };
 
 export const filterDataByTag = async (value) => {
@@ -55,7 +85,7 @@ export const filterDataByTag = async (value) => {
     const ref = firebase
       .firestore()
       .collection("products")
-      .where("tags", "array-contains-any", `${value}`);
+      .where("tags", "array-contains", `${value}`);
 
     const productsSnap = await ref.get();
     productsSnap.forEach((product) => {
@@ -71,6 +101,10 @@ export const filterDataByTag = async (value) => {
   }
   return products;
 };
+
+filterDataByTag("new");
+
+// console.log("filtered", filtered);
 
 // let  db = firebase.firestore();
 // products.forEach(function(product) {

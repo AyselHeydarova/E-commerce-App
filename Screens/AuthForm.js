@@ -1,106 +1,135 @@
 import React, { useState } from "react";
-import { StyleSheet, View, KeyboardAvoidingView,Button, Text, Image } from "react-native";
+import {
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  Text,
+  Image,
+} from "react-native";
 import { connect } from "react-redux";
 
-import {
-  SignUp,
-  selectAuthData,
-  SignIn
-} from "../store/auth"
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Input } from "../components/Field";
-import rightIcon from '../assets/rightArrow.png'
+import rightIcon from "../assets/rightArrow.png";
 import { Btn } from "../components/Btn";
-
+import { COLORS } from "../style/colors";
+import { GLOBAL_STYLES } from "../style/globalStyles";
+import { CustomText } from "../components/CustomText";
+import {
+  signupUser,
+  signIn,
+  selectAuthStatus,
+  selectAuthUserID,
+  logOut,
+} from "../store/users";
 
 const mapStateToProps = (state) => ({
-  authData: selectAuthData(state),
+  authStatus: selectAuthStatus(state),
+  userID: selectAuthUserID(state),
 });
 
 export const AuthForm = connect(mapStateToProps, {
-  SignUp, SignIn
-})(({ SignUp, authData, SignIn, forSignUp=true}) => {
-  
+  signupUser,
+  signIn,
+  logOut,
+})(({ signIn, signupUser, authStatus, userID, logOut }) => {
+  const [isLogin, setIsLogin] = useState(false);
   const [fields, setFields] = useState({
-    name:"",
+    username: "",
     email: "",
     password: "",
   });
-  const {userID}= authData;
-  const fieldChangeHandler = (name, value) =>
-    {
-      setFields((fields) => ({
+
+  const fieldChangeHandler = (name, value) => {
+    setFields((fields) => ({
       ...fields,
-      [name]: value,
+      [name]: value.trim(),
     }));
-    console.log('fields now: ',fields);
-  }
-
-  const submitSignUp = () => {
-    SignUp(fields.email, fields.password, fields.name);
-  };
-  const submitSignIn = () => {
-    SignIn(fields.email, fields.password);
   };
 
-  
   return (
     <View style={styles.container}>
-        {userID ? (
-          <Text>authorized</Text>
-        ) : forSignUp? (
-            <>
-          <View style={styles.signUpContainer}>
-            <Input name={'Name'} onChangeHandler={(value)=>fieldChangeHandler('name',value)} value={fields.name}/>
-            <Input name={'Email'} onChangeHandler={(value)=>fieldChangeHandler('email',value)} value={fields.email}/>
-            <Input name={'Password'} onChangeHandler={(value)=>fieldChangeHandler('password',value)} value={fields.password}/>
-            <TouchableOpacity style={styles.redirectTo}>
-              <Text style={styles.toSignIntext}>Already have an account?</Text>
-              <Image style={{width:15, height:6}} source={{uri:'../../assets/rightArrow.png'}}/>
-            </TouchableOpacity>
-          </View>
-            <TouchableOpacity onPress={submitSignUp}>
-              <Btn btnName="SIGN UP" width={'100%'} height={48} bgColor={'#EF3651'} titleStyle={{color:'#F5F5F5'}} />
-            </TouchableOpacity>
+      <CustomText weight="bold" style={{ fontSize: 34, marginBottom: 70 }}>
+        {isLogin ? "Login" : "Sign up"}
+      </CustomText>
 
-          </>
-        ):(
-          <View style={styles.signInContainer}>
-            <Input name={'Email'} onChangeHandler={(value)=>fieldChangeHandler('email',value)} value={fields.email}/>
-            <Input name={'Password'} onChangeHandler={(value)=>fieldChangeHandler('password',value)} value={fields.password}/>
-            <TouchableOpacity style={styles.redirectTo}>
-              <Text style={styles.toSignIntext}>Forgot your password?</Text>
-              <Image style={{width:15, height:6}} source={{uri:'../../assets/rightArrow.png'}}/>
-            </TouchableOpacity>
+      {!isLogin && (
+        <Input
+          name={"Name"}
+          onChangeHandler={(value) => fieldChangeHandler("username", value)}
+          value={fields.username}
+        />
+      )}
 
-            <TouchableOpacity onPress={submitSignIn}>
-              <Btn btnName="LOGIN" width={'100%'} height={48} bgColor={'#EF3651'} titleStyle={{color:'#F5F5F5'}} />
-            </TouchableOpacity>
-          </View>
-        )}
+      <Input
+        name={"Email"}
+        onChangeHandler={(value) => fieldChangeHandler("email", value)}
+        value={fields.email}
+        type="email"
+      />
+      <Input
+        name={"Password"}
+        onChangeHandler={(value) => fieldChangeHandler("password", value)}
+        value={fields.password}
+      />
+
+      {!isLogin && (
+        <TouchableOpacity
+          style={styles.redirectTo}
+          onPress={() => setIsLogin(true)}
+        >
+          <CustomText style={styles.toSignIntext}>
+            Already have an account?
+          </CustomText>
+          <Image
+            style={{ width: 15, height: 6 }}
+            source={{ uri: "../../assets/rightArrow.png" }}
+          />
+        </TouchableOpacity>
+      )}
+
+      <Btn
+        btnName={isLogin ? "LOGIN" : "SIGN UP"}
+        width={"100%"}
+        height={48}
+        bgColor={COLORS.PRIMARY}
+        titleStyle={{ color: "#F5F5F5" }}
+        onPress={() => {
+          isLogin ? signIn(fields) : signupUser(fields);
+        }}
+      />
+      <Btn
+        btnName="Log Out"
+        width={"100%"}
+        height={48}
+        bgColor="black"
+        titleStyle={{ color: "#F5F5F5" }}
+        style={{ marginTop: 30 }}
+        onPress={() => logOut()}
+      />
     </View>
   );
 });
 
-const styles=StyleSheet.create({
-  container:{
-    paddingHorizontal:15
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: GLOBAL_STYLES.PADDING,
+    backgroundColor: COLORS.BACKGROUND,
   },
-  signUpContainer:{
-    width:'100%',
-    alignItems:'center',
-
+  signUpContainer: {
+    width: "100%",
+    alignItems: "center",
   },
-  redirectTo:{
-    flexDirection:'row',
-    width:'100%',
-    justifyContent:'flex-end',
-    alignItems:'center',
-    marginBottom:25
+  redirectTo: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginBottom: 25,
   },
-  toSignIntext:{
-    color:'white',
-    marginRight:8
-
-  }
-})
+  toSignIntext: {
+    color: "white",
+    marginRight: 8,
+  },
+});

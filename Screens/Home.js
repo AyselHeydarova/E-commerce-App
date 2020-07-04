@@ -22,7 +22,7 @@ import {
 import { connect } from "react-redux";
 
 import banner from "../assets/Small_banner.png";
-import { filterDataByTag } from "../API";
+import { filterDataByTag, getData } from "../API";
 
 const mapStateToProps = (state) => ({
   // newProducts: selectNewProducts(state),
@@ -32,6 +32,7 @@ const mapStateToProps = (state) => ({
 const Home = connect(mapStateToProps, { getAllData })(
   ({ getAllData, navigation, newProducts, onSale, dresses }) => {
     const [showSale, setShowSale] = useState(false);
+    const [newAysel, setNewProducts] = useState([]);
 
     // const newHandle = async (data) => {
     //   try {
@@ -52,10 +53,17 @@ const Home = connect(mapStateToProps, { getAllData })(
     // console.log("women", women);
     // console.log("alllData", alllData);
 
-    useEffect(() => {
-      getAllData();
-    }, []);
+    // useEffect(() => {
+    //   const response = async () => {
+    //     const answer = await getData("new");
 
+    //     console.log("answer", answer);
+
+    //     setNewProducts(answer);
+    //   };
+    // }, []);
+
+    // console.log("newProducts", newAysel);
     return (
       <ScrollView style={styles.container}>
         {showSale ? (
