@@ -1,17 +1,28 @@
 import * as firebase from "firebase";
-import "./firebase";
-// import {products} from "../DummyData/data";
+import './firebase'
 
-// export const domain = "https://my-project-aysel.firebaseio.com/";
-//
-// export const getdbData = async () => {
-// const allData = await fetch(`${domain}/categories.json`, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   }).then((data) => data.json());
 
+export const getData = async (category="isNew") => {
+    const products = [];
+    try {
+        const ref = firebase.firestore().collection("products")
+            .where("tags", 'array-contains', "isNew");
+        //   .where(`${gender}`,'in',["new","women"]   );
+        //    .where("tags",'array-contains', `${gender}`);
+
+        const productsSnap = await ref.get();
+        productsSnap.forEach((product) => {
+            const data = product.data();
+            products.push({
+                id: product.id,
+                ...data
+            })
+        });
+    } catch (e) {
+        console.log('error', e)
+    }
+    return products;
+}
 //   console.log("allData db", allData);
 //   return allData;
 
@@ -50,27 +61,28 @@ export const getData = async (value) => {
 };
 
 export const filterDataByTag = async (value) => {
-  const products = [];
-  try {
-    const ref = firebase
-      .firestore()
-      .collection("products")
-      .where("tags", "array-contains-any", `${value}`);
+    const products = [];
+    try {
+        const ref = firebase
+            .firestore()
+            .collection("products")
+            .where("tags", "array-contains-any", `${value}`);
 
-    const productsSnap = await ref.get();
-    productsSnap.forEach((product) => {
-      const data = product.data();
-      products.push({
-        id: product.id,
-        ...data,
-      });
-    });
-    console.log("filterDataByTag", products);
-  } catch (e) {
-    console.log(" filterDataByTag error", e);
-  }
-  return products;
+        const productsSnap = await ref.get();
+        productsSnap.forEach((product) => {
+            const data = product.data();
+            products.push({
+                id: product.id,
+                ...data,
+            });
+        });
+        console.log("filterDataByTag", products);
+    } catch (e) {
+        console.log(" filterDataByTag error", e);
+    }
+    return products
 };
+
 
 // let  db = firebase.firestore();
 // products.forEach(function(product) {

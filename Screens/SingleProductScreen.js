@@ -23,20 +23,14 @@ export const SingleProductScreen = ({ route, navigation }) => {
   const [isSizeClicked, setIsSizeClicked] = useState(false);
   const [isColorClicked, setIsColorClicked] = useState(false);
 
-  const {
-    about,
-    brandName,
-    price,
-    imagesUrls,
-    name,
-    size,
-  } = route.params.product;
-  const { products } = route.params;
-  console.log(route.params.product);
-  return (
-    <TouchableWithoutFeedback onPress={() => setIsSizeClicked(false)}>
-      <View style={styles.container}>
-        <ScrollView>
+    const {id,about, brandName, price, imagesUrls, name,size} = route.params.product;
+    const {products} = route.params;
+    console.log(route.params.product);
+    return (
+        <TouchableWithoutFeedback onPress={()=>setIsSizeClicked(false)}>
+            <View style={styles.container}>
+            <ScrollView>
+
           <TouchableOpacity
             style={styles.backIcon}
             onPress={() => navigation.goBack()}
@@ -80,60 +74,63 @@ export const SingleProductScreen = ({ route, navigation }) => {
             </View>
             <CustomText style={styles.clothName}>{name}</CustomText>
 
-            {/*<CustomText style={styles.typeText}>{name}</CustomText>*/}
-            <CustomText style={styles.descText}>{about}</CustomText>
+                    {/*<CustomText style={styles.typeText}>{name}</CustomText>*/}
+                    <CustomText style={styles.descText}>{about}</CustomText>
 
-            <CustomText style={styles.suggestionText} weight="bold">
-              You can also like this
-            </CustomText>
-            <FlatList
-              data={products}
-              horizontal={true}
-              renderItem={({ item }) => (
-                <TouchableWithoutFeedback
-                  onPress={() =>
-                    navigation.navigate("SingleProductScreen", {
-                      product: item,
-                      products: products,
-                    })
-                  }
-                >
-                  <View>
-                    {about !== item.about ? (
-                      <ProductCard
-                        isInCatalog={true}
-                        product={item}
-                        isRowView={false}
-                      />
-                    ) : null}
-                  </View>
-                </TouchableWithoutFeedback>
-              )}
-              keyExtractor={(item) => item.name}
-            />
-          </View>
-        </ScrollView>
-        {isSizeClicked ? <SelectSize sizes={size} /> : null}
-        {isColorClicked ? (
-          <BottomModal name={"Select Color"}>
-            {/*<ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>*/}
-            {/*    {sizess.map((name) => (*/}
-            {/*        <View style={styles.sizes} key={`${name}-${Date.now()}`}>*/}
-            {/*            <SizeContainer*/}
-            {/*                bgColor={isClicked[`${name}`] ? COLORS.PRIMARY : null}*/}
-            {/*                borderWidth={isClicked[`${name}`] ? 0 : 0.4}*/}
-            {/*                onPress={() => handleSize(name)}*/}
-            {/*                isClicked={isClicked}*/}
-            {/*                name={name} width={100}/>*/}
-            {/*        </View>*/}
-            {/*    ))}*/}
-            {/*</ScrollView>*/}
-          </BottomModal>
-        ) : null}
-        <ActionModal btnName="Add to cart" />
-      </View>
-    </TouchableWithoutFeedback>
-  );
+                    <CustomText style={styles.suggestionText} weight="bold">
+                        You can also like this
+                    </CustomText>
+                    <FlatList
+                        data={products}
+                        horizontal={true}
+                        renderItem={({item}) =>
+                            <TouchableWithoutFeedback
+                                onPress={() => navigation.navigate("SingleProductScreen", {
+                                    product: item,
+                                    products: products
+                                })}>
+                                <View>
+                                    {
+                                        id !== item.id ?
+                                            <ProductCard isInCatalog={true} product={item} isRowView={false}/>
+                                            : null}
+                                </View>
+                            </TouchableWithoutFeedback>}
+                        keyExtractor={item => item.id}
+                    />
+                </View>
+            </ScrollView>
+            {
+                isSizeClicked?
+                    <SelectSize
+                        sizes={size}
+                    />:
+                    null
+            }
+            {
+                isColorClicked?
+                    <BottomModal name={"Select Color"}>
+                        {/*<ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>*/}
+                        {/*    {sizess.map((name) => (*/}
+                        {/*        <View style={styles.sizes} key={`${name}-${Date.now()}`}>*/}
+                        {/*            <SizeContainer*/}
+                        {/*                bgColor={isClicked[`${name}`] ? COLORS.PRIMARY : null}*/}
+                        {/*                borderWidth={isClicked[`${name}`] ? 0 : 0.4}*/}
+                        {/*                onPress={() => handleSize(name)}*/}
+                        {/*                isClicked={isClicked}*/}
+                        {/*                name={name} width={100}/>*/}
+                        {/*        </View>*/}
+                        {/*    ))}*/}
+                        {/*</ScrollView>*/}
+                    </BottomModal>
+
+                   :
+                    null
+            }
+             <ActionModal btnName="Add to cart" />
+        </View>
+        </TouchableWithoutFeedback>
+    );
 };
 
 const styles = StyleSheet.create({
