@@ -4,6 +4,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Home from "../Screens/Home";
 import { SingleProductScreen } from "../Screens/SingleProductScreen";
 import { COLORS } from "../style/colors";
+import { RatingReviewScreen } from "../Screens/RatingReviewScreen.js";
+import { Back } from "../Icons/Back";
 
 const { Navigator, Screen } = createStackNavigator();
 export const HomeStack = () => {
@@ -23,6 +25,19 @@ export const HomeStack = () => {
           headerTitleStyle: {
             textAlign: "center",
           },
+        })}
+      />
+      <Screen
+        name="Rating"
+        component={RatingReviewScreen}
+        options={() => ({
+          title: "",
+          headerStyle: {
+            backgroundColor: COLORS.BACKGROUND,
+            elevation: 0,
+          },
+          headerTintColor: COLORS.TEXT,
+          headerLeft: () => <Back />,
         })}
       />
     </Navigator>

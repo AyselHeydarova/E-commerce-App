@@ -8,7 +8,7 @@ export const ActionModal = ({ btnName, onPress }) => {
   return (
     <View style={styles.btnBox}>
       <Btn
-          onPress={onPress}
+        onPress={onPress}
         btnName={btnName}
         bgColor={COLORS.PRIMARY}
         height={48}
