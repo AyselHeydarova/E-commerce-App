@@ -11,5 +11,10 @@ const mapStateToProps = (state) => ({
 });
 
 export const RootNav = connect(mapStateToProps)(({ auth }) => (
-  <NavigationContainer>{auth ? <MyTabs /> : <AuthStack />}</NavigationContainer>
+    <NavigationContainer>{auth ? <MyTabs /> : <AuthStack />}</NavigationContainer>
+
 ));
+{/*<NavigationContainer>*/}
+{/*    <MyTabs />*/}
+{/*</NavigationContainer>*/}
+

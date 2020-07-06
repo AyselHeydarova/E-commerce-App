@@ -10,6 +10,7 @@ export const MODULE_NAME = "products";
 export const selectAllProductData = (state) => state[MODULE_NAME];
 export const selectSaleProductData = (state) => state[MODULE_NAME].saleProducts;
 export const selectNewProductData = (state) => state[MODULE_NAME].newProducts;
+export const selectBagProductData = (state) => state[MODULE_NAME].bagProducts;
 
 export const selectCategory = (state, category) =>
     state[MODULE_NAME].categories[category];
@@ -18,11 +19,10 @@ const initialState = {
     categories: [],
     saleProducts: [],
     newProducts: [],
-    bagProducts: [],
 };
 
 export function productsReducer(state = initialState, {type, payload}) {
-    console.log(state.categories)
+
     switch (type) {
         case SET_APP_PRODUCTS:
             return {
@@ -41,19 +41,24 @@ export function productsReducer(state = initialState, {type, payload}) {
                 newProducts: payload,
             };
 
-      case ADD_TO_BAG:
+        case ADD_TO_BAG:
             return {
                 ...state,
-                bagProducts:state.categories.products.map((product) => {
-          if (product.id === payload.productID) {
-              return {
-                  ...product,
-                  isBought: !product.isBought,
-              };
-          }
-          return product;
-      }),
-    };
+                bagProducts: [
+                    ...state.bagProducts,
+                    // userId: product.userId,
+                    {
+                        id: payload.id,
+                        name: payload.name,
+                        price: payload.price,
+                        count: payload.count,
+                        colors: payload.color,
+                        sizes: payload.size,
+                        imagesUrls:payload.imagesUrls
+                    }
+                ]
+            };
+
 
         default:
             return state;

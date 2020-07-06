@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {SliderBox} from "react-native-image-slider-box";
 import {COLORS} from "../style/colors";
 import {
@@ -15,45 +15,78 @@ import {CustomText} from "../components/CustomText";
 import {ProductCard} from "../components/ProductCard";
 import {GLOBAL_STYLES} from "../style/globalStyles";
 import {ActionModal} from "../components/ActionModal";
-import {SelectSize} from "../commons/SelectSize";
-import {Back} from "../Icons/Back";
 import {BottomModal} from "../components/bottomModal";
+import {
+    setAddToBag,
+    selectAllProductData,
+} from "../store/products";
+import {
+    addProductToUsersBag
+} from "../store/users";
+import {connect} from "react-redux";
 
-export const SingleProductScreen = ({route, navigation}) => {
+
+const mapStateToProps = (state) => ({
+    allProducts: selectAllProductData(state),
+});
+export const SingleProductScreen = connect(mapStateToProps, {setAddToBag,addProductToUsersBag})(
+    ({route,
+         setAddToBag,addProductToUsersBag, navigation}) => {
     const [isSizeClicked, setIsSizeClicked] = useState(false);
     const [isColorClicked, setIsColorClicked] = useState(false);
-
-    const {id, about, brandName, price, imagesUrls, name, sizes} = route.params.product;
+    console.log(isColorClicked)
+    const {id, about, brandName, price, imagesUrls, name, sizes, colors,count} = route.params.product;
     const {products} = route.params;
     const [addProduct, setAddProduct] = useState({
         userId: "",
         id: id,
+        name:name,
+        price:price,
+        count:count,
+        imagesUrls:imagesUrls,
         size: "",
         color: "",
     });
-    const [addSize,setAddSize]= useState("");
     const handleAddToCart = () => {
-
+        setAddToBag(addProduct);
+        addProductToUsersBag(addProduct);
+        setIsSizeClicked(false);
+        setIsColorClicked(false)
     };
     const [isClicked, setIsClicked] = useState({
         S: false,
         M: false,
         L: false,
     });
-    const handleSize = (name, size) => {
+    const handleSize = (size) => {
         setIsClicked({...false, [size]: !isClicked[`${size}`]});
         setAddProduct(prevState => ({
             ...prevState,
-            [name]: size
+            ["size"]: size
         }));
-        setAddSize(size)
         console.log(size)
-        console.log('name', name)
         console.log(addProduct)
     };
+    const handleColor = (color) => {
+        setAddProduct(prevState => ({
+            ...prevState,
+            ["color"]: color
+        }));
+        setIsSizeClicked(!isColorClicked);
+        console.log(size)
+        console.log(addProduct)
+    };
+
+    useEffect(() => {
+        console.log(addProduct)
+    })
     const size = ["S", "M", "L"];
     return (
-        <TouchableWithoutFeedback onPress={() => setIsSizeClicked(false)}>
+        <TouchableWithoutFeedback onPress={() => {
+            setIsSizeClicked(false),
+                setIsColorClicked(false)
+
+        }}>
             <View style={styles.container}>
                 <ScrollView>
                     <SliderBox
@@ -121,18 +154,16 @@ export const SingleProductScreen = ({route, navigation}) => {
                 </ScrollView>
                 {
                     isSizeClicked ?
-                        <BottomModal name={"Select Color"}>
+                        <BottomModal name={"Select Size"}>
                             <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
                                 {size.map((name) => (
-                                    <View style={styles.sizes} key={`${name}-${Date.now()}`}>
+                                    <View key={`${name}-${Date.now()}`}>
                                         <SizeContainer
                                             bgColor={isClicked[`${name}`] ? COLORS.PRIMARY : null}
                                             borderWidth={isClicked[`${name}`] ? 0 : 0.4}
                                             onPress={() => {
-                                                console.log(name);
-                                                handleSize("size", name)
+                                                handleSize(name)
                                             }}
-                                            isClicked={isClicked}
                                             name={name} width={100}/>
                                     </View>
                                 ))}
@@ -143,19 +174,18 @@ export const SingleProductScreen = ({route, navigation}) => {
                 }
                 {
                     isColorClicked ?
+
                         <BottomModal name={"Select Color"}>
-                            {/*<ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>*/}
-                            {/*    {sizess.map((name) => (*/}
-                            {/*        <View style={styles.sizes} key={`${name}-${Date.now()}`}>*/}
-                            {/*            <SizeContainer*/}
-                            {/*                bgColor={isClicked[`${name}`] ? COLORS.PRIMARY : null}*/}
-                            {/*                borderWidth={isClicked[`${name}`] ? 0 : 0.4}*/}
-                            {/*                onPress={() => handleSize(name)}*/}
-                            {/*                isClicked={isClicked}*/}
-                            {/*                name={name} width={100}/>*/}
-                            {/*        </View>*/}
-                            {/*    ))}*/}
-                            {/*</ScrollView>*/}
+                            <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                                {colors.map((name) => (
+                                    <View key={`${name.color}-${Date.now()}`}>
+                                        <SizeContainer
+                                            bgColor={name.color}
+                                            onPress={() => handleColor(name.color)}
+                                            name={name.color} width={100}/>
+                                    </View>
+                                ))}
+                            </ScrollView>
                         </BottomModal>
 
                         :
@@ -165,7 +195,7 @@ export const SingleProductScreen = ({route, navigation}) => {
             </View>
         </TouchableWithoutFeedback>
     );
-};
+});
 
 const styles = StyleSheet.create({
     container: {

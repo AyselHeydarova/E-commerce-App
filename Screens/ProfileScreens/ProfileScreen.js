@@ -12,7 +12,7 @@ export const ProfileScreen = ({
                                   navigation,
                                   username = 'Matilda Brown',
                                   email = "matildabrown@mail.com",
-                                  avatar="https://i1.sndcdn.com/avatars-000530040327-sk6iwk-t500x500.jpg"
+                                  avatar = "https://i1.sndcdn.com/avatars-000530040327-sk6iwk-t500x500.jpg"
                               }) => {
     const profileSections = [
         {
@@ -119,19 +119,23 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingRight: 10,
 
-    },})
-//     {
-//       sectionName: "Shipping addresses",
-//       dutyOfSection: `${shippingAddresses} addresses`,
-//     },
-//     {
-//       sectionName: "Payment methods",
-//       dutyOfSection: `Visa ${paymentMethods} `,
-//     },
-//     {
-//       sectionName: "Settings",
-//       dutyOfSection: "Notifications, password",
-//     },
+    },
+    text: {
+        marginTop: 10,
+    },
+    userInfoSection: {
+        width: "100%",
+        height: 120,
+        flexDirection: "row",
+        justifyContent: "flex-start",
+    },
+    avatar: {
+        width: 70,
+        height: 70,
+        borderRadius: 40,
+        marginLeft: 30,
+    },
+})
 //   ];
 //   return (
 //     <View style={styles.container}>
@@ -179,54 +183,3 @@ const styles = StyleSheet.create({
 //   );
 // };
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: COLORS.BACKGROUND,
-//   },
-//   title: {
-//     color: COLORS.TEXT,
-//     fontSize: 34,
-//     lineHeight: 34,
-//     margin: 30,
-//   },
-//   email: {
-//     color: COLORS.GRAY,
-//     fontSize: 16,
-//     lineHeight: 20,
-//     marginBottom: 15,
-//     marginLeft: 30,
-//   },
-//   name: {
-//     color: COLORS.TEXT,
-//     fontSize: 20,
-//     lineHeight: 22,
-//     marginLeft: 30,
-//     marginBottom: 8,
-//   },
-
-//   profileSection: {
-//     width: "100%",
-//     borderBottomWidth: 0.3,
-//     borderColor: COLORS.GRAY,
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     alignItems: "center",
-//     paddingRight: 10,
-//   },
-//   text: {
-//     marginTop: 10,
-//   },
-//   userInfoSection: {
-//     width: "100%",
-//     height: 120,
-//     flexDirection: "row",
-//     justifyContent: "flex-start",
-//   },
-//   avatar: {
-//     width: 70,
-//     height: 70,
-//     borderRadius: 40,
-//     marginLeft: 30,
-//   },
-// });

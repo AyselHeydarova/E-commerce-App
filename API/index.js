@@ -42,51 +42,6 @@ export const getOnSaleData = async (sale) => {
     }
     return saleProducts;
 };
-// export const getNewData = async (isNew) => {
-//     const newProducts = [];
-//     try {
-//         const ref = firebase.firestore().collection("products")
-//             .where("tags", 'array-contains', isNew);
-//
-//         const productsSnap = await ref.get();
-//         productsSnap.forEach((product) => {
-//             const data = product.data();
-//             newProducts.push({
-//                 id: product.id,
-//                 ...data
-//             })
-//         });
-//     } catch (e) {
-//         console.log('error', e)
-//     }
-//     return newProducts;
-// };
-<<<<<<< HEAD
-=======
-export const getData = async (value) => {
-  const products = [];
-  try {
-    const ref = firebase
-      .firestore()
-      .collection("products")
-      .where("tags", "array-contains", `${value}`);
-
-    const productsSnap = await ref.get();
-    productsSnap.forEach((product) => {
-      const data = product.data();
-      products.push({
-        id: product.id,
-        ...data,
-      });
-    });
-    console.log("products getData", products);
-  } catch (e) {
-    console.log("error", e);
-  }
-  return products;
-};
->>>>>>> master
-
 export const setUserFB = async () => {
   const data = {
     name: "aysel",
@@ -116,33 +71,6 @@ export const setUserFB = async () => {
     console.log("error", e);
   }
 };
-
-export const filterDataByTag = async (value) => {
-
-  const products = [];
-  try {
-    const ref = firebase
-      .firestore()
-      .collection("products")
-      .where("tags", "array-contains", `${value}`);
-  
-        const productsSnap = await ref.get();
-        productsSnap.forEach((product) => {
-            const data = product.data();
-            products.push({
-                id: product.id,
-                ...data,
-            });
-        });
-        console.log("filterDataByTag", products);
-    } catch (e) {
-        console.log(" filterDataByTag error", e);
-    }
-    return products
-};
-
-
-filterDataByTag("new");
 
 
 
