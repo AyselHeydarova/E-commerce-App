@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import { AddressCard } from "./AddressCard";
 import { COLORS } from "../style/colors";
 import { GLOBAL_STYLES } from "../style/globalStyles";
@@ -8,6 +8,8 @@ import { Plus } from "../Icons/Plus";
 export const ShippingAddressesScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
+      {/* <FlatList data={} renderItem={({ item }) => <AddressCard />} /> */}
+
       <AddressCard />
 
       <Plus
