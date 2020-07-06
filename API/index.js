@@ -1,53 +1,49 @@
 import * as firebase from "firebase";
 import "./firebase";
 
-export const getData = async (category, gender) => {
-  const products = [];
-  try {
-    const ref = firebase
-      .firestore()
-      .collection("products")
-      .where("tags", "array-contains", category)
-      .where(
-        "gender",
-        gender === undefined ? "in" : "==",
-        gender === undefined ? ["men", "women"] : gender
-      );
 
-    const productsSnap = await ref.get();
-    productsSnap.forEach((product) => {
-      const data = product.data();
-      products.push({
-        id: product.id,
-        ...data,
-      });
-    });
-  } catch (e) {
-    console.log("error", e);
-  }
-  return products;
+export const getData = async (category,gender) => {
+    const products = [];
+    try {
+        const ref = firebase.firestore().collection("products")
+            .where("tags", 'array-contains', category)
+            .where("gender" , gender===undefined?"in":"==" , gender===undefined?["men","women"]:gender)
+
+
+        const productsSnap = await ref.get();
+        productsSnap.forEach((product) => {
+            const data = product.data();
+            products.push({
+                id: product.id,
+                ...data
+            })
+        });
+    } catch (e) {
+        console.log('error', e)
+    }
+    return products;
 };
 export const getOnSaleData = async (sale) => {
-  const saleProducts = [];
-  try {
-    const ref = firebase
-      .firestore()
-      .collection("products")
-      .where("tags", "array-contains", sale);
+    const saleProducts = [];
+    try {
+        const ref = firebase.firestore().collection("products")
+            .where("tags", 'array-contains', sale);
 
-    const productsSnap = await ref.get();
-    productsSnap.forEach((product) => {
-      const data = product.data();
-      saleProducts.push({
-        id: product.id,
-        ...data,
-      });
-    });
-  } catch (e) {
-    console.log("error", e);
-  }
-  return saleProducts;
+        const productsSnap = await ref.get();
+        productsSnap.forEach((product) => {
+            const data = product.data();
+            saleProducts.push({
+                id: product.id,
+                ...data
+            })
+        });
+    } catch (e) {
+        console.log('error', e)
+    }
+    return saleProducts;
 };
+
+
 // export const getNewData = async (isNew) => {
 //     const newProducts = [];
 //     try {
