@@ -1,13 +1,39 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {StyleSheet, View, StatusBar, FlatList, TouchableOpacity, ScrollView} from "react-native";
 import {COLORS} from "../style/colors";
 import {CustomText} from "../components/CustomText";
 import {Btn} from "../components/Btn";
 import {ProductCard} from "../components/ProductCard";
 import {CardView} from "../Icons/CardView";
+import {selectUserData,getCurrentUserData} from "../store/users";
+import {connect} from "react-redux";
 
-export const MyBag = () => {
-    const clothes = ["T-Shirt", "Shirt", "Skirt", "Shoes", "Short",];
+const mapStateToProps = (state) => ({
+    usersData: selectUserData(state),
+});
+export const MyBag = connect(mapStateToProps,{getCurrentUserData})(({getCurrentUserData,usersData, navigation}) => {
+     const bagProducts=usersData.userProductsInBag||[];
+     console.log(usersData,'usersData')
+     console.log(bagProducts,'bagProducts')
+     console.log(usersData.userProductsInBag,'usersData.userProductsInBag')
+    const totalAmount = () => {
+        let total = 0;
+        bagProducts.forEach((product) => {
+            total = total + product.price
+        });
+        return total;
+    };
+    const handleUserData = async () => {
+        try {
+            await getCurrentUserData();
+        } catch (error) {
+            console.log("getCurrentUserData", error);
+        }
+    };
+    useEffect(() => {
+        handleUserData();
+
+    }, []);
     return (
         <View style={styles.container}>
             <StatusBar/>
@@ -16,20 +42,20 @@ export const MyBag = () => {
             </CustomText>
 
             <FlatList
-                data={clothes}
+                data={bagProducts}
                 renderItem={({item}) => (
                     <View style={styles.card}>
-                        <ProductCard />
+                        <ProductCard product={item} isRowView={true}/>
                     </View>
                 )}
-                keyExtractor={item => item}
+                keyExtractor={item => item.id}
             />
             <View style={styles.amountContainer}>
                 <CustomText weight={'bold'} style={styles.amount}>
                     Total amount:
                 </CustomText>
                 <CustomText weight={'bold'} style={styles.totalCost}>
-                    124$
+                    ${totalAmount()}
                 </CustomText>
             </View>
             <TouchableOpacity style={styles.btn}>
@@ -37,13 +63,14 @@ export const MyBag = () => {
             </TouchableOpacity>
         </View>
     );
-};
+});
 
 const styles = StyleSheet.create({
 
     container: {
         flex: 1,
         backgroundColor: COLORS.BACKGROUND,
+        paddingHorizontal: 15,
 
 
     },
@@ -51,7 +78,7 @@ const styles = StyleSheet.create({
         color: COLORS.TEXT,
         fontSize: 34,
         lineHeight: 34,
-        margin: 30,
+        marginVertical: 30,
 
     },
     amount: {
@@ -65,23 +92,22 @@ const styles = StyleSheet.create({
         color: COLORS.TEXT,
         fontSize: 18,
         lineHeight: 22,
-        marginRight:28
+        marginRight: 28
 
     },
     btn: {
         marginTop: 30,
         marginBottom: 30,
         justifyContent: "center",
-        alignItems:"center"
+        alignItems: "center"
     },
     card: {
-        marginLeft: 30,
-        marginBottom: 20
+        marginBottom: 10
     },
-    amountContainer:{
-        display:"flex",
-        flexDirection:"row",
-        justifyContent:"space-between",
+    amountContainer: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
         marginTop: 20
     }
 
