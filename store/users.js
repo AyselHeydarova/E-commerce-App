@@ -1,115 +1,16 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 
-const SET_AUTH_SUCCESS = "SET_AUTH_SUCCESS";
-const SET_AUTH_LOGOUT = "SET_AUTH_LOGOUT";
-const SET_AUTH_PHOTO = "SET_AUTH_PHOTO";
 const SET_AUTH_DATA = "SET_AUTH_DATA";
 
-export const MODULE_NAME = "auth";
-export const selectAuthStatus = (state) => state[MODULE_NAME].status;
-export const selectAuthUserID = (state) => state[MODULE_NAME].userID;
-export const selectAuthUsername = (state) => state[MODULE_NAME].username;
-export const selectAuthPhoto = (state) => state[MODULE_NAME].photo;
 export const selectUserData = (state) => state[MODULE_NAME].usersData;
 
-// ACTION CREATORS
-export const setAuthSuccess = (payload) => ({
-    type: SET_AUTH_SUCCESS,
-    payload,
-});
-export const setAuthPhoto = (payload) => ({
-    type: SET_AUTH_PHOTO,
-    payload,
-});
-export const setAuthLogout = () => ({
-    type: SET_AUTH_LOGOUT,
-});
+
 export const setAuthData = (payload) => ({
     type: SET_AUTH_DATA,
     payload,
 });
 
-const initialState = {
-    status: false,
-    userID: null,
-    username: null,
-    photo: null,
-    usersData: {},
-};
-
-export function authReducer(state = initialState, {type, payload}) {
-    switch (type) {
-        case SET_AUTH_SUCCESS:
-            return {
-                ...state,
-                status: true,
-                userID: payload.userID,
-                username: payload.username,
-                // photo: payload.photo,
-            };
-        case SET_AUTH_LOGOUT:
-            return {
-                ...state,
-                status: false,
-                userID: null,
-                username: null,
-            };
-        case SET_AUTH_PHOTO:
-            return {
-                ...state,
-                usersData: payload,
-            };
-            case SET_AUTH_DATA:
-            return {
-                usersData: payload,
-            };
-        default:
-            return state;
-    }
-}
-
-export const signupUser = (userDetails) => async (dispatch) => {
-    const {username, email, password} = userDetails;
-
-    try {
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then(() => {
-                firebase
-                    .firestore()
-                    .collection("users")
-                    .doc(firebase.auth().currentUser.uid)
-                    .set({
-                        username: username,
-                        email: email,
-                        password: password,
-                        userProductsInBag: []
-                    })
-                    .catch((error) => {
-                        console.log(
-                            "Something went wrong with added user to firestore: ",
-                            error
-                        );
-                    });
-
-                let uid = firebase.auth().currentUser.uid;
-                console.log("uid", uid);
-
-                dispatch(
-                    setAuthSuccess({
-                        userID: uid,
-                        username,
-                        // photo,
-                    })
-                );
-                console.log("firebase auth", firebase.auth());
-            });
-    } catch (error) {
-        console.log("Something went wrong with sign up: ", error);
-    }
-};
 export const addProductToUsersBag = (product) => async () => {
     try {
         const userProductsRef = firebase.firestore()
@@ -137,50 +38,51 @@ export const getCurrentUserData = () => async (dispatch) => {
         const userProductsSnap = await userProductsRef.get();
         const userData = await userProductsSnap.data();
         dispatch(setAuthData({userData}));
-        console.log('dispatch(setAuthData({userData}));',dispatch(setAuthData(userData)))
-        console.log('currentUserData',userData)
+        console.log('dispatch(setAuthData({userData}));', dispatch(setAuthData(userData)))
+        console.log('currentUserData', userData)
     } catch (e) {
         console.log('error', e)
     }
 
 };
-export const signIn = (userDetails) => async (dispatch) => {
-    const {username, email, password} = userDetails;
-    try {
-        firebase
-            .auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(() => {
-                firebase
-                    .firestore()
-                    .collection("users")
-                    .doc(firebase.auth().currentUser.uid)
-                    .get()
-                    .then(function (doc) {
-                        console.log("userDattaaa", doc.data());
-                    });
-            });
 
-        let uid = firebase.auth().currentUser.uid;
-        console.log("uid", uid);
+const SET_USERS = "SET_USERS";
 
-        dispatch(
-            setAuthSuccess({
-                userID: uid,
-                username,
-                // photo,
-            })
-        );
-    } catch (error) {
-        console.log("signIN error", error);
+export const setUsers = (payload) => ({
+    type: SET_USERS,
+    payload,
+});
+
+export const MODULE_NAME = "users";
+export const selectUsers = (state) => state[MODULE_NAME];
+export const selectUsernameByID = (state, ID) =>
+    state[MODULE_NAME].filter((user) => user.id === ID).username;
+
+const initialState = {
+    usersData: {},
+}
+
+
+export function usersReducer(state = initialState, {type, payload}) {
+    switch (type) {
+        case SET_USERS:
+            return [...state, ...payload];
+        case SET_AUTH_DATA:
+            return {
+                usersData: payload,
+            };
+        default:
+            return state;
     }
-};
+}
 
-export const logOut = () => async (dispatch) => {
+export const setUsersData = () => async (dispatch, getState) => {
     try {
-        await firebase.auth().signOut();
-        dispatch(setAuthLogout());
+        const users = await getUsersData();
+        dispatch(setUsers(users));
+
+        console.log("SetUsersData", users);
     } catch (error) {
-        Alert.alert(error.message);
+        console.log("setUsersData", error);
     }
 };

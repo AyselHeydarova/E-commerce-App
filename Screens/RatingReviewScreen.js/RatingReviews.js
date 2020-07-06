@@ -22,7 +22,9 @@ const product = {
   },
 };
 
-export const RatingReviews = () => {
+export const RatingReviews = ({ route }) => {
+  console.log("Rating Deeper", route);
+
   const allRatingsArray = Object.values(product.ratings);
   const totalRatingCount = allRatingsArray.reduce(function (a, b) {
     return a + b;

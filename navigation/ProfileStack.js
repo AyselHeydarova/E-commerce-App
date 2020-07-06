@@ -10,6 +10,8 @@ import { MyOrders } from "../Screens/ProfileScreens/MyOrders";
 import { Settings } from "../Screens/ProfileScreens/Settings";
 import { AddingShippingAddress } from "../Screens/AddingShippingAddress";
 import { ShippingAddressesScreen } from "../Screens/ShippingAddressesScreen";
+import { Back } from "../Icons/Back";
+import { COLORS } from "../style/colors";
 
 const { Navigator, Screen } = createStackNavigator();
 export const ProfileStack = () => {
@@ -41,12 +43,28 @@ export const ProfileStack = () => {
         component={MyOrders}
       />
       <Screen
-        options={{ headerShown: false }}
+        options={({ navigation }) => ({
+          title: "Adding Shipping Address",
+          headerStyle: {
+            backgroundColor: COLORS.BACKGROUND,
+            elevation: 0,
+          },
+          headerTintColor: COLORS.TEXT,
+          headerLeft: () => <Back onPress={() => navigation.goBack()} />,
+        })}
         name="AddingShippingAddress"
         component={AddingShippingAddress}
       />
       <Screen
-        options={{ headerShown: false }}
+        options={({ navigation }) => ({
+          title: "Shipping Addresses",
+          headerStyle: {
+            backgroundColor: COLORS.BACKGROUND,
+            elevation: 0,
+          },
+          headerTintColor: COLORS.TEXT,
+          headerLeft: () => <Back onPress={() => navigation.goBack()} />,
+        })}
         name="ShippingAddressesScreen"
         component={ShippingAddressesScreen}
       />

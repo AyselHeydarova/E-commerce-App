@@ -1,3 +1,4 @@
+
 import React, {useState} from "react";
 import {View, StyleSheet, Image} from "react-native";
 import {CustomText} from "./CustomText";
@@ -6,6 +7,8 @@ import StarRating from "react-native-star-rating";
 import {ProductTag} from "../commons/ProductTag";
 import {Heart} from "../Icons/Heart";
 import {Counter} from "./Counter";
+
+import { averageRatingCalc, totalRatingCalc } from "../Utils/Calculations";
 
 export const ProductCard = ({
                                 product,
@@ -69,15 +72,15 @@ export const ProductCard = ({
         totalStarCount += isInCatalog ? allRatingsArray[i] * (i + 1) : 0;
     }
 
-    const averageRating =
-        Math.round((totalStarCount / totalRatingCount) * 10) / 10;
 
-    const cardWrapperStyles = [
-        isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
-        {opacity: count === 0 ? 0.5 : 1},
-    ];
+  const cardWrapperStyles = [
+    isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
+    { opacity: count === 0 ? 0.5 : 1 },
+  ];
 
-    const salePrice = isOnSale ? Math.floor((+price * (100 - +onSale.discount)) / 100) : null;
+  const salePrice = isOnSale
+    ? Math.floor((+price * (100 - +onSale.discount)) / 100)
+    : null;
 
 
     return (
@@ -106,24 +109,27 @@ export const ProductCard = ({
                     </View>
                 )}
             </View>
-            {isInCatalog ?
-                <View style={styles.description}>
-                    <View style={styles.row}>
-                        <StarRating
-                            disabled={true}
-                            fullStarColor={COLORS.STAR}
-                            starSize={14}
-                            starStyle={{margin: 3}}
-                            containerStyle={{marginTop: 10, width: 80}}
-                            maxStars={5}
-                            rating={averageRating}
-                        />
-                        <CustomText style={styles.ratingCount}>
-                            {`(${totalRatingCount})`}
-                        </CustomText>
-                    </View>
 
-                    <CustomText style={{color: COLORS.GRAY}}>{brandName}</CustomText>
+            {isInCatalog ?
+                    <View style={styles.description}>
+                        <View style={styles.row}>
+                            <StarRating
+                                disabled={true}
+                                fullStarColor={COLORS.STAR}
+                                starSize={14}
+                                starStyle={{ margin: 3 }}
+                                containerStyle={{ marginTop: 10, width: 80 }}
+                                maxStars={5}
+                                rating={averageRatingCalc(rating)}
+                            />
+                            <CustomText style={styles.ratingCount}>
+                                ({totalRatingCalc(rating)})
+                            </CustomText>
+                        </View>
+
+
+
+                        <CustomText style={{color: COLORS.GRAY}}>{brandName}</CustomText>
                     <CustomText weight="medium">{name.toLowerCase()}</CustomText>
 
 
@@ -186,6 +192,7 @@ export const ProductCard = ({
                         </View>
 
                     </View>
+        )}
 
                 )}
             <Heart width={12} height={12} color={COLORS.GRAY}/>

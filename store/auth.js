@@ -1,154 +1,153 @@
-// import store from ".";
+import * as firebase from "firebase";
+import "firebase/firestore";
 
-// const SET_AUTH_DATA='SET_AUTH_DATA';
-// const SET_AUTH_DATA_FROM_AS='SET_AUTH_DATA_FROM_AS';
+const SET_AUTH_SUCCESS = "SET_AUTH_SUCCESS";
+const SET_AUTH_LOGOUT = "SET_AUTH_LOGOUT";
+const SET_AUTH_PHOTO = "SET_AUTH_PHOTO";
 
-// export const MODULE_NAME="auth";
-// export const selectAuthData=state=>state[MODULE_NAME];
+export const MODULE_NAME = "auth";
+export const selectAuthStatus = (state) => state[MODULE_NAME].status;
+export const selectAuthUserID = (state) => state[MODULE_NAME].userID;
+export const selectAuthUsername = (state) => state[MODULE_NAME].username;
+export const selectAuthPhoto = (state) => state[MODULE_NAME].photo;
 
-// //INITAIAL STATE
+// export const selectUsernameByID = (state, ID) =>
+//   state[MODULE_NAME].filter((user) => user.userID === ID).username;
 
-// const initialState={
-//     token:null,
-//     refreshToken:null,
-//     tokenExpires:0,
-//     userID:null
-// };
+// ACTION CREATORS
+export const setAuthSuccess = (payload) => ({
+  type: SET_AUTH_SUCCESS,
+  payload,
+});
+export const setAuthPhoto = (payload) => ({
+  type: SET_AUTH_PHOTO,
+  payload,
+});
+export const setAuthLogout = () => ({
+  type: SET_AUTH_LOGOUT,
+});
 
-// export function authReducer(state=initialState,{type, payload}){
-//     switch (type){
-//         case SET_AUTH_DATA:
-//             console.log('set auth in reducer fired');
-//             return {
-//                 ...state,
-//                 token:payload.token,
-//                 refreshToken:payload.refreshToken,
-//                 tokenExpires:payload.tokenExpires,
-//                 userID:payload.userID
-//             }
-//         case SET_AUTH_DATA_FROM_AS:
-//             console.log('set autf from as fired');
-//             return {
-//                 ...state,
-//                 ...payload
-//             }
-//         default:
-//             return state;
-//     }
-// }
+const initialState = [
+  {
+    status: false,
+    userID: null,
+    username: null,
+    photo: null,
+    ratingReviews: [
+      {
+        productID: "0DfEDzHyyUuQkqEo5OLd",
+        comment: "I like it very much",
+        rating: "4star",
+      },
+      { productID: "2utQmBZllB7TqnUiGqG4", comment: "Superr", rating: "5star" },
+    ],
+  },
+];
+export function authReducer(state = initialState, { type, payload }) {
+  switch (type) {
+    case SET_AUTH_SUCCESS:
+      return {
+        ...state,
+        status: true,
+        userID: payload.userID,
+        username: payload.username,
+        // photo: payload.photo,
+      };
+    case SET_AUTH_LOGOUT:
+      return {
+        ...state,
+        status: false,
+        userID: null,
+        username: null,
+      };
+    case SET_AUTH_PHOTO:
+      return {
+        ...state,
+        photo: payload,
+      };
+    default:
+      return state;
+  }
+}
 
-// //action creators
+export const signupUser = (userDetails) => async (dispatch) => {
+  const { username, email, password } = userDetails;
 
-// export const setAuthData=(payload)=>({
-//     type:SET_AUTH_DATA,
-//     payload
-// });
+  try {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(firebase.auth().currentUser.uid)
+          .set({
+            username: username,
+            email: email,
+            password: password,
+          })
+          .catch((error) => {
+            console.log(
+              "Something went wrong with added user to firestore: ",
+              error
+            );
+          });
 
-// //middleWare
-// const FIREBASE_API_KEY='AIzaSyBxsJAJK05HY8yQEicfNxxuWq_4h13kp9I'
-// export const SignUp=(email,password,name)=>async dispatch =>{
-//     console.log('signup fired');
-//     try {
-//         const response=await fetch (`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${FIREBASE_API_KEY}`,
-//             {
-//                 method:'POST',
-//                 headers:{
-//                     'Content-Type':'application/json'
-//                 },
-//                 body:JSON.stringify({
-//                     returnSecureToken:true,
-//                     email,
-//                     password
-//                 }),
-//             }
-//         );
-//         const result=await response.json();
-//         console.log('result in signUp function firebase', result);
-//         if (!result.error){
-//             await fetch (`https://my-project-aysel.firebaseio.com/users/${result.localId}.json?auth=${result.idToken}`,
-//                 {
-//                     method:'PUT',
-//                     headers:{
-//                         "Content-Type":"application/json"
-//                     },
-//                     body:JSON.stringify({
-//                         name:name
-//                     }),
-//                 }
-//             );
-//             dispatch(setAuthData({
-//                 token:result.idToken,
-//                 refreshToken:result.refreshToken,
-//                 tokenExpires:Date.now()+(result.expiresIn*1000)-15000,
-//                 userID:result.localId
-//             }))
-//             console.log('setAuthData fired and state is: ', store.getState());
+        let uid = firebase.auth().currentUser.uid;
+        console.log("uid", uid);
 
-//         }
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
+        dispatch(
+          setAuthSuccess({
+            userID: uid,
+            username,
+            // photo,
+          })
+        );
+        console.log("firebase auth", firebase.auth());
+      });
+  } catch (error) {
+    console.log("Something went wrong with sign up: ", error);
+  }
+};
 
-// //signIn
-// export const SignIn = (email, password) => async (dispatch) => {
-//     try {
-//       const response = await fetch(
-//         `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API_KEY}`,
-//         {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({
-//             returnSecureToken: true,
-//             email,
-//             password,
-//           }),
-//         }
-//       );
-//       const result = await response.json();
-//       if (!result.error) {
-//         dispatch(
-//           setAuthData({
-//             token: result.idToken,
-//             refreshToken: result.refreshToken,
-//             tokenExpires: Date.now() + result.expiresIn * 1000 - 15000,
-//             userID: result.localId,
-//           })
-//         );
-//       }
-//     } catch (error) {
-//         console.log('error: ', error);
-//     }
-//   };
+export const signIn = (userDetails) => async (dispatch) => {
+  const { username, email, password } = userDetails;
+  try {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(firebase.auth().currentUser.uid)
+          .get()
+          .then(function (doc) {
+            console.log("userDattaaa", doc.data());
+          });
+      });
 
-//   export const sign = (email, password, username, isSignIn) => async (
-//     dispatch
-//   ) => {
-//     try {
-//       let uid;
-//       if (!isSignIn) {
-//         ({
-//           user: { uid },
-//         } = await fbApp.auth.signInWithEmailAndPassword(email, password));
-//         const userDataSnapshot = await fbApp.db.ref(`users/${uid}`).once("value");
-//         ({ username, photo } = userDataSnapshot.val());
-//       } else {
-//         ({
-//           user: { uid },
-//         } = await fbApp.auth.createUserWithEmailAndPassword(email, password));
-//         fbApp.db.ref(`users/${uid}`).set({ username, photo: "" });
-//       }
+    let uid = firebase.auth().currentUser.uid;
+    console.log("uid", uid);
 
-//       dispatch(
-//         setAuthSuccess({
-//           userID: uid,
-//           username,
-//           photo,
-//         })
-//       );
-//     } catch (error) {
-//       Alert.alert(error.message);
-//     }
-//   };
+    dispatch(
+      setAuthSuccess({
+        userID: uid,
+        username,
+        // photo,
+      })
+    );
+  } catch (error) {
+    console.log("signIN error", error);
+  }
+};
+
+export const logOut = () => async (dispatch) => {
+  try {
+    await firebase.auth().signOut();
+    dispatch(setAuthLogout());
+  } catch (error) {
+    Alert.alert(error.message);
+  }
+};
