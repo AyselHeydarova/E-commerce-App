@@ -5,7 +5,7 @@ import StarRating from "react-native-star-rating";
 import { COLORS } from "../../style/colors";
 
 export const RatingRow = ({ starCount, ratingCount, totalRatingCount }) => {
-  const ratingInPercentage = (ratingCount / totalRatingCount) * 100 
+  const ratingInPercentage = (ratingCount / totalRatingCount) * 100;
   return (
     <View style={styles.row}>
       <StarRating
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   ratingCount: {
     fontSize: 14,
     color: COLORS.GRAY,
-    width: 25,
+    width: 33,
     textAlign: "center",
   },
 

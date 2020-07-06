@@ -14,7 +14,6 @@ import { COLORS } from "../style/colors";
 import { GLOBAL_STYLES } from "../style/globalStyles";
 import { SaleSlogan } from "../components/SaleSlogan";
 import { Category } from "../components/Category";
-import { allProducts } from "../Utils/DataSelection";
 import { getAllData, selectAllProductData } from "../store/products";
 import { connect } from "react-redux";
 const mapStateToProps = (state) => ({
@@ -78,7 +77,7 @@ export const Categories = connect(mapStateToProps, { getAllData })(
         isWomanClicked: isWomanClicked,
       });
     };
-        console.log(allProducts)
+    console.log(allProducts);
     return (
       <View style={styles.container}>
         <StatusBar />
