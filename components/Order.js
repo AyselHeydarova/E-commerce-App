@@ -4,15 +4,17 @@ import {COLORS} from "../style/colors";
 import {CustomText} from "./CustomText";
 import {Btn} from "./Btn";
 
-export const Order = ({orderNo, trackingNo, quantity, total, date, status,onPress}) => {
+export const Order = ({orderNo, trackingNo, quantity, total, date, status='Delivered',onPress}) => {
     return (
-        <TouchableOpacity style={styles.container} onPress={onPress}>
+        <TouchableOpacity style={styles.container}
+                          // onPress={onPress}
+        >
             <View style={styles.firstPart}>
                 <CustomText weight={"medium"} style={styles.orderNo}>
-                    Order №1947034
+                    Order №{orderNo}
                 </CustomText>
                 <CustomText style={styles.date}>
-                    05-12-2020
+                    {date}
                 </CustomText>
             </View>
             <View style={[styles.firstPart, {justifyContent: "flex-start"}]}>
@@ -20,7 +22,7 @@ export const Order = ({orderNo, trackingNo, quantity, total, date, status,onPres
                     Tracking number:
                 </CustomText>
                 <CustomText weight={"medium"} style={styles.orderNo}>
-                    IW3475453455
+                    {trackingNo}
                 </CustomText>
 
             </View>
@@ -30,7 +32,7 @@ export const Order = ({orderNo, trackingNo, quantity, total, date, status,onPres
                         Quantity:
                     </CustomText>
                     <CustomText weight={"medium"} style={styles.orderNo}>
-                        3
+                        {quantity}
                     </CustomText>
 
                 </View>
@@ -39,7 +41,7 @@ export const Order = ({orderNo, trackingNo, quantity, total, date, status,onPres
                         Total Amount:
                     </CustomText>
                     <CustomText weight={"medium"} style={styles.orderNo}>
-                        112$
+                        {Math.floor(total)}$
                     </CustomText>
                 </View>
             </View>
@@ -49,6 +51,7 @@ export const Order = ({orderNo, trackingNo, quantity, total, date, status,onPres
                      borderColor={COLORS.TEXT}
                      borderWidth={1}
                      btnName={"Details"}
+                     onPress={onPress}
                 />
                 <CustomText style={styles.status}>
                     Delivered

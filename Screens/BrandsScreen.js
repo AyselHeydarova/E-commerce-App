@@ -1,13 +1,11 @@
-import React,{useState} from 'react';
-import {StyleSheet, TextInput, View, FlatList, StatusBar} from 'react-native';
-import {GLOBAL_STYLES} from "../style/globalStyles";
+import React, {useState} from 'react';
+import {StyleSheet, TextInput, View, FlatList, StatusBar, TouchableOpacity} from 'react-native';
 import {COLORS} from "../style/colors";
 import {Search} from "../Icons/Search";
 import {BrandContainer} from "../components/BrandContainer";
-import {SizeContainer} from "../components/SizeContainer";
 import {Buttons} from "../components/Buttons";
 
-export const BrandsScreen = ({navigation}) => {
+export const BrandsScreen = ({navigation, route}) => {
     const {finalProducts} = route.params;
     // const brands = ["ADIDAS", "GUCCI", "GAP", "H&M", "Mango", "ZARA", "Diesel", "NIKE", "Levi's", "Pull&Bear","HERMES"]
     const [brands, setBrands] = useState([
@@ -55,9 +53,14 @@ export const BrandsScreen = ({navigation}) => {
                 brand: "HERMES",
                 state: false
             },
-           ]
+        ]
     );
-    const handleBrand=()=>{
+    const [filteredProductsByBrand, setFilteredProductsByBrand] = useState([]);
+    const handleBrand = (brandName) => {
+        const filteredProductsByBrand = finalProducts.filter((product) => product.brandName === brandName);
+        setFilteredProductsByBrand(filteredProductsByBrand);
+        console.log('filteredProductsByBrand', filteredProductsByBrand)
+        console.log('brandName', brandName)
 
     };
     return (
@@ -70,11 +73,19 @@ export const BrandsScreen = ({navigation}) => {
             <FlatList
                 data={brands}
                 renderItem={({item}) => (
-                    <BrandContainer brandName={item.brand} />
+                    <TouchableOpacity onPress={() => handleBrand(item.brand)}>
+                        <BrandContainer brandName={item.brand} onPress={() => handleBrand(item.brand)}/>
+                    </TouchableOpacity>
+
                 )}
                 keyExtractor={item => item.brand}
             />
-            <Buttons/>
+            <Buttons
+                onPressApply={() => navigation.navigate("Catalog", {
+                    filteredProducts: filteredProductsByBrand,
+                    isFiltered: true
+                })}
+                onPressDiscard={() => navigation.navigate("Filters")}/>
         </View>
     );
 };

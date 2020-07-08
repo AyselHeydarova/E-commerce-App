@@ -8,6 +8,7 @@ import { Favorites } from "../Screens/Favorites";
 
 import { ProfileStack, ShopStack } from "./index";
 import { HomeStack } from "./HomeStack";
+import {COLORS} from "../style/colors";
 
 const Tab = createBottomTabNavigator();
 
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
+      backgroundColor:COLORS.BACKGROUND,
   },
 });
 

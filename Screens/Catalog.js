@@ -26,15 +26,17 @@ import { GLOBAL_STYLES } from "../style/globalStyles";
 const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),
 });
-export const Catalog = connect(mapStateToProps, { getAllData })(
-  ({ getAllData, allProducts, route, navigation }) => {
+export const Catalog = connect(mapStateToProps)(
+  ({  allProducts, route, navigation }) => {
     const {
       name,
       isWomanClicked,
       categoryName,
       isOnSale = false,
+        isFiltered,
+        filteredProducts
     } = route.params;
-    const products = allProducts.categories;
+    const products = allProducts.allProducts;
     const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
     const [sortOption, setSortOption] = useState({
       Popular: true,
@@ -43,7 +45,8 @@ export const Catalog = connect(mapStateToProps, { getAllData })(
       lowestToHigh: false,
       highestToLow: false,
     });
-    console.log(isOnSale);
+    console.log('filteredProducts',filteredProducts);
+    console.log('isFiltered',isFiltered);
     const sortOptions = [
       {
         sortingName: "Popular",
@@ -143,7 +146,7 @@ export const Catalog = connect(mapStateToProps, { getAllData })(
         </View>
 
         <FlatList
-          data={finalProducts}
+          data={isFiltered?filteredProducts:finalProducts}
           numColumns={numberOfColums}
           key={numberOfColums}
           renderItem={({ item }) => (
@@ -166,7 +169,7 @@ export const Catalog = connect(mapStateToProps, { getAllData })(
         />
 
         {isBottomModalOpen ? (
-          <BottomModal name={"SortBy"} height={350}>
+          <BottomModal name={"SortBy"} height={350} >
             <View style={styles.sortBy}>
               <FlatList
                 data={sortOptions}
@@ -235,6 +238,7 @@ const styles = StyleSheet.create({
   },
   sortBy: {
     width: "100%",
+      marginTop: 70
   },
   sortingName: {
     fontSize: 18,
@@ -242,7 +246,7 @@ const styles = StyleSheet.create({
   },
   sortingContainer: {
     width: "100%",
-    padding: 18,
+    padding: 16,
     alignItems: "flex-start",
   },
 });
