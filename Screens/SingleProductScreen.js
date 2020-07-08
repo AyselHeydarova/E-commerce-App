@@ -38,6 +38,7 @@ export const SingleProductScreen = connect(mapStateToProps, {setAddToBag, addPro
      }) => {
         const [isSizeClicked, setIsSizeClicked] = useState(false);
         const [isColorClicked, setIsColorClicked] = useState(false);
+        const [isHeartClicked, setIsHeartClicked] = useState(false);
         const {
             id,
             about,
@@ -52,8 +53,9 @@ export const SingleProductScreen = connect(mapStateToProps, {setAddToBag, addPro
             count
         } = route.params.product;
         const {products} = route.params;
+        const {product} = route.params;
         const [addProduct, setAddProduct] = useState({
-            userId: "",
+            selectedCount:1,
             id: id,
             name: name,
             price: price,
@@ -64,9 +66,14 @@ export const SingleProductScreen = connect(mapStateToProps, {setAddToBag, addPro
         });
         const handleAddToCart = () => {
             setAddToBag(addProduct);
-            addProductToUsersBag(addProduct);
+            addProductToUsersBag(addProduct,false);
             setIsSizeClicked(false);
             setIsColorClicked(false)
+        };
+        const handleFavoriteProduct = () => {
+            addProductToUsersBag(product,true);
+            setIsHeartClicked(!isHeartClicked)
+            console.log('product',product)
         };
         const [isClicked, setIsClicked] = useState({
             S: false,
@@ -111,7 +118,7 @@ export const SingleProductScreen = connect(mapStateToProps, {setAddToBag, addPro
                             dotColor={COLORS.PRIMARY}
                         />
                         <View style={styles.main}>
-                            <View style={styles.row}>
+                            <View style={[styles.row,{justifyContent: "space-around"}]}>
                                 <SizeContainer
                                     width={130}
                                     name="Size"
@@ -128,7 +135,11 @@ export const SingleProductScreen = connect(mapStateToProps, {setAddToBag, addPro
                                     bgColor={isColorClicked ? COLORS.PRIMARY : null}
                                     borderWidth={isColorClicked ? 0 : 0.4}
                                 />
-                                <Heart width={30} height={30}/>
+                               <View style={{width:38}}>
+                                   <Heart width={25} height={25}
+                                          isHeartClicked={isHeartClicked}
+                                          onPress={()=>handleFavoriteProduct()}/>
+                               </View>
                             </View>
 
                             <View style={styles.row}>
@@ -247,6 +258,14 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
     },
+    ratingRow:{
+        width:140,
+        flexDirection: "row",
+        marginBottom: 10,
+        justifyContent: "space-between",
+        alignItems: "baseline",
+    },
+
     bigText: {
         fontSize: 24,
     },
@@ -266,4 +285,9 @@ const styles = StyleSheet.create({
         fontSize: 10,
         marginBottom: 15,
     },
+    ratingCount: {
+        color: COLORS.GRAY,
+        marginTop: 10,
+        marginLeft: 15
+    }
 });

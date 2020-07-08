@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, StatusBar, FlatList, TouchableOpacity, Image} from "react-native";
 import {COLORS} from "../../style/colors";
 import {CustomText} from "../../components/CustomText";
@@ -7,12 +7,31 @@ import {Back} from "../../Icons/Back";
 import {Btn} from "../../components/Btn";
 import {Order} from "../../components/Order";
 import {GLOBAL_STYLES} from "../../style/globalStyles";
+import {
+    getCurrentUserData,
+    selectUserData
+} from "../../store/users";
+import {connect} from "react-redux";
 
-export const MyOrders = ({navigation}) => {
+
+const mapStateToProps = (state) => ({
+    usersData: selectUserData(state),
+});
+
+export const MyOrders = connect(mapStateToProps,
+    {
+        getCurrentUserData,
+    })
+(({
+      navigation,
+      getCurrentUserData,
+      usersData,
+  }) => {
     const [isDeliveredClicked, setIsDeliveredClicked] = useState(true);
     const [isProcessingClicked, setIsProcessingClicked] = useState(false);
     const [isCancelledClicked, setIsCancelledClicked] = useState(false);
-
+    console.log('usersData MyOrders',usersData)
+    const orders=usersData.orders ||[];
     const handleDelivered = () => {
         setIsDeliveredClicked(true);
         setIsProcessingClicked(false);
@@ -28,6 +47,17 @@ export const MyOrders = ({navigation}) => {
         setIsProcessingClicked(false);
         setIsCancelledClicked(true);
     };
+
+    const handleUserData = async () => {
+        try {
+            await getCurrentUserData();
+        } catch (error) {
+            console.log("getCurrentUserData", error);
+        }
+    };
+    useEffect(() => {
+        handleUserData();
+    }, []);
     return (
         <View style={styles.container}>
             <StatusBar/>
@@ -66,16 +96,30 @@ export const MyOrders = ({navigation}) => {
                 />
             </View>
             <FlatList
-                data={["a", "b", "c"]}
+                data={orders}
                 renderItem={({item}) => (
-                    <Order onPress={()=>navigation.navigate("OrderDetails")}/>
+                    <Order date={item.date}
+                           orderNo={item.orderNo}
+                           quantity={item.quantity}
+                           total={item.totalAmount}
+                           trackingNo={item.trackingNo}
+                           onPress={() => navigation.navigate("OrderDetails",{
+                               orderedProducts:item.orderedProducts,
+                               orderNo:item.orderNo,
+                               trackingNo:item.trackingNo,
+                               quantity:item.quantity,
+                               date:item.date,
+                               status:'Delivered',
+                               total:item.totalAmount
+
+                           })}/>
                 )}
-                keyExtractor={item => item}
+                keyExtractor={item => item.orderNo}
             />
 
         </View>
     );
-};
+});
 
 const styles = StyleSheet.create({
 
@@ -98,8 +142,11 @@ const styles = StyleSheet.create({
     },
 
     btns: {
+        width:'100%',
         flexDirection: "row",
-        marginBottom:GLOBAL_STYLES.MARGIN_LEFT
+        alignItems:"center",
+        justifyContent:"center",
+        marginBottom: GLOBAL_STYLES.MARGIN_LEFT
     }
 
 

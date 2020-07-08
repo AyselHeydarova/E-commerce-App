@@ -9,8 +9,17 @@ import {ListViewChanger} from "../Icons/ListViewChanger";
 import {ProductCard} from "../components/ProductCard";
 import {CardView} from "../Icons/CardView";
 import {Back} from "../Icons/Back";
+import {getCurrentUserData, selectUserData} from "../store/users";
+import {connect} from "react-redux";
 
-export const Favorites = () => {
+    const mapStateToProps = (state) => ({
+        usersData: selectUserData(state),
+    });
+    export const Favorites = connect(mapStateToProps,{getCurrentUserData})(({getCurrentUserData,usersData, navigation}) => {
+        const favorites=usersData.userFavorites||[];
+        console.log(usersData,'usersData')
+        console.log(favorites,'userFavorites')
+        console.log(usersData.userFavorites,'usersData.userFavorites')
     const clothes = ["T-Shirt", "Shirt", "Skirt", "Shoes", "Short",];
     const [isListView, setIsListView] = useState(true);
     return (
@@ -60,10 +69,15 @@ export const Favorites = () => {
             </View>
             {isListView ?
                 <FlatList
-                    data={clothes}
+                    data={favorites}
                     renderItem={({item}) => (
                         <View style={styles.card}>
-                            <ProductCard/>
+                            <ProductCard
+                                product={item}
+                                isInFavs={true}
+                                isRowView={isListView}
+                                isInCatalog={true}
+                            />
                         </View>
                     )}
                     keyExtractor={item => item}
@@ -71,9 +85,14 @@ export const Favorites = () => {
                 :
                 <View style={styles.cardContainer}>
                 <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                        {clothes.map((name) => (
+                        {favorites.map((name) => (
                             <View style={{marginLeft:1,marginBottom: 15}} key={`${name}-${Date.now()}`}>
-                                <ProductCard isRowView={isListView}/>
+                                <ProductCard
+                                    product={item}
+                                    isInFavs={true}
+                                    isRowView={isListView}
+                                    isInCatalog={true}
+                                />
                             </View>
                         ))}
                     </ScrollView>
@@ -83,7 +102,7 @@ export const Favorites = () => {
 
         </View>
     );
-};
+});
 
 const styles = StyleSheet.create({
 
