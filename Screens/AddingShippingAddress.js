@@ -9,15 +9,17 @@ import { connect } from "react-redux";
 import { saveShippingAddress } from "../store/users";
 
 export const AddingShippingAddress = connect(null, { saveShippingAddress })(
-  ({ saveShippingAddress }) => {
-    const [addressFields, setAddressFields] = useState({
-      fullName: "",
-      address: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      country: "",
-    });
+  ({ saveShippingAddress, route, navigation }) => {
+    const [addressFields, setAddressFields] = useState(
+      route.params?.address || {
+        fullName: "",
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        country: "",
+      }
+    );
 
     const handleFieldChange = (name, value) => {
       setAddressFields((fields) => ({
@@ -25,8 +27,6 @@ export const AddingShippingAddress = connect(null, { saveShippingAddress })(
         [name]: value,
       }));
     };
-
-    console.log("address fields", addressFields);
 
     return (
       <View style={styles.container}>
@@ -67,7 +67,10 @@ export const AddingShippingAddress = connect(null, { saveShippingAddress })(
             bgColor={COLORS.PRIMARY}
             width="100%"
             height={48}
-            onPress={() => saveShippingAddress(addressFields)}
+            onPress={() => {
+              saveShippingAddress(addressFields);
+              navigation.navigate("ShippingAddressesScreen");
+            }}
           />
           {/* <ActionModal btnName="Save Address" /> */}
         </ScrollView>
@@ -78,7 +81,6 @@ export const AddingShippingAddress = connect(null, { saveShippingAddress })(
 
 const styles = StyleSheet.create({
   container: {
-    // alignItems: "center",
     backgroundColor: COLORS.BACKGROUND,
     padding: GLOBAL_STYLES.PADDING,
   },

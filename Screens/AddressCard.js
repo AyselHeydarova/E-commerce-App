@@ -5,19 +5,22 @@ import { COLORS } from "../style/colors";
 import { AcceptIcon } from "../Icons/AcceptIcon";
 
 export const AddressCard = ({
-  fullname = "John Doe",
+  fullName = "John Doe",
   address = "3 Newbridge Court",
   city = "Chino Hills",
   state = "California",
   zipCode = "AZ1000",
   country = "Azerbaijan",
+  editPressHandler,
+  isSelected,
+  onPress,
 }) => {
-  const [clicked, setClicked] = useState(false);
+  // const [clicked, setClicked] = useState(false);
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <CustomText weight="medium">{fullname}</CustomText>
-        <TouchableOpacity>
+        <CustomText weight="medium">{fullName}</CustomText>
+        <TouchableOpacity onPress={editPressHandler}>
           <CustomText style={styles.edit} weight="bold">
             Edit
           </CustomText>
@@ -28,21 +31,18 @@ export const AddressCard = ({
       <CustomText>
         {city}, {state} {zipCode}, {country}
       </CustomText>
-      <TouchableOpacity
-        style={styles.checkboxWrapper}
-        onPress={() => setClicked(!clicked)}
-      >
+      <TouchableOpacity style={styles.checkboxWrapper} onPress={onPress}>
         <View
           style={[
             styles.checkbox,
             {
-              backgroundColor: clicked ? COLORS.TEXT : null,
-              borderColor: clicked ? null : COLORS.GRAY,
-              borderWidth: clicked ? null : 2,
+              backgroundColor: isSelected ? COLORS.TEXT : null,
+              borderColor: isSelected ? null : COLORS.GRAY,
+              borderWidth: isSelected ? null : 2,
             },
           ]}
         >
-          <AcceptIcon width={20} height={20} />
+          <AcceptIcon width={20} height={20} color={COLORS.DARK} />
         </View>
         <CustomText>Use as the shipping address</CustomText>
       </TouchableOpacity>

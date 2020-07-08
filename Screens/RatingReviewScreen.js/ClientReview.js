@@ -11,23 +11,29 @@ import StarRating from "react-native-star-rating";
 import { GLOBAL_STYLES } from "../../style/globalStyles";
 import { ActionModal } from "../../components/ActionModal";
 import { Btn } from "../../components/Btn";
-import { selectAuthUserID } from "../../store/auth";
 import { connect } from "react-redux";
-import { sendReview } from "../../store/products";
+import { sendReview, increaseRating } from "../../store/products";
+import { selectUserData } from "../../store/users";
 
 const mapStateToProps = (state) => ({
-  currentUserID: selectAuthUserID(state),
+  currentUser: selectUserData(state),
 });
 
 export const ClientReview = connect(mapStateToProps, { sendReview })(
-  ({ currentUserID, productID, sendReview }) => {
+  ({ currentUser, productID, sendReview }) => {
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
 
-    console.log("client review product ID", productID);
+    console.log("currentUser review", currentUser);
+
+    const increaseRatingFields = {
+      productID: productID,
+      givenRating: rating,
+    };
 
     const fields = {
-      authorID: currentUserID,
+      username: currentUser.username,
+      userPhoto: currentUser.userPhoto,
       review_text: comment,
       givenRating: rating,
       productID: productID,
@@ -60,6 +66,8 @@ export const ClientReview = connect(mapStateToProps, { sendReview })(
         <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoid}>
           <TextInput
             style={styles.comment}
+            multiline={true}
+            textAlignVertical="top"
             placeholder="Your review"
             onChangeText={(v) => setComment(v)}
           />
@@ -70,7 +78,10 @@ export const ClientReview = connect(mapStateToProps, { sendReview })(
           bgColor={COLORS.PRIMARY}
           width="100%"
           height={48}
-          onPress={() => sendReview(fields)}
+          onPress={() => {
+            sendReview(fields);
+            increaseRating(increaseRatingFields);
+          }}
         />
 
         {/* <ActionModal btnName="send review" /> */}
@@ -113,6 +124,7 @@ const styles = StyleSheet.create({
   comment: {
     width: "100%",
     height: 130,
+    color: COLORS.TEXT,
     backgroundColor: COLORS.BACKGROUND,
     borderRadius: 4,
     padding: 20,
