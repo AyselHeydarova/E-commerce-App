@@ -37,7 +37,7 @@ export const ProfileScreen = ({
     {
       sectionName: "Payment methods",
       dutyOfSection: `Visa ${paymentMethods} `,
-      screenTo: "PasswordChange",
+      screenTo: "PaymentScreen",
     },
     {
       sectionName: "Settings",
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT,
     fontSize: 34,
     lineHeight: 34,
-    margin: 30,
+    margin: 30, 
   },
   email: {
     color: COLORS.GRAY,

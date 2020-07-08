@@ -1,16 +1,13 @@
 import React from 'react';
 import {useState} from 'react';
 import {StyleSheet, View, StatusBar, FlatList, TouchableOpacity, } from "react-native";
-import {CustomText} from "../Payments/components/CustomText";
-import {COLORS} from "../Payments/style/colors"
-import {GLOBAL_STYLES} from "../Payments/style/globalStyles"
-import {Plus} from "../Payments/Icons/Plus"
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {CustomText} from "../components/CustomText";
+import {COLORS} from "../style/colors"
+import {GLOBAL_STYLES} from "../style/globalStyles"
+import {Plus} from "../Icons/Plus"
 
 
-
-function PaymentsScreen ({ navigation }) {
+export const PaymentScreen = () => {
   return (
     <View style={styles.container}>
     <StatusBar/>
@@ -18,6 +15,7 @@ function PaymentsScreen ({ navigation }) {
     <CustomText weight={'bold'} style={{textAlign: "center", color: COLORS.TEXT , fontSize: 25, }} >
         Payment Methods
     </CustomText>
+    <CustomText>Your payment cards</CustomText>
     </View>
     <Plus
         style={{ alignSelf: "flex-end" }}
@@ -26,4 +24,3 @@ function PaymentsScreen ({ navigation }) {
 </View>
   );
 };
-export default PaymentsScreen;
