@@ -1,5 +1,13 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, StatusBar, FlatList, TouchableOpacity, ScrollView} from "react-native";
+import React, {useState,useEffect} from 'react';
+import {
+    StyleSheet,
+    View,
+    StatusBar,
+    FlatList,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    ScrollView
+} from "react-native";
 import {COLORS} from "../style/colors";
 import {CustomText} from "../components/CustomText";
 import {Btn} from "../components/Btn";
@@ -12,16 +20,25 @@ import {Back} from "../Icons/Back";
 import {getCurrentUserData, selectUserData} from "../store/users";
 import {connect} from "react-redux";
 
-    const mapStateToProps = (state) => ({
-        usersData: selectUserData(state),
-    });
-    export const Favorites = connect(mapStateToProps,{getCurrentUserData})(({getCurrentUserData,usersData, navigation}) => {
-        const favorites=usersData.userFavorites||[];
-        console.log(usersData,'usersData')
-        console.log(favorites,'userFavorites')
-        console.log(usersData.userFavorites,'usersData.userFavorites')
+const mapStateToProps = (state) => ({
+    usersData: selectUserData(state),
+});
+export const Favorites = connect(mapStateToProps, {getCurrentUserData})(({getCurrentUserData, usersData, navigation}) => {
+    const favorites = usersData.userFavorites || [];
+    console.log(usersData, 'usersData')
     const clothes = ["T-Shirt", "Shirt", "Skirt", "Shoes", "Short",];
     const [isListView, setIsListView] = useState(true);
+
+    const handleFavs = async () => {
+        try {
+            await getCurrentUserData();
+        } catch (error) {
+            console.log("getNewData", error);
+        }
+    };
+    useEffect(()=>{
+        handleFavs();
+    },[])
     return (
         <View style={styles.container}>
             <StatusBar/>
@@ -71,29 +88,37 @@ import {connect} from "react-redux";
                 <FlatList
                     data={favorites}
                     renderItem={({item}) => (
-                        <View style={styles.card}>
+                        <TouchableWithoutFeedback onPress={() => navigation.navigate("SingleProductScreen", {
+                            product: item,
+                        })
+                        } style={styles.card}>
                             <ProductCard
                                 product={item}
                                 isInFavs={true}
                                 isRowView={isListView}
                                 isInCatalog={true}
                             />
-                        </View>
+                        </TouchableWithoutFeedback>
                     )}
-                    keyExtractor={item => item}
+                    keyExtractor={item => item.id}
                 />
                 :
                 <View style={styles.cardContainer}>
-                <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                    <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
                         {favorites.map((name) => (
-                            <View style={{marginLeft:1,marginBottom: 15}} key={`${name}-${Date.now()}`}>
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate("SingleProductScreen", {
+                                    product: name,
+                                })}
+                                style={{marginLeft: 1, marginBottom: 15}}
+                                key={`${name}-${Date.now()}`}>
                                 <ProductCard
-                                    product={item}
+                                    product={name}
                                     isInFavs={true}
                                     isRowView={isListView}
                                     isInCatalog={true}
                                 />
-                            </View>
+                            </TouchableOpacity>
                         ))}
                     </ScrollView>
                 </View>
@@ -143,8 +168,8 @@ const styles = StyleSheet.create({
     },
     cardContainer: {
         width: "100%",
-        display:"flex",
-        justifyContent:"space-around",
+        display: "flex",
+        justifyContent: "space-around",
     },
 
 });

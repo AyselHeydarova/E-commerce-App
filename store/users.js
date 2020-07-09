@@ -18,7 +18,7 @@ export const setAuthData = (payload) => ({
     payload,
 });
 
-export const addProductToUsersBag = (product, isFav, isDeleted) => async () => {
+export const addProductToUsersBag = (product, isFav, isDeleteFav,  isDeleteBag, ) => async () => {
     try {
         const userProductsRef = firebase.firestore()
             .collection("users")
@@ -26,38 +26,65 @@ export const addProductToUsersBag = (product, isFav, isDeleted) => async () => {
         const userProductsSnap = await userProductsRef.get();
         const userData = await userProductsSnap.data();
         if (isFav) {
-            console.log(userData.userFavorites)
-            userData.userFavorites.forEach((item) => {
-                console.log('item.id', item.id)
-                console.log('product.id', product.id)
-                if (item.id !== product.id) {
-                    userData.userFavorites.push(product);
-                }
-            });
-            userProductsRef.set({
-                    userFavorites: userData.userFavorites,
-                },
-                {merge: true})
+            if (isDeleteFav) {
+                const favs = userData.userFavorites;
+                favs.push(product);
+                const filteredFavs = favs.filter((item) => {
+                    return item.id !== product.id
+                });
+                userProductsRef.set({
+                        userFavorites: filteredFavs,
+                    },
+                    {merge: true})
+            } else {
+                console.log(userData)
 
+                let shouldBeAdded = true;
+                shouldBeAdded = userData.userFavorites.find(item => item.id === product.id)
+                shouldBeAdded ? null : userData.userFavorites.push(product)
 
+                userProductsRef.set({
+                        userFavorites: userData.userFavorites,
+                    },
+                    {merge: true})
+            }
         } else {
+            if (isDeleteBag) {
+                const bagProducts = userData.userProductsInBag;
+                bagProducts.push(product);
+                const filteredBagProducts = bagProducts.filter((item) => {
+                    return (item.id !== product.id && (item.color !== product.color || item.size !== product.size))
+                });
+                console.log('deleted');
+                console.log('filteredBagProducts',filteredBagProducts);
+
+                userProductsRef.set({
+                        userProductsInBag: filteredBagProducts,
+                    },
+                    {merge: true})
+            }
+            else{
             if (userData.userProductsInBag === undefined) {
                 const userProductsInBag = [];
                 userProductsInBag.push(product)
-                console.log('userProductsInBag',userProductsInBag)
                 userProductsRef.set({
                         userProductsInBag
                     },
                     {merge: true})
             } else {
-                userData.userProductsInBag.push(product);
-                console.log('userData.userProductsInBag', userData.userProductsInBag)
+                let shouldBeAddedToBag = true;
+                shouldBeAddedToBag = userData.userProductsInBag.find(item => item.id === product.id
+                    && (item.color === product.color || item.size === product.size)
+                )
+                console.log('shouldBeAddedToBag',shouldBeAddedToBag)
+                shouldBeAddedToBag ? userData.userProductsInBag.push(product) : null;
+                // userData.userProductsInBag.push(product);
                 userProductsRef.set({
                         userProductsInBag: userData.userProductsInBag,
                     },
                     {merge: true})
             }
-        }
+        }}
     } catch (e) {
         console.log('error', e)
     }
@@ -117,18 +144,13 @@ export const addOrderedProducts = (products) => async () => {
 
 export const getCurrentUserData = () => async (dispatch) => {
     try {
-        // const userProductsRef =
         firebase.firestore()
             .collection("users")
             .doc(firebase.auth().currentUser.uid)
             .onSnapshot(function (doc) {
-                console.log(doc.data(), 'doc.data()')
+                console.log('doc.data()', doc.data())
                 dispatch(setAuthData(doc.data()));
             });
-        // const userProductsSnap = await userProductsRef.get();
-        // const userData = await userProductsSnap.data();
-
-        console.log('currentUserData', currentUserData)
     } catch (e) {
         console.log('error', e)
     }

@@ -66,7 +66,7 @@ export const SingleProductScreen = connect(mapStateToProps, {setAddToBag, addPro
         });
         const handleAddToCart = () => {
             setAddToBag(addProduct);
-            addProductToUsersBag(addProduct,false);
+            addProductToUsersBag(addProduct,false,false,false);
             setIsSizeClicked(false);
             setIsColorClicked(false)
         };

@@ -43,7 +43,6 @@ export const MyBag = connect(mapStateToProps,
     const handleUserData = async () => {
         try {
             await getCurrentUserData();
-            await deleteBagProducts();
         } catch (error) {
             console.log("getCurrentUserData", error);
         }
@@ -59,14 +58,6 @@ export const MyBag = connect(mapStateToProps,
         addOrderedProducts(bagProducts);
         handleDeleteBagProducts();
         console.log('bagProducts', bagProducts)
-
-         // firebase.firestore.collection('users')
-         //    .doc(firebase.auth().currentUser.uid)
-         //    .set({ userProductsInBag: true })
-         //    .then(() => deleteBagProducts())
-         //    .then(() => {
-         //        console.log('Document field deleted');
-         //    }).catch((e)=>console.log(e));
 
     };
 
@@ -91,7 +82,7 @@ export const MyBag = connect(mapStateToProps,
                         />
                     </View>
                 )}
-                keyExtractor={item => item.id}
+                keyExtractor={item => `${item.id}${item.size}${item.color}`}
             />
             <View style={styles.amountContainer}>
                 <CustomText weight={'bold'} style={styles.amount}>

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {View, StyleSheet, Image} from "react-native";
+import {View, StyleSheet, Image, TouchableWithoutFeedback,TouchableOpacity} from "react-native";
 import {CustomText} from "./CustomText";
 import {COLORS} from "../style/colors";
 import StarRating from "react-native-star-rating";
@@ -11,6 +11,7 @@ import {averageRatingCalc, totalRatingCalc} from "../Utils/Calculations";
 import {selectAllProductData, setAddToBag} from "../store/products";
 import {connect} from "react-redux";
 import {addProductToUsersBag, selectCount, setCount, setCountSize} from "../store/users";
+import {Cross} from "../Icons/Cross";
 
 const mapStateToProps = (state) => ({
     allProducts: selectAllProductData(state),
@@ -76,9 +77,7 @@ export const ProductCard = connect(mapStateToProps, {setAddToBag, setCount, setC
                 return value;
             }
         }) : null;
-        const totalRatingCount = isInCatalog ? allRatingsArray.reduce(function (a, b) {
-            return a + b;
-        }) : null;
+
         const handleFavoriteProduct = () => {
             addProductToUsersBag(product, true);
             setIsHeartClicked(!isHeartClicked)
@@ -109,135 +108,148 @@ export const ProductCard = connect(mapStateToProps, {setAddToBag, setCount, setC
         };
 
         return (
-            <View style={cardWrapperStyles}>
-                <View style={isRowView ? styles.imgWrapper : columnStyles.imgWrapper}>
-                    {isNew ? <ProductTag style={styles.tag} title="new"/> : null}
+            <TouchableWithoutFeedback
+                onLongPress={() => isInFavs ? addProductToUsersBag(product, true, true, false) : {}}>
+                <View style={cardWrapperStyles}>
+                    <View style={isRowView ? styles.imgWrapper : columnStyles.imgWrapper}>
+                        {isNew ? <ProductTag style={styles.tag} title="new"/> : null}
 
-                    {isOnSale ? (
-                        <ProductTag
-                            style={{...styles.tag, backgroundColor: COLORS.PRIMARY}}
-                            title={`${onSale.discount}%`}
-                        />
-                    ) : null}
-                    <Image
-                        source={{
-                            uri:
-                                imagesUrls[0] ||
-                                "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-                        }}
-                        style={isRowView ? styles.productImg : columnStyles.productImg}
-                    />
-
-                    {count === 0 && (
-                        <View style={styles.soldOut}>
-                            <CustomText>Sorry, this item is currently sold out</CustomText>
-                        </View>
-                    )}
-                </View>
-
-                {isInCatalog ?
-                    <View style={styles.description}>
-                        <View style={styles.row}>
-                            <StarRating
-                                disabled={true}
-                                fullStarColor={COLORS.STAR}
-                                starSize={14}
-                                starStyle={{margin: 3}}
-                                containerStyle={{marginTop: 10, width: 80}}
-                                maxStars={5}
-                                rating={averageRatingCalc(rating)}
+                        {isOnSale ? (
+                            <ProductTag
+                                style={{...styles.tag, backgroundColor: COLORS.PRIMARY}}
+                                title={`${onSale.discount}%`}
                             />
-                            <CustomText style={styles.ratingCount}>
-                                ({totalRatingCalc(rating)})
-                            </CustomText>
-                        </View>
+                        ) : null}
+                        <Image
+                            source={{
+                                uri:
+                                    imagesUrls[0] ||
+                                    "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+                            }}
+                            style={isRowView ? styles.productImg : columnStyles.productImg}
+                        />
+
+                        {count === 0 && (
+                            <View style={styles.soldOut}>
+                                <CustomText>Sorry, this item is currently sold out</CustomText>
+                            </View>
+                        )}
+                    </View>
+
+                    {isInCatalog ?
+                        <View style={styles.description}>
+                            <View style={styles.row}>
+                                <StarRating
+                                    disabled={true}
+                                    fullStarColor={COLORS.STAR}
+                                    starSize={14}
+                                    starStyle={{margin: 3}}
+                                    containerStyle={{marginTop: 10, width: 80}}
+                                    maxStars={5}
+                                    rating={averageRatingCalc(rating)}
+                                />
+                                <CustomText style={styles.ratingCount}>
+                                    ({totalRatingCalc(rating)})
+                                </CustomText>
+                            </View>
 
 
-                        <CustomText style={{color: COLORS.GRAY}}>{brandName}</CustomText>
-                        <CustomText weight="medium">{name.toLowerCase()}</CustomText>
+                            <CustomText style={{color: COLORS.GRAY}}>{brandName}</CustomText>
+                            <CustomText weight="medium">{name.toLowerCase()}</CustomText>
 
 
-                        <View style={styles.priceRow}>
-                            <CustomText
-                                weight="bold"
-                                style={{
-                                    color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
-                                    textDecorationLine: isOnSale ? "line-through" : null,
-                                }}
-                            >
-                                {`${price}$`}
-                            </CustomText>
-                            {isOnSale ? (
+                            <View style={styles.priceRow}>
                                 <CustomText
                                     weight="bold"
-                                    style={{color: COLORS.SALE, marginLeft: 10}}
-                                >{`${salePrice}$`}
+                                    style={{
+                                        color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
+                                        textDecorationLine: isOnSale ? "line-through" : null,
+                                    }}
+                                >
+                                    {`${price}$`}
                                 </CustomText>
-                            ) : null}
-                        </View>
+                                {isOnSale ? (
+                                    <CustomText
+                                        weight="bold"
+                                        style={{color: COLORS.SALE, marginLeft: 10}}
+                                    >{`${salePrice}$`}
+                                    </CustomText>
+                                ) : null}
+                            </View>
 
-                    </View>
-                    : (
-                        <View style={styles.description}>
-                            <CustomText style={{marginTop: 5,marginBottom:5}} weight="medium">{name.toUpperCase()}</CustomText>
-                            <View style={styles.rowBag}>
-                                <View style={[styles.row, {marginRight: 10}]}>
-                                    <CustomText style={{color: COLORS.GRAY}}>Color: </CustomText>
-                                    <CustomText> {color} </CustomText>
+                        </View>
+                        : (
+                            <View style={styles.description}>
+                                <CustomText style={{marginTop: 5, marginBottom: 5}}
+                                            weight="medium">{name.toUpperCase()}</CustomText>
+
+                                {isInOrders ? null : <TouchableOpacity style={styles.cross}
+                                    onPress={() => addProductToUsersBag(product, false, false, true)}>
+                                    <Cross width={15} height={15}/>
+                                </TouchableOpacity>
+                                }
+                                <View style={styles.rowBag}>
+
+                                    <View style={[styles.row, {marginRight: 10}]}>
+                                        <CustomText style={{color: COLORS.GRAY}}>Color: </CustomText>
+                                        <CustomText> {color} </CustomText>
+                                    </View>
+                                    <View style={styles.row}>
+                                        <CustomText style={{color: COLORS.GRAY}}>Size:</CustomText>
+                                        <CustomText>{size}</CustomText>
+                                    </View>
                                 </View>
                                 <View style={styles.row}>
-                                    <CustomText style={{color: COLORS.GRAY}}>Size:</CustomText>
-                                    <CustomText>{size}</CustomText>
-                                </View>
-                            </View>
-                            <View style={styles.row}>
-                                {isInOrders ?
-                                    <View style={[styles.row, {marginRight: 10}]}>
-                                        <CustomText style={{color: COLORS.GRAY}}>Units: </CustomText>
-                                        <CustomText> {selectedCount} </CustomText>
-                                    </View>
+                                    {isInOrders ?
+                                        <View style={[styles.row, {marginRight: 10}]}>
+                                            <CustomText style={{color: COLORS.GRAY}}>Units: </CustomText>
+                                            <CustomText> {selectedCount} </CustomText>
+                                        </View>
 
-                                    :
-                                    <Counter
-                                        count={defaultCount}
-                                        handleMinus={() => {
-                                            setDefaultCount(defaultCount === 1 ? defaultCount : defaultCount - 1),
-                                                handleCount()
-                                        }}
-                                        handlePlus={() => {
-                                            setDefaultCount(defaultCount + 1),
-                                                handleCount()
-                                        }}
-                                    />
-                                }
+                                        :
+                                        <Counter
+                                            count={defaultCount}
+                                            handleMinus={() => {
+                                                setDefaultCount(defaultCount === 1 ? defaultCount : defaultCount - 1),
+                                                    handleCount()
+                                            }}
+                                            handlePlus={() => {
+                                                setDefaultCount(defaultCount + 1),
+                                                    handleCount()
+                                            }}
+                                        />
+                                    }
 
-                                <View>
-                                    {isOnSale ? (
-                                        <CustomText
+                                    <View>
+                                        {isOnSale ? (
+                                            <CustomText
+                                                weight="bold"
+                                                style={{color: COLORS.SALE, marginLeft: 10}}
+                                            >{`${salePrice}$`}
+                                            </CustomText>
+                                        ) : <CustomText
                                             weight="bold"
-                                            style={{color: COLORS.SALE, marginLeft: 10}}
-                                        >{`${salePrice}$`}
-                                        </CustomText>
-                                    ) : <CustomText
-                                        weight="bold"
-                                        style={{
-                                            color: isOnSale ? COLORS.GRAY : COLORS.TEXT, lineHeight: 45, fontSize: 19,
-                                            textDecorationLine: isOnSale ? "line-through" : null,
-                                        }}
-                                    >
-                                        {`${price * defaultCount}$`}
-                                    </CustomText>}
+                                            style={{
+                                                color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
+                                                lineHeight: 45,
+                                                fontSize: 19,
+                                                textDecorationLine: isOnSale ? "line-through" : null,
+                                            }}
+                                        >
+                                            {`${price * defaultCount}$`}
+                                        </CustomText>}
+                                    </View>
                                 </View>
-                            </View>
 
-                        </View>
-                    )}
-                {isInFavs || isInOrders ? null :
-                    <Heart width={15} height={15}
-                           isHeartClicked={isHeartClicked}
-                           onPress={() => handleFavoriteProduct()}/>
-                }
-            </View>
+                            </View>
+                        )}
+                    {isInFavs || isInOrders ? null :
+                        <Heart width={15} height={15}
+                               isHeartClicked={isHeartClicked}
+                               onPress={() => handleFavoriteProduct()}/>
+                    }
+                </View>
+            </TouchableWithoutFeedback>
         );
     });
 
@@ -281,7 +293,7 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginBottom:5
+        marginBottom: 5
     },
     rowBag: {
         flexDirection: "row",
@@ -302,5 +314,10 @@ const styles = StyleSheet.create({
         color: COLORS.GRAY,
         marginTop: 10,
         marginLeft: 15
+    },
+    cross:{
+        position:'absolute',
+        top:7,
+        right:7
     }
 });
