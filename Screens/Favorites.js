@@ -27,6 +27,7 @@ export const Favorites = connect(mapStateToProps, {getCurrentUserData})(({getCur
     const favorites = usersData.userFavorites || [];
     console.log(usersData, 'usersData')
     const clothes = ["T-Shirt", "Shirt", "Skirt", "Shoes", "Short",];
+
     const [isListView, setIsListView] = useState(true);
 
     const handleFavs = async () => {
@@ -40,29 +41,28 @@ export const Favorites = connect(mapStateToProps, {getCurrentUserData})(({getCur
         handleFavs();
     },[])
     return (
-        <View style={styles.container}>
-            <StatusBar/>
+      <View style={styles.container}>
+        <StatusBar />
 
-            <CustomText weight={'bold'} style={styles.title}>
-                Favorites
-            </CustomText>
-            <View style={styles.btns}>
-                <FlatList
-                    horizontal={true}
-                    data={clothes}
-                    renderItem={({item}) => (
-                        <View style={styles.btn}>
-                            <Btn
-                                width={100}
-                                height={30}
-                                bgColor={COLORS.TEXT}
-                                btnName={item}
-                                titleStyle={{color: COLORS.BACKGROUND}}/>
-                        </View>
-                    )}
-                    keyExtractor={item => item}
+        <CustomText weight={"bold"} style={styles.title}>
+          Favorites
+        </CustomText>
+        <View style={styles.btns}>
+          <FlatList
+            horizontal={true}
+            data={clothes}
+            renderItem={({ item }) => (
+              <View style={styles.btn}>
+                <Btn
+                  width={100}
+                  height={30}
+                  bgColor={COLORS.TEXT}
+                  btnName={item}
+                  titleStyle={{ color: COLORS.BACKGROUND }}
                 />
             </View>
+                )}/>
+        </View>
             <View style={styles.filters}>
                 <TouchableOpacity style={styles.filter}>
                     <Filter width={20} height={20}/>
@@ -121,16 +121,15 @@ export const Favorites = connect(mapStateToProps, {getCurrentUserData})(({getCur
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
+
                 </View>
-            }
-
-
-        </View>
+        }
+      </View>
     );
-});
+  }
+);
 
 const styles = StyleSheet.create({
-
     container: {
         flex: 1,
         backgroundColor: COLORS.BACKGROUND,

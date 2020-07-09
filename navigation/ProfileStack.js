@@ -33,7 +33,15 @@ export const ProfileStack = () => {
         component={PasswordChange}
       />
       <Screen
-        options={{ headerShown: false }}
+        options={({ navigation }) => ({
+          title: "",
+          headerStyle: {
+            backgroundColor: COLORS.BACKGROUND,
+            elevation: 0,
+          },
+          headerTintColor: COLORS.TEXT,
+          headerLeft: () => <Back onPress={() => navigation.goBack()} />,
+        })}
         name="Settings"
         component={Settings}
       />

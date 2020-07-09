@@ -1,25 +1,35 @@
 import React, {useState} from "react";
-import {View, StyleSheet, Image, TouchableWithoutFeedback,TouchableOpacity} from "react-native";
+import {addProductToUsersBag, selectCount, setCount, setCountSize} from "../store/users";
+import {Cross} from "../Icons/Cross";
+import {View, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback} from "react-native";
 import {CustomText} from "./CustomText";
 import {COLORS} from "../style/colors";
 import StarRating from "react-native-star-rating";
 import {ProductTag} from "../commons/ProductTag";
 import {Heart} from "../Icons/Heart";
 import {Counter} from "./Counter";
-
 import {averageRatingCalc, totalRatingCalc} from "../Utils/Calculations";
 import {selectAllProductData, setAddToBag} from "../store/products";
 import {connect} from "react-redux";
-import {addProductToUsersBag, selectCount, setCount, setCountSize} from "../store/users";
-import {Cross} from "../Icons/Cross";
+import {
+    addProductToUsersBag,
+    selectCount,
+    setCount,
+    setCountSize,
+} from "../store/users";
+import {columnStyles} from "../style/globalStyles";
 
 const mapStateToProps = (state) => ({
     allProducts: selectAllProductData(state),
-    count: selectCount(state)
+    count: selectCount(state),
 });
-export const ProductCard = connect(mapStateToProps, {setAddToBag, setCount, setCountSize, addProductToUsersBag})(
+export const ProductCard = connect(mapStateToProps, {
+    setAddToBag,
+    setCount,
+    setCountSize,
+    addProductToUsersBag,
+})(
     ({
-
          addProductToUsersBag,
          setCountSize,
          product,
@@ -28,33 +38,14 @@ export const ProductCard = connect(mapStateToProps, {setAddToBag, setCount, setC
          isInFavs,
          isNew,
          isOnSale,
-         isInOrders = false
+         isInOrders = false,
      }) => {
 
-        const columnStyles = {
-            cardWrapper: {
-                flexDirection: "column",
-                width: 150,
-                height: 280,
-                borderRadius: 8,
-                backgroundColor: COLORS.DARK,
-                marginRight: 20,
-                marginBottom: 20,
-            },
 
-            imgWrapper: {
-                width: "100%",
-                height: 174,
-                borderRadius: 8,
-                overflow: "hidden",
-                position: "relative",
-            },
-            productImg: {
-                borderRadius: 8,
-                width: "100%",
-                height: "100%",
-            },
-        };
+        const cardWrapperStyles = [
+            isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
+            {opacity: count === 0 ? 0.5 : 1},
+        ];
 
         const {
             id,
@@ -71,28 +62,21 @@ export const ProductCard = connect(mapStateToProps, {setAddToBag, setCount, setC
         } = product;
         const [isHeartClicked, setIsHeartClicked] = useState(false);
         const [defaultCount, setDefaultCount] = useState(selectedCount);
-        const allRatingsArray = isInCatalog ? rating.map((obj) => {
-            for (let key in obj) {
-                const value = obj[key];
-                return value;
-            }
-        }) : null;
+        // const allRatingsArray = isInCatalog ? rating.map((obj) => {
+        //     for (let key in obj) {
+        //         const value = obj[key];
+        //         return value;
+        //     }
+        // }) : null;
 
         const handleFavoriteProduct = () => {
             addProductToUsersBag(product, true);
             setIsHeartClicked(!isHeartClicked)
         };
-        let totalStarCount = 0;
-        for (let i = 0; i <= 4; i++) {
-            totalStarCount += isInCatalog ? allRatingsArray[i] * (i + 1) : 0;
-        }
-
-
-        const cardWrapperStyles = [
-            isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
-            {opacity: count === 0 ? 0.5 : 1},
-        ];
-
+        // let totalStarCount = 0;
+        // for (let i = 0; i <= 4; i++) {
+        //     totalStarCount += isInCatalog ? allRatingsArray[i] * (i + 1) : 0;
+        // }
         const salePrice = isOnSale
             ? Math.floor((+price * (100 - +onSale.discount)) / 100)
             : null;
@@ -100,12 +84,13 @@ export const ProductCard = connect(mapStateToProps, {setAddToBag, setCount, setC
             try {
                 await setCountSize({
                     productID: id,
-                    selectedCount: defaultCount
+                    selectedCount: defaultCount,
                 });
             } catch (error) {
                 console.log("getCurrentUserData", error);
             }
         };
+
 
         return (
             <TouchableWithoutFeedback
@@ -184,7 +169,7 @@ export const ProductCard = connect(mapStateToProps, {setAddToBag, setCount, setC
                                             weight="medium">{name.toUpperCase()}</CustomText>
 
                                 {isInOrders ? null : <TouchableOpacity style={styles.cross}
-                                    onPress={() => addProductToUsersBag(product, false, false, true)}>
+                                                                       onPress={() => addProductToUsersBag(product, false, false, true)}>
                                     <Cross width={15} height={15}/>
                                 </TouchableOpacity>
                                 }
@@ -253,6 +238,7 @@ export const ProductCard = connect(mapStateToProps, {setAddToBag, setCount, setC
         );
     });
 
+
 const styles = StyleSheet.create({
     cardWrapper: {
         height: 110,
@@ -289,7 +275,6 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
     },
-
     row: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -315,9 +300,9 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginLeft: 15
     },
-    cross:{
-        position:'absolute',
-        top:7,
-        right:7
+    cross: {
+        position: 'absolute',
+        top: 7,
+        right: 7
     }
 });
