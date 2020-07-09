@@ -4,27 +4,38 @@ import {COLORS} from "../style/colors";
 import {CustomText} from "./CustomText";
 import {AcceptIcon} from "../Icons/AcceptIcon";
 
-export const BrandContainer = ({brandName}) => {
+export const BrandContainer = ({brandName, onPress}) => {
     const [isIconClicked, setIsIconClicked] = useState(false);
+    const handleBrand = () => {
+        setIsIconClicked(!isIconClicked);
+        onPress();
+    }
     return (
-        <View style={styles.container}>
-            <TouchableWithoutFeedback onPress={() => setIsIconClicked(!isIconClicked)}>
-                <CustomText style={{
-                    color: isIconClicked?COLORS.PRIMARY:COLORS.TEXT,
-                    fontSize: 16,
-                    lineHeight: 20,
-                }}>{brandName}</CustomText>
-            </TouchableWithoutFeedback>
-            <TouchableOpacity style={[styles.iconContainer, {
-                borderWidth: isIconClicked ? 0 : 2,
-                backgroundColor: isIconClicked ? COLORS.PRIMARY : null
-            }]}
-                              onPress={() => setIsIconClicked(!isIconClicked)}>
-                {isIconClicked ?
-                    <View style={styles.acceptIcon}><AcceptIcon width={25} height={23}/></View>
-                    : null}
-            </TouchableOpacity>
-        </View>
+        <TouchableWithoutFeedback onPress={onPress}>
+            <View style={styles.container}>
+                <TouchableWithoutFeedback onPress={() => handleBrand()
+
+                }>
+                    <CustomText style={{
+                        color: isIconClicked ? COLORS.PRIMARY : COLORS.TEXT,
+                        fontSize: 16,
+                        lineHeight: 20,
+                    }}>{brandName}</CustomText>
+                </TouchableWithoutFeedback>
+                <TouchableOpacity style={[styles.iconContainer, {
+                    borderWidth: isIconClicked ? 0 : 2,
+                    backgroundColor: isIconClicked ? COLORS.PRIMARY : null
+                }]}
+                                  onPress={() => handleBrand()}>
+                    {isIconClicked ?
+                        <TouchableWithoutFeedback
+                            style={styles.acceptIcon}>
+                            <AcceptIcon width={25}
+                                        height={23}/></TouchableWithoutFeedback>
+                        : null}
+                </TouchableOpacity>
+            </View>
+        </TouchableWithoutFeedback>
     );
 };
 export const styles = StyleSheet.create({

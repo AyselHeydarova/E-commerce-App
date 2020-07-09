@@ -6,7 +6,9 @@ import {Back} from "../../Icons/Back";
 import {Btn} from "../../components/Btn";
 import {ProductCard} from "../../components/ProductCard";
 
-export const OrderDetails = ({orderCount, trackingNumber, orderNo, date, status,navigation}) => {
+export const OrderDetails = ({navigation, route}) => {
+    const {quantity, trackingNo, orderNo, date, total, orderedProducts} = route.params
+
     const orderInfo = [
         {
             infoTitle: "Shipping Address:",
@@ -26,16 +28,15 @@ export const OrderDetails = ({orderCount, trackingNumber, orderNo, date, status,
         },
         {
             infoTitle: "Total Amount:",
-            infoText: `133$`
+            infoText: `${total}$`
         },
 
     ];
-
     return (
         <View style={styles.container}>
             <StatusBar/>
-            <View style={[styles.header, {justifyContent: "flex-start",marginBottom:40}]}>
-                <TouchableOpacity style={styles.backIcon} onPress={()=>navigation.goBack()}>
+            <View style={[styles.header, {justifyContent: "flex-start", marginBottom: 40}]}>
+                <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
                     <Back/>
                 </TouchableOpacity>
                 <CustomText weight={'bold'} style={styles.title}>
@@ -45,10 +46,10 @@ export const OrderDetails = ({orderCount, trackingNumber, orderNo, date, status,
             <ScrollView>
                 <View style={styles.header}>
                     <CustomText weight={"medium"} style={styles.orderNo}>
-                        Order №1947034
+                        Order №{orderNo}
                     </CustomText>
                     <CustomText style={styles.date}>
-                        05-12-2020
+                        {date}
                     </CustomText>
                 </View>
                 <View style={[styles.header, {justifyContent: "flex-start"}]}>
@@ -56,13 +57,13 @@ export const OrderDetails = ({orderCount, trackingNumber, orderNo, date, status,
                         Tracking number:
                     </CustomText>
                     <CustomText weight={"medium"} style={styles.orderNo}>
-                        IW3475453455
+                        {trackingNo}
                     </CustomText>
                 </View>
 
                 <View style={styles.header}>
                     <CustomText weight={"medium"} style={styles.orderNo}>
-                        3 items
+                        {quantity} items
                     </CustomText>
                     <CustomText style={styles.status}>
                         Delivered
@@ -70,14 +71,18 @@ export const OrderDetails = ({orderCount, trackingNumber, orderNo, date, status,
                 </View>
                 <View style={styles.cards}>
                     <FlatList
-                        data={["a", "b", "c"]}
+                        data={orderedProducts}
                         renderItem={({item}) => (
                             <View style={styles.card}>
-                                <ProductCard/>
+                                <ProductCard
+                                    product={item}
+                                    isRowView={true}
+                                    isInOrders={true}
+                                />
                             </View>
 
                         )}
-                        keyExtractor={item => item}
+                        keyExtractor={item => item.id}
                     />
 
 
@@ -86,13 +91,13 @@ export const OrderDetails = ({orderCount, trackingNumber, orderNo, date, status,
                     Order Information
                 </CustomText>
                 {
-                    orderInfo.map((item)=>(
+                    orderInfo.map((item) => (
                         <View style={[styles.header, {justifyContent: "flex-start"}]} key={item.infoText}>
-                           <View style={{width:152}}>
-                               <CustomText style={styles.date}>
-                                   {item.infoTitle}
-                               </CustomText>
-                           </View>
+                            <View style={{width: 152}}>
+                                <CustomText style={styles.date}>
+                                    {item.infoTitle}
+                                </CustomText>
+                            </View>
                             <CustomText weight={"medium"} style={styles.orderNo}>
                                 {item.infoText}
                             </CustomText>
@@ -107,6 +112,7 @@ export const OrderDetails = ({orderCount, trackingNumber, orderNo, date, status,
                          borderColor={COLORS.TEXT}
                          borderWidth={1}
                          btnName={"Reorder"}
+                         onPress={()=>navigation.navigate("Home")}
                     />
                 </View>
             </ScrollView>
@@ -157,14 +163,11 @@ const styles = StyleSheet.create({
         lineHeight: 25,
         marginRight: 15
     },
-    card: {
-        marginTop: 20,
-        marginBottom: 10,
-    },
+
     cards: {
         width: '100%',
         display: "flex",
-        alignItems: "center",
+        // alignItems: "center",
 
     },
     orderInfoTitle: {
@@ -172,7 +175,7 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         marginLeft: 18,
         marginTop: 18,
-        marginBottom:20
+        marginBottom: 20
     },
     btn: {
         width: 360,

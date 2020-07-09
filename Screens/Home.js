@@ -90,7 +90,9 @@ const Home = connect(mapStateToProps, {
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() =>
-                      navigation.navigate("SingleProduct", { product: item })
+                      navigation.navigate("SingleProduct", {
+                        product: item,
+                        products:saleProducts,})
                     }
                   >
                     <ProductCard
@@ -141,6 +143,7 @@ const Home = connect(mapStateToProps, {
                 onPress={() =>
                   navigation.navigate("SingleProduct", {
                     product: item,
+                    products:newProducts,
                   })
                 }
               >

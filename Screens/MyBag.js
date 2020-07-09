@@ -1,38 +1,77 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
+import * as firebase from "firebase";
+import "firebase/firestore";
 import {StyleSheet, View, StatusBar, FlatList, TouchableOpacity, ScrollView} from "react-native";
 import {COLORS} from "../style/colors";
 import {CustomText} from "../components/CustomText";
 import {Btn} from "../components/Btn";
 import {ProductCard} from "../components/ProductCard";
 import {CardView} from "../Icons/CardView";
-import {selectUserData,getCurrentUserData} from "../store/users";
+import {
+    selectUserData,
+    getCurrentUserData,
+    addOrderedProducts,
+    selectCount,
+    deleteBagProducts
+} from "../store/users";
 import {connect} from "react-redux";
 
 const mapStateToProps = (state) => ({
     usersData: selectUserData(state),
+    count: selectCount(state)
 });
-export const MyBag = connect(mapStateToProps,{getCurrentUserData})(({getCurrentUserData,usersData, navigation}) => {
-     const bagProducts=usersData.userProductsInBag||[];
-     console.log(usersData,'usersData')
-     console.log(bagProducts,'bagProducts')
-     console.log(usersData.userProductsInBag,'usersData.userProductsInBag')
+export const MyBag = connect(mapStateToProps,
+    {
+        getCurrentUserData,
+        addOrderedProducts,
+        deleteBagProducts
+    })
+(({
+      getCurrentUserData,
+      usersData,
+      addOrderedProducts,
+      deleteBagProducts
+  }) => {
+    const bagProducts = usersData.userProductsInBag || [];
     const totalAmount = () => {
         let total = 0;
         bagProducts.forEach((product) => {
-            total = total + product.price
+            total = total + product.price * product.selectedCount
         });
         return total;
     };
     const handleUserData = async () => {
         try {
             await getCurrentUserData();
+            await deleteBagProducts();
         } catch (error) {
             console.log("getCurrentUserData", error);
         }
     };
+    const handleDeleteBagProducts = async () => {
+        try {
+            await deleteBagProducts();
+        } catch (error) {
+            console.log("getCurrentUserData", error);
+        }
+    };
+    const handleCheckOut = () => {
+        addOrderedProducts(bagProducts);
+        handleDeleteBagProducts();
+        console.log('bagProducts', bagProducts)
+
+         // firebase.firestore.collection('users')
+         //    .doc(firebase.auth().currentUser.uid)
+         //    .set({ userProductsInBag: true })
+         //    .then(() => deleteBagProducts())
+         //    .then(() => {
+         //        console.log('Document field deleted');
+         //    }).catch((e)=>console.log(e));
+
+    };
+
     useEffect(() => {
         handleUserData();
-
     }, []);
     return (
         <View style={styles.container}>
@@ -45,7 +84,11 @@ export const MyBag = connect(mapStateToProps,{getCurrentUserData})(({getCurrentU
                 data={bagProducts}
                 renderItem={({item}) => (
                     <View style={styles.card}>
-                        <ProductCard product={item} isRowView={true}/>
+                        <ProductCard
+                            isInFavs={true}
+                            product={item}
+                            isRowView={true}
+                        />
                     </View>
                 )}
                 keyExtractor={item => item.id}
@@ -55,11 +98,16 @@ export const MyBag = connect(mapStateToProps,{getCurrentUserData})(({getCurrentU
                     Total amount:
                 </CustomText>
                 <CustomText weight={'bold'} style={styles.totalCost}>
-                    ${totalAmount()}
+                    ${Math.floor(totalAmount())}
                 </CustomText>
             </View>
             <TouchableOpacity style={styles.btn}>
-                <Btn width={345} height={50} bgColor={COLORS.PRIMARY} btnName={"CHECK OUT"}/>
+                <Btn onPress={() => handleCheckOut()}
+                     width={345}
+                     height={50}
+                     bgColor={COLORS.PRIMARY}
+                     btnName={"CHECK OUT"}/>
+
             </TouchableOpacity>
         </View>
     );

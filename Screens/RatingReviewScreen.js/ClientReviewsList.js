@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: GLOBAL_STYLES.PADDING,
     paddingVertical: GLOBAL_STYLES.PADDING,
-    // backgroundColor: COLORS.PRIMARY,
     marginBottom: 100,
     paddingBottom: 250,
   },

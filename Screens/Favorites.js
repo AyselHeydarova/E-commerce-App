@@ -16,84 +16,106 @@ import { ListViewChanger } from "../Icons/ListViewChanger";
 import { ProductCard } from "../components/ProductCard";
 import { CardView } from "../Icons/CardView";
 import { Back } from "../Icons/Back";
+import { getCurrentUserData, selectUserData } from "../store/users";
+import { connect } from "react-redux";
 
-export const Favorites = () => {
-  const clothes = ["T-Shirt", "Shirt", "Skirt", "Shoes", "Short"];
-  const [isListView, setIsListView] = useState(true);
-  return (
-    <View style={styles.container}>
-      <StatusBar />
+const mapStateToProps = (state) => ({
+  usersData: selectUserData(state),
+});
+export const Favorites = connect(mapStateToProps, { getCurrentUserData })(
+  ({ getCurrentUserData, usersData, navigation }) => {
+    const favorites = usersData.userFavorites || [];
+    console.log(usersData, "usersData");
+    console.log(favorites, "userFavorites");
+    console.log(usersData.userFavorites, "usersData.userFavorites");
+    const clothes = ["T-Shirt", "Shirt", "Skirt", "Shoes", "Short"];
+    const [isListView, setIsListView] = useState(true);
+    return (
+      <View style={styles.container}>
+        <StatusBar />
 
-      <CustomText weight={"bold"} style={styles.title}>
-        Favorites
-      </CustomText>
-      <View style={styles.btns}>
-        <FlatList
-          horizontal={true}
-          data={clothes}
-          renderItem={({ item }) => (
-            <View style={styles.btn}>
-              <Btn
-                width={100}
-                height={30}
-                bgColor={COLORS.TEXT}
-                btnName={item}
-                titleStyle={{ color: COLORS.BACKGROUND }}
-              />
-            </View>
-          )}
-          keyExtractor={(item) => item}
-        />
-      </View>
-      <View style={styles.filters}>
-        <TouchableOpacity style={styles.filter}>
-          <Filter width={20} height={20} />
-          <CustomText>Filters</CustomText>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.filter}>
-          <PriceArrows width={20} height={20} />
-          <CustomText>Price: lowest to high</CustomText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.filter}
-          onPress={() => setIsListView(!isListView)}
-        >
-          {isListView ? (
-            <ListViewChanger width={20} height={20} />
-          ) : (
-            <CardView width={20} height={20} />
-          )}
-        </TouchableOpacity>
-      </View>
-      {isListView ? (
-        <FlatList
-          data={clothes}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <ProductCard />
-            </View>
-          )}
-          keyExtractor={(item) => item}
-        />
-      ) : (
-        <View style={styles.cardContainer}>
-          <ScrollView
-            contentContainerStyle={{ flexDirection: "row", flexWrap: "wrap" }}
-          >
-            {clothes.map((name) => (
-              <View
-                style={{ marginLeft: 1, marginBottom: 15 }}
-                key={`${name}-${Date.now()}`}
-              >
-                <ProductCard isRowView={isListView} />
+        <CustomText weight={"bold"} style={styles.title}>
+          Favorites
+        </CustomText>
+        <View style={styles.btns}>
+          <FlatList
+            horizontal={true}
+            data={clothes}
+            renderItem={({ item }) => (
+              <View style={styles.btn}>
+                <Btn
+                  width={100}
+                  height={30}
+                  bgColor={COLORS.TEXT}
+                  btnName={item}
+                  titleStyle={{ color: COLORS.BACKGROUND }}
+                />
               </View>
-            ))}
-          </ScrollView>
+            )}
+            keyExtractor={(item) => item}
+          />
         </View>
-      )}
-    </View>
-  );
-};
+        <View style={styles.filters}>
+          <TouchableOpacity style={styles.filter}>
+            <Filter width={20} height={20} />
+            <CustomText>Filters</CustomText>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filter}>
+            <PriceArrows width={20} height={20} />
+            <CustomText>Price: lowest to high</CustomText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.filter}
+            onPress={() => setIsListView(!isListView)}
+          >
+            {isListView ? (
+              <ListViewChanger width={20} height={20} />
+            ) : (
+              <CardView width={20} height={20} />
+            )}
+          </TouchableOpacity>
+        </View>
+
+        {isListView ? (
+          <FlatList
+            data={favorites}
+            renderItem={({ item }) => (
+              <View style={styles.card}>
+                <ProductCard
+                  product={item}
+                  isInFavs={true}
+                  isRowView={isListView}
+                  isInCatalog={true}
+                />
+              </View>
+            )}
+            keyExtractor={(item) => item}
+          />
+        ) : (
+          <View style={styles.cardContainer}>
+            <ScrollView
+              contentContainerStyle={{ flexDirection: "row", flexWrap: "wrap" }}
+            >
+              {favorites.map((name) => (
+                <View
+                  style={{ marginLeft: 1, marginBottom: 15 }}
+                  key={`${name}-${Date.now()}`}
+                >
+                  <ProductCard
+                    product={item}
+                    isInFavs={true}
+                    isRowView={isListView}
+                    isInCatalog={true}
+                  />
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+      </View>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {

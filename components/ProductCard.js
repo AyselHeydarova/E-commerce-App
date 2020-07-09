@@ -6,135 +6,136 @@ import StarRating from "react-native-star-rating";
 import { ProductTag } from "../commons/ProductTag";
 import { Heart } from "../Icons/Heart";
 import { Counter } from "./Counter";
-
 import { averageRatingCalc, totalRatingCalc } from "../Utils/Calculations";
+import { selectAllProductData, setAddToBag } from "../store/products";
+import { connect } from "react-redux";
+import {
+  addProductToUsersBag,
+  selectCount,
+  setCount,
+  setCountSize,
+} from "../store/users";
 import { columnStyles } from "../style/globalStyles";
 
-export const ProductCard = ({
-  product,
-  isRowView = false,
-  isInCatalog = false,
-  isInFavs,
-  isNew,
-  isOnSale,
-  navigation,
-}) => {
-  const {
-    brandName,
-    name,
-    price,
-    sizes,
-    colors,
-    rating,
-    imagesUrls,
-    count,
-    onSale,
-  } = product;
+const mapStateToProps = (state) => ({
+  allProducts: selectAllProductData(state),
+  count: selectCount(state),
+});
+export const ProductCard = connect(mapStateToProps, {
+  setAddToBag,
+  setCount,
+  setCountSize,
+  addProductToUsersBag,
+})(
+  ({
+    addProductToUsersBag,
+    setCountSize,
+    product,
+    isRowView = false,
+    isInCatalog = false,
+    isInFavs,
+    isNew,
+    isOnSale,
+    isInOrders = false,
+  }) => {
+    const {
+      id,
+      brandName,
+      name,
+      price,
+      size,
+      color,
+      rating,
+      imagesUrls,
+      count,
+      onSale,
+      selectedCount,
+    } = product;
 
-  const [defaultCount, setDefaultCount] = useState(0);
+    const [isHeartClicked, setIsHeartClicked] = useState(false);
+    const [defaultCount, setDefaultCount] = useState(selectedCount);
 
-  const cardWrapperStyles = [
-    isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
-    { opacity: count === 0 ? 0.5 : 1 },
-  ];
+    const handleFavoriteProduct = () => {
+      addProductToUsersBag(product, true);
+      setIsHeartClicked(!isHeartClicked);
+    };
 
-  const salePrice = isOnSale
-    ? Math.floor((+price * (100 - +onSale.discount)) / 100)
-    : null;
+    const cardWrapperStyles = [
+      isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
+      { opacity: count === 0 ? 0.5 : 1 },
+    ];
 
-  return (
-    <View style={cardWrapperStyles}>
-      <View style={isRowView ? styles.imgWrapper : columnStyles.imgWrapper}>
-        {isNew ? <ProductTag style={styles.tag} title="new" /> : null}
+    const salePrice = isOnSale
+      ? Math.floor((+price * (100 - +onSale.discount)) / 100)
+      : null;
+    const handleCount = async () => {
+      try {
+        await setCountSize({
+          productID: id,
+          selectedCount: defaultCount,
+        });
+      } catch (error) {
+        console.log("getCurrentUserData", error);
+      }
+    };
 
-        {isOnSale ? (
-          <ProductTag
-            style={{ ...styles.tag, backgroundColor: COLORS.PRIMARY }}
-            title={`${onSale.discount}%`}
-          />
-        ) : null}
-        <Image
-          source={{
-            uri:
-              imagesUrls[0] ||
-              "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-          }}
-          style={isRowView ? styles.productImg : columnStyles.productImg}
-        />
+    return (
+      <View style={cardWrapperStyles}>
+        <View style={isRowView ? styles.imgWrapper : columnStyles.imgWrapper}>
+          {isNew ? <ProductTag style={styles.tag} title="new" /> : null}
 
-        {count === 0 && (
-          <View style={styles.soldOut}>
-            <CustomText>Sorry, this item is currently sold out</CustomText>
-          </View>
-        )}
-      </View>
-
-      {isInCatalog ? (
-        <View style={styles.description}>
-          <View style={styles.row}>
-            <StarRating
-              disabled={true}
-              fullStarColor={COLORS.STAR}
-              starSize={14}
-              starStyle={{ margin: 3 }}
-              containerStyle={{ marginTop: 10, width: 80 }}
-              maxStars={5}
-              rating={averageRatingCalc(rating)}
+          {isOnSale ? (
+            <ProductTag
+              style={{ ...styles.tag, backgroundColor: COLORS.PRIMARY }}
+              title={`${onSale.discount}%`}
             />
-            <CustomText style={styles.ratingCount}>
-              ({totalRatingCalc(rating)})
-            </CustomText>
-          </View>
+          ) : null}
+          <Image
+            source={{
+              uri:
+                imagesUrls[0] ||
+                "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+            }}
+            style={isRowView ? styles.productImg : columnStyles.productImg}
+          />
 
-          <CustomText style={{ color: COLORS.GRAY }}>{brandName}</CustomText>
-          <CustomText weight="medium">{name.toLowerCase()}</CustomText>
+          {count === 0 && (
+            <View style={styles.soldOut}>
+              <CustomText>Sorry, this item is currently sold out</CustomText>
+            </View>
+          )}
+        </View>
 
-          <View style={styles.priceRow}>
-            <CustomText
-              weight="bold"
-              style={{
-                color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
-                textDecorationLine: isOnSale ? "line-through" : null,
-              }}
-            >
-              {`${price}$`}
-            </CustomText>
-            {isOnSale ? (
+        {isInCatalog ? (
+          <View style={styles.description}>
+            <View style={styles.row}>
+              <StarRating
+                disabled={true}
+                fullStarColor={COLORS.STAR}
+                starSize={14}
+                starStyle={{ margin: 3 }}
+                containerStyle={{ marginTop: 10, width: 80 }}
+                maxStars={5}
+                rating={averageRatingCalc(rating)}
+              />
+              <CustomText style={styles.ratingCount}>
+                ({totalRatingCalc(rating)})
+              </CustomText>
+            </View>
+
+            <CustomText style={{ color: COLORS.GRAY }}>{brandName}</CustomText>
+            <CustomText weight="medium">{name.toLowerCase()}</CustomText>
+
+            <View style={styles.priceRow}>
               <CustomText
                 weight="bold"
-                style={{ color: COLORS.SALE, marginLeft: 10 }}
+                style={{
+                  color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
+                  textDecorationLine: isOnSale ? "line-through" : null,
+                }}
               >
-                {`${salePrice}$`}
+                {`${price}$`}
               </CustomText>
-            ) : null}
-          </View>
-        </View>
-      ) : (
-        <View style={styles.description}>
-          <CustomText style={{ marginTop: 8 }} weight="medium">
-            {name.toUpperCase()}
-          </CustomText>
-          <View style={styles.rowBag}>
-            <View style={[styles.row, { marginRight: 10 }]}>
-              <CustomText style={{ color: COLORS.GRAY }}>Color: </CustomText>
-              <CustomText> {colors} </CustomText>
-            </View>
-            <View style={styles.row}>
-              <CustomText style={{ color: COLORS.GRAY }}>Size:</CustomText>
-              <CustomText>{sizes}</CustomText>
-            </View>
-          </View>
-          <View style={styles.row}>
-            <Counter
-              count={defaultCount}
-              handleMinus={() =>
-                setDefaultCount(
-                  defaultCount === 0 ? defaultCount : defaultCount - 1
-                )
-              }
-              handlePlus={() => setDefaultCount(defaultCount + 1)}
-            />
-            <View>
               {isOnSale ? (
                 <CustomText
                   weight="bold"
@@ -142,28 +143,87 @@ export const ProductCard = ({
                 >
                   {`${salePrice}$`}
                 </CustomText>
-              ) : (
-                <CustomText
-                  weight="bold"
-                  style={{
-                    color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
-                    lineHeight: 30,
-                    fontSize: 19,
-                    textDecorationLine: isOnSale ? "line-through" : null,
-                  }}
-                >
-                  {`${price}$`}
-                </CustomText>
-              )}
+              ) : null}
             </View>
           </View>
-        </View>
-      )}
+        ) : (
+          <View style={styles.description}>
+            <CustomText
+              style={{ marginTop: 5, marginBottom: 5 }}
+              weight="medium"
+            >
+              {name.toUpperCase()}
+            </CustomText>
+            <View style={styles.rowBag}>
+              <View style={[styles.row, { marginRight: 10 }]}>
+                <CustomText style={{ color: COLORS.GRAY }}>Color: </CustomText>
+                <CustomText> {color} </CustomText>
+              </View>
+              <View style={styles.row}>
+                <CustomText style={{ color: COLORS.GRAY }}>Size:</CustomText>
+                <CustomText>{size}</CustomText>
+              </View>
+            </View>
+            <View style={styles.row}>
+              {isInOrders ? (
+                <View style={[styles.row, { marginRight: 10 }]}>
+                  <CustomText style={{ color: COLORS.GRAY }}>
+                    Units:{" "}
+                  </CustomText>
+                  <CustomText> {selectedCount} </CustomText>
+                </View>
+              ) : (
+                <Counter
+                  count={defaultCount}
+                  handleMinus={() => {
+                    setDefaultCount(
+                      defaultCount === 1 ? defaultCount : defaultCount - 1
+                    ),
+                      handleCount();
+                  }}
+                  handlePlus={() => {
+                    setDefaultCount(defaultCount + 1), handleCount();
+                  }}
+                />
+              )}
 
-      <Heart width={12} height={12} color={COLORS.GRAY} />
-    </View>
-  );
-};
+              <View>
+                {isOnSale ? (
+                  <CustomText
+                    weight="bold"
+                    style={{ color: COLORS.SALE, marginLeft: 10 }}
+                  >
+                    {`${salePrice}$`}
+                  </CustomText>
+                ) : (
+                  <CustomText
+                    weight="bold"
+                    style={{
+                      color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
+                      lineHeight: 45,
+                      fontSize: 19,
+                      textDecorationLine: isOnSale ? "line-through" : null,
+                    }}
+                  >
+                    {`${price * defaultCount}$`}
+                  </CustomText>
+                )}
+              </View>
+            </View>
+          </View>
+        )}
+        {isInFavs || isInOrders ? null : (
+          <Heart
+            width={15}
+            height={15}
+            isHeartClicked={isHeartClicked}
+            onPress={() => handleFavoriteProduct()}
+          />
+        )}
+      </View>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   cardWrapper: {
@@ -205,6 +265,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: 5,
   },
   rowBag: {
     flexDirection: "row",
