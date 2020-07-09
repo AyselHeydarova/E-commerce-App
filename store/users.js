@@ -1,248 +1,374 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
-import {getUsersData} from "../API";
-import {randomString} from "../Utils/Calculations";
+import { getUsersData } from "../API";
+import { randomString } from "../Utils/Calculations";
 
-const SET_AUTH_DATA = "SET_AUTH_DATA";
 export const MODULE_NAME = "users";
+
 export const selectUsers = (state) => state[MODULE_NAME];
 export const selectCount = (state) => state[MODULE_NAME].count;
-export const selectUsernameByID = (state, ID) =>
-    state[MODULE_NAME].filter((user) => user.id === ID).username;
-
 export const selectUserData = (state) => state[MODULE_NAME].usersData;
+export const selectCurrentUserShippingAddresses = (state) =>
+  state[MODULE_NAME].usersData.shippingAddresses;
 
-
-export const setAuthData = (payload) => ({
-    type: SET_AUTH_DATA,
-    payload,
-});
-
-export const addProductToUsersBag = (product, isFav, isDeleted) => async () => {
-    try {
-        const userProductsRef = firebase.firestore()
-            .collection("users")
-            .doc(firebase.auth().currentUser.uid);
-        const userProductsSnap = await userProductsRef.get();
-        const userData = await userProductsSnap.data();
-        if (isFav) {
-            console.log(userData.userFavorites)
-            userData.userFavorites.forEach((item) => {
-                console.log('item.id', item.id)
-                console.log('product.id', product.id)
-                if (item.id !== product.id) {
-                    userData.userFavorites.push(product);
-                }
-            });
-            userProductsRef.set({
-                    userFavorites: userData.userFavorites,
-                },
-                {merge: true})
-
-
-        } else {
-            if (userData.userProductsInBag === undefined) {
-                const userProductsInBag = [];
-                userProductsInBag.push(product)
-                console.log('userProductsInBag',userProductsInBag)
-                userProductsRef.set({
-                        userProductsInBag
-                    },
-                    {merge: true})
-            } else {
-                userData.userProductsInBag.push(product);
-                console.log('userData.userProductsInBag', userData.userProductsInBag)
-                userProductsRef.set({
-                        userProductsInBag: userData.userProductsInBag,
-                    },
-                    {merge: true})
-            }
-        }
-    } catch (e) {
-        console.log('error', e)
-    }
-
-};
-export const deleteBagProducts = () => {
-    try {
-
-
-        const userProductsRef = firebase.firestore()
-            .collection("users")
-            .doc(firebase.auth().currentUser.uid);
-
-        userProductsRef.update({
-            userProductsInBag: firebase.firestore.FieldValue.delete()
-        });
-    } catch (e) {
-        console.log('deleteBagProducts', e)
-    }
-    // return removeBagProducts;
-};
-export const addOrderedProducts = (products) => async () => {
-    try {
-        const date = new Date(Date.now()).toLocaleString().split(',')[0];
-        const userProductsRef = firebase.firestore()
-            .collection("users")
-            .doc(firebase.auth().currentUser.uid);
-        const userProductsSnap = await userProductsRef.get();
-        const userData = await userProductsSnap.data();
-        console.log('userData', userData);
-        console.log('length', products.length);
-        const totalAmount = () => {
-            let total = 0;
-            products.forEach((product) => {
-                total = total + product.price * product.selectedCount
-            });
-            return total;
-        };
-        userData.orders.push({
-            orderNo: randomString(7, 'n'),
-            trackingNo: randomString(12),
-            quantity: products.length,
-            totalAmount: totalAmount(),
-            date: date,
-            orderedProducts: products,
-
-        });
-        userProductsRef.set({
-                orders: userData.orders,
-            },
-            {merge: true})
-    } catch (e) {
-        console.log('error', e)
-    }
-
-};
-
-export const getCurrentUserData = () => async (dispatch) => {
-    try {
-        // const userProductsRef =
-        firebase.firestore()
-            .collection("users")
-            .doc(firebase.auth().currentUser.uid)
-            .onSnapshot(function (doc) {
-                console.log(doc.data(), 'doc.data()')
-                dispatch(setAuthData(doc.data()));
-            });
-        // const userProductsSnap = await userProductsRef.get();
-        // const userData = await userProductsSnap.data();
-
-        console.log('currentUserData', currentUserData)
-    } catch (e) {
-        console.log('error', e)
-    }
-
-};
-export const submitOrder = async (orderInfo) => {
-    const orderId = await firebase
-        .firestore
-        .collection('orders')
-        .push(orderInfo).id;
-    console.log('orderId', orderId);
-    firebase
-        .firestore
-        .collection('users')
-        .doc(firebase.auth().currentUser.uid)
-        .orders
-        .set({
-            [orderId]: true
-        })
-
-}
+const SET_AUTH_DATA = "SET_AUTH_DATA";
+const ADD_SHIPPING_ADDRESS = "ADD_SHIPPING_ADDRESS";
 const SET_USERS = "SET_USERS";
 const SET_COUNT = "SET_COUNT";
 
 export const setUsers = (payload) => ({
-    type: SET_USERS,
-    payload,
+  type: SET_USERS,
+  payload,
 });
 export const setCount = (payload) => ({
-    type: SET_COUNT,
-    payload,
+  type: SET_COUNT,
+  payload,
 });
 
+export const addShippingAddress = (payload) => ({
+  type: ADD_SHIPPING_ADDRESS,
+  payload,
+});
+
+export const setAuthData = (payload) => ({
+  type: SET_AUTH_DATA,
+  payload,
+});
 
 const initialState = {
-    usersData: {},
-    count: 0,
+  usersData: {},
+  count: 0,
 };
 
+export function usersReducer(state = initialState, { type, payload }) {
+  switch (type) {
+    case SET_USERS:
+      return [...state, ...payload];
 
-export function usersReducer(state = initialState, {type, payload}) {
-    switch (type) {
-        case SET_USERS:
-            return [...state, ...payload];
-        case SET_AUTH_DATA:
-            return {
-                usersData: payload,
-            };
-        case SET_COUNT:
-            return {
+    case SET_COUNT:
+      return {
+        count: payload.count,
+        id: payload.id,
+      };
+    case SET_AUTH_DATA:
+      return {
+        ...state,
+        usersData: payload,
+      };
+    // FIX shipping redux________________
 
-                count: payload.count,
-                id: payload.id
+    case ADD_SHIPPING_ADDRESS:
+      return {
+        ...state,
+        usersData: [...state.usersData, { shippingAddresses: payload }],
+      };
 
-            };
-
-        default:
-            return state;
-    }
+    default:
+      return state;
+  }
 }
 
-export const setUsersData = () => async (dispatch, getState) => {
-    try {
-        const users = await getUsersData();
-        dispatch(setUsers(users));
+export const getCurrentUserData = () => async (dispatch) => {
+  try {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .onSnapshot(function (doc) {
+        console.log("Current Snapshotdata: ", doc.data());
+        dispatch(setAuthData(doc.data()));
+      });
+    console.log("currentUserData", currentUserData);
+  } catch (e) {
+    console.log("getCurrentUserData error", e);
+  }
+};
 
-        console.log("SetUsersData", users);
-    } catch (error) {
-        console.log("setUsersData", error);
+export const saveShippingAddress = (payload) => async (dispatch, getState) => {
+  try {
+    const userRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+
+    const userSnap = await userRef.get();
+    const userData = userSnap.data();
+
+    userData.shippingAddresses.push({
+      ...payload,
+    });
+
+    userRef
+      .set(
+        {
+          shippingAddresses: userData.shippingAddresses,
+        },
+
+        { merge: true }
+      )
+      .catch((error) => {
+        console.log(
+          "Something went wrong with added shipping address to firestore: ",
+          error
+        );
+      });
+    dispatch(addShippingAddress(payload));
+  } catch (error) {
+    console.log("sendReview error", error);
+  }
+};
+
+// ________________________________________________________________________________
+// // FIRESTORE ACTIONS -- WE SHOULD MOVE THEM TO ANOTHER FILE , MAYBE INSIDE API
+// _________________________________________________________________________________
+
+export const addProductToUsersBag = (product, isFav, isDeleted) => async () => {
+  try {
+    const userProductsRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+    const userProductsSnap = await userProductsRef.get();
+    const userData = await userProductsSnap.data();
+    if (isFav) {
+      console.log(userData.userFavorites);
+      userData.userFavorites.forEach((item) => {
+        console.log("item.id", item.id);
+        console.log("product.id", product.id);
+        if (item.id !== product.id) {
+          userData.userFavorites.push(product);
+        }
+      });
+      userProductsRef.set(
+        {
+          userFavorites: userData.userFavorites,
+        },
+        { merge: true }
+      );
+    } else {
+      if (userData.userProductsInBag === undefined) {
+        const userProductsInBag = [];
+        userProductsInBag.push(product);
+        console.log("userProductsInBag", userProductsInBag);
+        userProductsRef.set(
+          {
+            userProductsInBag,
+          },
+          { merge: true }
+        );
+      } else {
+        userData.userProductsInBag.push(product);
+        console.log("userData.userProductsInBag", userData.userProductsInBag);
+        userProductsRef.set(
+          {
+            userProductsInBag: userData.userProductsInBag,
+          },
+          { merge: true }
+        );
+      }
     }
+  } catch (e) {
+    console.log("error", e);
+  }
+};
+
+export const deleteBagProducts = () => {
+  try {
+    const userProductsRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+
+    userProductsRef.update({
+      userProductsInBag: firebase.firestore.FieldValue.delete(),
+    });
+  } catch (e) {
+    console.log("deleteBagProducts", e);
+  }
+  // return removeBagProducts;
+};
+
+export const addOrderedProducts = (products) => async () => {
+  try {
+    const date = new Date(Date.now()).toLocaleString().split(",")[0];
+    const userProductsRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+    const userProductsSnap = await userProductsRef.get();
+    const userData = await userProductsSnap.data();
+    console.log("userData", userData);
+    console.log("length", products.length);
+    const totalAmount = () => {
+      let total = 0;
+      products.forEach((product) => {
+        total = total + product.price * product.selectedCount;
+      });
+      return total;
+    };
+    userData.orders.push({
+      orderNo: randomString(7, "n"),
+      trackingNo: randomString(12),
+      quantity: products.length,
+      totalAmount: totalAmount(),
+      date: date,
+      orderedProducts: products,
+    });
+    userProductsRef.set(
+      {
+        orders: userData.orders,
+      },
+      { merge: true }
+    );
+  } catch (e) {
+    console.log("error", e);
+  }
+};
+
+export const addProductToUsersBag = (product) => async () => {
+  try {
+    const userProductsRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+    const userProductsSnap = await userProductsRef.get();
+    const userData = await userProductsSnap.data();
+    userData.userProductsInBag.push(product);
+    userProductsRef.set(
+      {
+        userProductsInBag: userData.userProductsInBag,
+      },
+      { merge: true }
+    );
+  } catch (e) {
+    console.log("error", e);
+  }
+};
+export const submitOrder = async (orderInfo) => {
+  const orderId = await firebase.firestore.collection("orders").push(orderInfo)
+    .id;
+  console.log("orderId", orderId);
+  firebase.firestore
+    .collection("users")
+    .doc(firebase.auth().currentUser.uid)
+    .orders.set({
+      [orderId]: true,
+    });
+};
+
+export const selectShippingAddress = async (pressedIndex) => {
+  try {
+    const userRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+
+    const userSnap = await userRef.get();
+    const userData = userSnap.data();
+
+    userData.shippingAddresses.map((address, index) => {
+      if (index === pressedIndex) {
+        address.isSelected = true;
+      } else {
+        address.isSelected = false;
+      }
+    });
+
+    userRef
+      .set(
+        {
+          shippingAddresses: userData.shippingAddresses,
+        },
+
+        { merge: true }
+      )
+      .catch((error) => {
+        console.log(
+          "Something went wrong with a selectShippingAddressto firestore: ",
+          error
+        );
+      });
+    // dispatch(addShippingAddress(payload));
+  } catch (error) {
+    console.log("selectShippingAddress error", error);
+  }
+};
+
+export const changeUsernameAndPhoto = async (payload) => {
+  try {
+    const response = await fetch(payload.userPhoto);
+    const blob = await response.blob();
+    const key = firebase.database().ref("key").push().key;
+    const snap = await firebase.storage().ref(key).put(blob);
+    const url = await snap.ref.getDownloadURL();
+
+    const settingsRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+
+    const settingsSnap = await settingsRef.get();
+    const settingData = settingsSnap.data();
+    settingsRef
+      .set(
+        {
+          ...settingData,
+          username: payload.username,
+          userPhoto: url,
+        },
+
+        { merge: true }
+      )
+      .catch((error) => {
+        console.log(
+          "Something went wrong with changeUsernameAndPhoto to firestore: ",
+          error
+        );
+      });
+  } catch (error) {
+    console.log("changeUsernameAndPhoto error", error);
+  }
 };
 export const setCountSize = async (payload) => {
-    try {
-        const countRef = firebase
-            .firestore()
-            .collection("users")
-            .doc(firebase.auth().currentUser.uid)
+  try {
+    const countRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
 
-
-        const countSnap = await countRef.get();
-        const countData = countSnap.data();
-        const updatedProducts = []
-        console.log("payload", payload);
-        console.log("countData", countData);
-        countData.userProductsInBag.forEach((product) => {
-            if (product.id === payload.productID) {
-                updatedProducts.push({
-                    ...product,
-                    selectedCount: payload.selectedCount + 1
-                })
-            } else {
-                updatedProducts.push(product)
-            }
+    const countSnap = await countRef.get();
+    const countData = countSnap.data();
+    const updatedProducts = [];
+    console.log("payload", payload);
+    console.log("countData", countData);
+    countData.userProductsInBag.forEach((product) => {
+      if (product.id === payload.productID) {
+        updatedProducts.push({
+          ...product,
+          selectedCount: payload.selectedCount + 1,
         });
-        console.log('updatedProducts', updatedProducts)
+      } else {
+        updatedProducts.push(product);
+      }
+    });
+    console.log("updatedProducts", updatedProducts);
 
+    countRef
+      .set(
+        {
+          userProductsInBag: updatedProducts,
+        },
 
-        countRef
-            .set(
-                {
-                    userProductsInBag: updatedProducts,
-                },
-
-                {merge: true}
-            )
-            .catch((error) => {
-                console.log(
-                    "Something went wrong with added user to firestore: ",
-                    error
-                );
-            });
-        // dispatch(addReview(payload));
-    } catch (error) {
-        console.log("countData error", error);
-    }
+        { merge: true }
+      )
+      .catch((error) => {
+        console.log(
+          "Something went wrong with added user to firestore: ",
+          error
+        );
+      });
+    // dispatch(addReview(payload));
+  } catch (error) {
+    console.log("countData error", error);
+  }
 };
-

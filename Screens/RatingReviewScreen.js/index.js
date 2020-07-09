@@ -1,11 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ClientReviewsList } from "./ClientReviewsList";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { COLORS } from "../../style/colors";
 import { CustomText } from "../../components/CustomText";
 import { RatingRow } from "./RatingRow";
@@ -14,11 +9,18 @@ import { averageRatingCalc, totalRatingCalc } from "../../Utils/Calculations";
 import { ActionModal } from "../../components/ActionModal";
 import { ClientReview } from "./ClientReview";
 import { Btn } from "../../components/Btn";
+import { connect } from "react-redux";
+import { selectCurrentProductRating } from "../../store/products";
 
-export const RatingReviewScreen = ({ route }) => {
+const mapStateToProps = (state) => ({
+  rating: selectCurrentProductRating(state),
+});
+
+export const RatingReviewScreen = connect(
+  mapStateToProps,
+  null
+)(({ route, rating }) => {
   const [showWriteReview, setShowWriteReview] = useState(false);
-  const rating = route.params.rating;
-  const reviews = route.params.reviews || [];
   const productID = route.params.productID;
 
   return (
@@ -68,7 +70,7 @@ export const RatingReviewScreen = ({ route }) => {
           </View>
         </View>
 
-        <ClientReviewsList productID={productID} reviews={reviews} />
+        <ClientReviewsList productID={productID} />
         <Btn
           btnName="Write a review"
           onPress={() => setShowWriteReview(true)}
@@ -85,12 +87,11 @@ export const RatingReviewScreen = ({ route }) => {
       </View>
     </TouchableWithoutFeedback>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingBottom: 50,
     backgroundColor: COLORS.BACKGROUND,
   },
   ratingWrapper: {
