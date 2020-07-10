@@ -1,13 +1,15 @@
 export function averageRatingCalc(rating) {
-  const allRatingsArray = rating.map((obj) => {
+  const allRatingsArray = (rating||[]).map((obj) => {
     for (let key in obj) {
       const value = obj[key];
       return value;
     }
   });
-  const totalRatingCount = allRatingsArray.reduce(function (a, b) {
+  let totalRatingCount=0
+  allRatingsArray.length!==0?
+  totalRatingCount = allRatingsArray.reduce(function (a, b) {
     return a + b;
-  });
+  }):null;
   let totalStarCount = 0;
   for (let i = 0; i <= 4; i++) {
     totalStarCount += allRatingsArray[i] * (i + 1);
@@ -19,15 +21,17 @@ export function averageRatingCalc(rating) {
 }
 
 export function totalRatingCalc(rating) {
-  const allRatingsArray = rating.map((obj) => {
+  const allRatingsArray = (rating||[]).map((obj) => {
     for (let key in obj) {
       const value = obj[key];
       return value;
     }
   });
-  const totalRatingCount = allRatingsArray.reduce(function (a, b) {
+  let totalRatingCount=0
+  allRatingsArray.length!==0?
+   totalRatingCount = allRatingsArray.reduce(function (a, b) {
     return a + b;
-  });
+  }):null;
 
   return totalRatingCount;
 }

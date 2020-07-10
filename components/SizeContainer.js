@@ -5,12 +5,14 @@ import { CustomText } from "./CustomText";
 
 
 
-export const SizeContainer = ({width, name,onPress,bgColor,borderWidth}) => {
+export const SizeContainer = ({width, name,onPress,bgColor,borderWidth,marginHorizontal}) => {
 
     return (
         <TouchableOpacity style={[styles.container, {width: width,
             backgroundColor: bgColor,
-            borderWidth:borderWidth }
+            borderWidth:borderWidth,
+            marginHorizontal:marginHorizontal
+        }
         ]}
                           onPress={onPress}
         >
@@ -27,7 +29,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 7,
         borderColor: '#ABB4BD',
-        marginHorizontal:10,
+        // marginHorizontal:10,
 
     },
     containerText: {

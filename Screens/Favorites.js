@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     StyleSheet,
     View,
@@ -23,116 +23,125 @@ import {connect} from "react-redux";
 const mapStateToProps = (state) => ({
     usersData: selectUserData(state),
 });
-export const Favorites = connect(mapStateToProps, {getCurrentUserData})(({getCurrentUserData, usersData, navigation}) => {
-    const favorites = usersData.userFavorites || [];
-    console.log(usersData, 'usersData')
-    const clothes = ["T-Shirt", "Shirt", "Skirt", "Shoes", "Short",];
+export const Favorites = connect(mapStateToProps, {getCurrentUserData})
+(({getCurrentUserData, usersData, navigation}) => {
+        const favorites = usersData.userFavorites || [];
+        console.log(usersData, 'usersData')
+        const clothes = ["T-Shirts", "Skirts", "Shoes", "Shorts",'Dresses','Trousers'];
+        let favoritesSortedByCategory = [];
+        const [isListView, setIsListView] = useState(true);
 
-    const [isListView, setIsListView] = useState(true);
+        const handleFavs = async () => {
+            try {
+                await getCurrentUserData();
+            } catch (error) {
+                console.log("getNewData", error);
+            }
+        };
+        useEffect(() => {
+            console.log('favoritesSortedByCategory use',favoritesSortedByCategory)
+            handleFavs();
+        }, []);
+        const handleSortByCategory = (category) => {
+            favoritesSortedByCategory = favorites.filter((fav) => fav.tags.includes(category));
+            console.log('category',category)
+            console.log('favoritesSortedByCategory',favoritesSortedByCategory)
+        };
+        return (
+            <View style={styles.container}>
+                <StatusBar/>
 
-    const handleFavs = async () => {
-        try {
-            await getCurrentUserData();
-        } catch (error) {
-            console.log("getNewData", error);
-        }
-    };
-    useEffect(()=>{
-        handleFavs();
-    },[])
-    return (
-      <View style={styles.container}>
-        <StatusBar />
-
-        <CustomText weight={"bold"} style={styles.title}>
-          Favorites
-        </CustomText>
-        <View style={styles.btns}>
-          <FlatList
-            horizontal={true}
-            data={clothes}
-            renderItem={({ item }) => (
-              <View style={styles.btn}>
-                <Btn
-                  width={100}
-                  height={30}
-                  bgColor={COLORS.TEXT}
-                  btnName={item}
-                  titleStyle={{ color: COLORS.BACKGROUND }}
-                />
-            </View>
-                )}/>
-        </View>
-            <View style={styles.filters}>
-                <TouchableOpacity style={styles.filter}>
-                    <Filter width={20} height={20}/>
-                    <CustomText>
-                        Filters
-                    </CustomText>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.filter}>
-                    <PriceArrows width={20} height={20}/>
-                    <CustomText>
-                        Price: lowest to high
-                    </CustomText>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.filter} onPress={() => setIsListView(!isListView)}>
-                    {isListView ?
-                        <ListViewChanger width={20} height={20}/>
-                        :
-                        <CardView width={20} height={20}/>
-                    }
-                </TouchableOpacity>
-            </View>
-            {isListView ?
-                <FlatList
-                    data={favorites}
-                    renderItem={({item}) => (
-                        <TouchableWithoutFeedback onPress={() => navigation.navigate("SingleProductScreen", {
-                            product: item,
-                        })
-                        } style={styles.card}>
-                            <ProductCard
-                                product={item}
-                                isInFavs={true}
-                                isRowView={isListView}
-                                isInCatalog={true}
-                            />
-                        </TouchableWithoutFeedback>
-                    )}
-                    keyExtractor={item => item.id}
-                />
-                :
-                <View style={styles.cardContainer}>
-                    <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                        {favorites.map((name) => (
-                            <TouchableOpacity
+                <CustomText weight={"bold"} style={styles.title}>
+                    Favorites
+                </CustomText>
+                <View style={styles.btns}>
+                    <FlatList
+                        horizontal={true}
+                        data={clothes}
+                        renderItem={({item}) => (
+                            <View style={styles.btn}>
+                                <Btn
+                                    width={100}
+                                    height={30}
+                                    bgColor={COLORS.TEXT}
+                                    btnName={item}
+                                    titleStyle={{color: COLORS.BACKGROUND}}
+                                    onPress={() => handleSortByCategory(item)}
+                                />
+                            </View>
+                        )}/>
+                </View>
+                <View style={styles.filters}>
+                    <TouchableOpacity style={styles.filter}>
+                        <Filter width={20} height={20}/>
+                        <CustomText>
+                            Filters
+                        </CustomText>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.filter}>
+                        <PriceArrows width={20} height={20}/>
+                        <CustomText>
+                            Price: lowest to high
+                        </CustomText>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.filter} onPress={() => setIsListView(!isListView)}>
+                        {isListView ?
+                            <ListViewChanger width={20} height={20}/>
+                            :
+                            <CardView width={20} height={20}/>
+                        }
+                    </TouchableOpacity>
+                </View>
+                {isListView ?
+                    <FlatList
+                        data={favoritesSortedByCategory.length!==0?favoritesSortedByCategory:favorites}
+                        renderItem={({item}) => (
+                            <TouchableWithoutFeedback
                                 onPress={() => navigation.navigate("SingleProductScreen", {
-                                    product: name,
-                                })}
-                                style={{marginLeft: 1, marginBottom: 15}}
-                                key={`${name}-${Date.now()}`}>
+                                    product: item,
+                                })} style={styles.card}>
                                 <ProductCard
-                                    product={name}
+                                    product={item}
                                     isInFavs={true}
                                     isRowView={isListView}
                                     isInCatalog={true}
                                 />
-                            </TouchableOpacity>
-                        ))}
-                    </ScrollView>
+                            </TouchableWithoutFeedback>
+                        )}
+                        keyExtractor={item => item.id}
+                    />
+                    :
+                    <View style={styles.cardContainer}>
+                        <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                            {(favoritesSortedByCategory.length!==0?favoritesSortedByCategory:favorites).map((name) => (
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate("SingleProductScreen", {
+                                        product: name,
+                                    })}
+                                    style={{marginLeft: 1, marginBottom: 15}}
+                                    key={`${name.id}-${Date.now()}`}>
+                                    <ProductCard
+                                        product={name}
+                                        isInFavs={true}
+                                        isRowView={isListView}
+                                        isInCatalog={true}
+                                    />
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
 
-                </View>
-        }
-      </View>
-    );
-  }
+                    </View>
+                }
+            </View>
+        );
+    }
 );
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.BACKGROUND,
+
 
     },
     title: {
@@ -169,6 +178,7 @@ const styles = StyleSheet.create({
         width: "100%",
         display: "flex",
         justifyContent: "space-around",
+        paddingLeft: 15
     },
 
 });

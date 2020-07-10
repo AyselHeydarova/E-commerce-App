@@ -240,12 +240,14 @@ export const SingleProductScreen = connect(mapStateToProps, {
                 bgColor={isColorClicked ? COLORS.PRIMARY : null}
                 borderWidth={isColorClicked ? 0 : 0.4}
               />
-              <Heart
-                width={25}
-                height={25}
-                isHeartClicked={isHeartClicked}
-                onPress={() => handleFavoriteProduct()}
-              />
+             <View style={styles.heart}>
+               <Heart
+                   width={25}
+                   height={25}
+                   isHeartClicked={isHeartClicked}
+                   onPress={() => handleFavoriteProduct()}
+               />
+             </View>
             </View>
 
             <View style={styles.row}>
@@ -324,6 +326,7 @@ export const SingleProductScreen = connect(mapStateToProps, {
                     }}
                     name={name}
                     width={100}
+                    marginHorizontal={10}
                   />
                 </View>
               ))}
@@ -342,6 +345,7 @@ export const SingleProductScreen = connect(mapStateToProps, {
                     onPress={() => handleColor(name.color)}
                     name={name.color}
                     width={100}
+                    marginHorizontal={10}
                   />
                 </View>
               ))}
@@ -400,4 +404,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 15,
   },
+  heart:{
+    width:40,
+    height:40,
+  }
 });

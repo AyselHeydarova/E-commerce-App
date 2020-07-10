@@ -7,12 +7,14 @@ import {Btn} from "../../components/Btn";
 import {ProductCard} from "../../components/ProductCard";
 
 export const OrderDetails = ({navigation, route}) => {
-    const {quantity, trackingNo, orderNo, date, total, orderedProducts} = route.params
-
+    const {quantity, trackingNo, orderNo, date, total, orderedProducts,shippingAddresses} = route.params;
+    console.log('shippingAddresses',shippingAddresses);
+    const currentAddress=shippingAddresses.filter((address)=>address.isSelected==true)
     const orderInfo = [
         {
             infoTitle: "Shipping Address:",
-            infoText: `3 Newbridge Court ,Chine Hills,CA 91928,United States`
+            infoText: `${currentAddress[0].address}, ${currentAddress[0].city},
+            ${currentAddress[0].country}`
         },
         {
             infoTitle: " Payment method:",
@@ -24,7 +26,8 @@ export const OrderDetails = ({navigation, route}) => {
         },
         {
             infoTitle: "Discount:",
-            infoText: `10%,Personal promo code`
+            infoText: `10%,Personal promo
+             code`
         },
         {
             infoTitle: "Total Amount:",

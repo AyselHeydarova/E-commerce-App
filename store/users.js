@@ -60,11 +60,16 @@ export const addProductToUsersBag = (product, isFav, isDeleteFav, isDeleteBag,) 
                 const bagProducts = userData.userProductsInBag;
                 bagProducts.push(product);
                 const filteredBagProducts = bagProducts.filter((item) => {
-                    return (item.id !== product.id && (item.color !== product.color || item.size !== product.size))
+                
+                    if(item.id === product.id && item.color === product.color && item.size === product.size) {
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+            
                 });
-                console.log('deleted');
-                console.log('filteredBagProducts', filteredBagProducts);
-
+            
                 userProductsRef.set({
                         userProductsInBag: filteredBagProducts,
                     },
@@ -79,11 +84,11 @@ export const addProductToUsersBag = (product, isFav, isDeleteFav, isDeleteBag,) 
                         {merge: true})
                 } else {
                     let shouldBeAddedToBag = true;
-                    shouldBeAddedToBag = userData.userProductsInBag.find(item => item.id === product.id
-                        && (item.color === product.color || item.size === product.size)
-                    )
-                    console.log('shouldBeAddedToBag', shouldBeAddedToBag)
-                    shouldBeAddedToBag ? userData.userProductsInBag.push(product) : null;
+                    shouldBeAddedToBag = userData.userProductsInBag.find(
+                        item => (item.id === product.id && (item.color === product.color && item.size === product.size))
+                    );
+                   
+                    shouldBeAddedToBag ? null : userData.userProductsInBag.push(product);
                     // userData.userProductsInBag.push(product);
                     userProductsRef.set({
                             userProductsInBag: userData.userProductsInBag,
@@ -99,158 +104,155 @@ export const addProductToUsersBag = (product, isFav, isDeleteFav, isDeleteBag,) 
 }
 
 
+export const addShippingAddress = (payload) => ({
+    type: ADD_SHIPPING_ADDRESS,
+    payload,
+});
 
+export const setAuthData = (payload) => ({
+    type: SET_AUTH_DATA,
+    payload,
+});
 
+const initialState = {
+    usersData: {},
+    count: 0,
+};
 
-    export const addShippingAddress = (payload) => ({
-        type: ADD_SHIPPING_ADDRESS,
-        payload,
-    });
+export function usersReducer(state = initialState, {type, payload}) {
+    switch (type) {
+        case SET_USERS:
+            return [...state, ...payload];
 
-    export const setAuthData = (payload) => ({
-        type: SET_AUTH_DATA,
-        payload,
-    });
+        case SET_COUNT:
+            return {
+                count: payload.count,
+                id: payload.id,
+            };
+        case SET_AUTH_DATA:
+            return {
+                ...state,
+                usersData: payload,
+            };
+        // FIX shipping redux________________
 
-    const initialState = {
-        usersData: {},
-        count: 0,
-    };
+        case ADD_SHIPPING_ADDRESS:
+            return {
+                ...state,
+                usersData: [...state.usersData, {shippingAddresses: payload}],
+            };
 
-    export function usersReducer(state = initialState, {type, payload}) {
-        switch (type) {
-            case SET_USERS:
-                return [...state, ...payload];
-
-            case SET_COUNT:
-                return {
-                    count: payload.count,
-                    id: payload.id,
-                };
-            case SET_AUTH_DATA:
-                return {
-                    ...state,
-                    usersData: payload,
-                };
-            // FIX shipping redux________________
-
-            case ADD_SHIPPING_ADDRESS:
-                return {
-                    ...state,
-                    usersData: [...state.usersData, {shippingAddresses: payload}],
-                };
-
-            default:
-                return state;
-        }
+        default:
+            return state;
     }
+}
 
-    export const getCurrentUserData = () => async (dispatch) => {
-        try {
-            firebase
-                .firestore()
-                .collection("users")
-                .doc(firebase.auth().currentUser.uid)
-                .onSnapshot(function (doc) {
-                    console.log("Current Snapshotdata: ", doc.data());
-                    dispatch(setAuthData(doc.data()));
-                });
-            console.log("currentUserData", currentUserData);
-        } catch (e) {
-            console.log("getCurrentUserData error", e);
-        }
-    };
-
-    export const saveShippingAddress = (payload) => async (dispatch, getState) => {
-        try {
-            const userRef = firebase
-                .firestore()
-                .collection("users")
-                .doc(firebase.auth().currentUser.uid);
-
-            const userSnap = await userRef.get();
-            const userData = userSnap.data();
-
-            userData.shippingAddresses.push({
-                ...payload,
+export const getCurrentUserData = () => async (dispatch) => {
+    try {
+        firebase
+            .firestore()
+            .collection("users")
+            .doc(firebase.auth().currentUser.uid)
+            .onSnapshot(function (doc) {
+                console.log("Current Snapshotdata: ", doc.data());
+                dispatch(setAuthData(doc.data()));
             });
+        console.log("currentUserData", currentUserData);
+    } catch (e) {
+        console.log("getCurrentUserData error", e);
+    }
+};
 
-            userRef
-                .set(
-                    {
-                        shippingAddresses: userData.shippingAddresses,
-                    },
+export const saveShippingAddress = (payload) => async (dispatch, getState) => {
+    try {
+        const userRef = firebase
+            .firestore()
+            .collection("users")
+            .doc(firebase.auth().currentUser.uid);
 
-                    {merge: true}
-                )
-                .catch((error) => {
-                    console.log(
-                        "Something went wrong with added shipping address to firestore: ",
-                        error
-                    );
-                });
-            dispatch(addShippingAddress(payload));
-        } catch (error) {
-            console.log("sendReview error", error);
-        }
-    };
+        const userSnap = await userRef.get();
+        const userData = userSnap.data();
+
+        userData.shippingAddresses.push({
+            ...payload,
+        });
+
+        userRef
+            .set(
+                {
+                    shippingAddresses: userData.shippingAddresses,
+                },
+
+                {merge: true}
+            )
+            .catch((error) => {
+                console.log(
+                    "Something went wrong with added shipping address to firestore: ",
+                    error
+                );
+            });
+        dispatch(addShippingAddress(payload));
+    } catch (error) {
+        console.log("sendReview error", error);
+    }
+};
 
 // ________________________________________________________________________________
 // // FIRESTORE ACTIONS -- WE SHOULD MOVE THEM TO ANOTHER FILE , MAYBE INSIDE API
 // _________________________________________________________________________________
 
-    export const deleteBagProducts = () => {
-        try {
-            const userProductsRef = firebase
-                .firestore()
-                .collection("users")
-                .doc(firebase.auth().currentUser.uid);
+export const deleteBagProducts = () => {
+    try {
+        const userProductsRef = firebase
+            .firestore()
+            .collection("users")
+            .doc(firebase.auth().currentUser.uid);
 
-            userProductsRef.update({
-                userProductsInBag: firebase.firestore.FieldValue.delete(),
-            });
-        } catch (e) {
-            console.log("deleteBagProducts", e);
-        }
-        // return removeBagProducts;
-    };
+        userProductsRef.update({
+            userProductsInBag: firebase.firestore.FieldValue.delete(),
+        });
+    } catch (e) {
+        console.log("deleteBagProducts", e);
+    }
+    // return removeBagProducts;
+};
 
-    export const addOrderedProducts = (products) => async () => {
-        try {
-            const date = new Date(Date.now()).toLocaleString().split(",")[0];
-            const userProductsRef = firebase
-                .firestore()
-                .collection("users")
-                .doc(firebase.auth().currentUser.uid);
-            const userProductsSnap = await userProductsRef.get();
-            const userData = await userProductsSnap.data();
-            console.log("userData", userData);
-            console.log("length", products.length);
-            const totalAmount = () => {
-                let total = 0;
-                products.forEach((product) => {
-                    total = total + product.price * product.selectedCount;
-                });
-                return total;
-            };
-            userData.orders.push({
-                orderNo: randomString(7, "n"),
-                trackingNo: randomString(12),
-                quantity: products.length,
-                totalAmount: totalAmount(),
-                date: date,
-                orderedProducts: products,
+export const addOrderedProducts = (products) => async () => {
+    try {
+        const date = new Date(Date.now()).toLocaleString().split(",")[0];
+        const userProductsRef = firebase
+            .firestore()
+            .collection("users")
+            .doc(firebase.auth().currentUser.uid);
+        const userProductsSnap = await userProductsRef.get();
+        const userData = await userProductsSnap.data();
+        console.log("userData", userData);
+        console.log("length", products.length);
+        const totalAmount = () => {
+            let total = 0;
+            products.forEach((product) => {
+                total = total + product.price * product.selectedCount;
             });
-            userProductsRef.set(
-                {
-                    orders: userData.orders,
-                },
-                {merge: true}
-            );
-        } catch (e) {
-            console.log("error", e);
-        }
-    };
+            return total;
+        };
+        userData.orders.push({
+            orderNo: randomString(7, "n"),
+            trackingNo: randomString(12),
+            quantity: products.length,
+            totalAmount: totalAmount(),
+            date: date,
+            orderedProducts: products,
+        });
+        userProductsRef.set(
+            {
+                orders: userData.orders,
+            },
+            {merge: true}
+        );
+    } catch (e) {
+        console.log("error", e);
+    }
+};
 
 // export const addProductToUsersBag = (product) => async () => {
 //   try {
@@ -283,119 +285,119 @@ export const addProductToUsersBag = (product, isFav, isDeleteFav, isDeleteBag,) 
 //     });
 // };
 
-    export const selectShippingAddress = async (pressedIndex) => {
-        try {
-            const userRef = firebase
-                .firestore()
-                .collection("users")
-                .doc(firebase.auth().currentUser.uid);
+export const selectShippingAddress = async (pressedIndex) => {
+    try {
+        const userRef = firebase
+            .firestore()
+            .collection("users")
+            .doc(firebase.auth().currentUser.uid);
 
-            const userSnap = await userRef.get();
-            const userData = userSnap.data();
+        const userSnap = await userRef.get();
+        const userData = userSnap.data();
 
-            userData.shippingAddresses.map((address, index) => {
-                if (index === pressedIndex) {
-                    address.isSelected = true;
-                } else {
-                    address.isSelected = false;
-                }
+        userData.shippingAddresses.map((address, index) => {
+            if (index === pressedIndex) {
+                address.isSelected = true;
+            } else {
+                address.isSelected = false;
+            }
+        });
+
+        userRef
+            .set(
+                {
+                    shippingAddresses: userData.shippingAddresses,
+                },
+
+                {merge: true}
+            )
+            .catch((error) => {
+                console.log(
+                    "Something went wrong with a selectShippingAddressto firestore: ",
+                    error
+                );
             });
+        // dispatch(addShippingAddress(payload));
+    } catch (error) {
+        console.log("selectShippingAddress error", error);
+    }
+};
 
-            userRef
-                .set(
-                    {
-                        shippingAddresses: userData.shippingAddresses,
-                    },
+export const changeUsernameAndPhoto = async (payload) => {
+    try {
+        const response = await fetch(payload.userPhoto);
+        const blob = await response.blob();
+        const key = firebase.database().ref("key").push().key;
+        const snap = await firebase.storage().ref(key).put(blob);
+        const url = await snap.ref.getDownloadURL();
 
-                    {merge: true}
-                )
-                .catch((error) => {
-                    console.log(
-                        "Something went wrong with a selectShippingAddressto firestore: ",
-                        error
-                    );
-                });
-            // dispatch(addShippingAddress(payload));
-        } catch (error) {
-            console.log("selectShippingAddress error", error);
-        }
-    };
+        const settingsRef = firebase
+            .firestore()
+            .collection("users")
+            .doc(firebase.auth().currentUser.uid);
 
-    export const changeUsernameAndPhoto = async (payload) => {
-        try {
-            const response = await fetch(payload.userPhoto);
-            const blob = await response.blob();
-            const key = firebase.database().ref("key").push().key;
-            const snap = await firebase.storage().ref(key).put(blob);
-            const url = await snap.ref.getDownloadURL();
+        const settingsSnap = await settingsRef.get();
+        const settingData = settingsSnap.data();
+        settingsRef
+            .set(
+                {
+                    ...settingData,
+                    username: payload.username,
+                    userPhoto: url,
+                },
 
-            const settingsRef = firebase
-                .firestore()
-                .collection("users")
-                .doc(firebase.auth().currentUser.uid);
-
-            const settingsSnap = await settingsRef.get();
-            const settingData = settingsSnap.data();
-            settingsRef
-                .set(
-                    {
-                        ...settingData,
-                        username: payload.username,
-                        userPhoto: url,
-                    },
-
-                    {merge: true}
-                )
-                .catch((error) => {
-                    console.log(
-                        "Something went wrong with changeUsernameAndPhoto to firestore: ",
-                        error
-                    );
-                });
-        } catch (error) {
-            console.log("changeUsernameAndPhoto error", error);
-        }
-    };
-    export const setCountSize = async (payload) => {
-        try {
-            const countRef = firebase
-                .firestore()
-                .collection("users")
-                .doc(firebase.auth().currentUser.uid);
-
-            const countSnap = await countRef.get();
-            const countData = countSnap.data();
-            const updatedProducts = [];
-            console.log("payload", payload);
-            console.log("countData", countData);
-            countData.userProductsInBag.forEach((product) => {
-                if (product.id === payload.productID) {
-                    updatedProducts.push({
-                        ...product,
-                        selectedCount: payload.selectedCount + 1,
-                    });
-                } else {
-                    updatedProducts.push(product);
-                }
+                {merge: true}
+            )
+            .catch((error) => {
+                console.log(
+                    "Something went wrong with changeUsernameAndPhoto to firestore: ",
+                    error
+                );
             });
-            console.log("updatedProducts", updatedProducts);
+    } catch (error) {
+        console.log("changeUsernameAndPhoto error", error);
+    }
+};
+export const setCountSize = async (payload) => {
+    try {
+        const countRef = firebase
+            .firestore()
+            .collection("users")
+            .doc(firebase.auth().currentUser.uid);
 
-            countRef
-                .set(
-                    {
-                        userProductsInBag: updatedProducts,
-                    },
-
-                    {merge: true}
-                )
-                .catch((error) => {
-                    console.log(
-                        "Something went wrong with added user to firestore: ",
-                        error
-                    );
+        const countSnap = await countRef.get();
+        const countData = countSnap.data();
+        const updatedProducts = [];
+        console.log("payload", payload);
+        console.log("countData", countData);
+        countData.userProductsInBag.forEach((product) => {
+            if (product.id === payload.productID) {
+                updatedProducts.push({
+                    ...product,
+                    selectedCount: payload.selectedCount + 1,
                 });
-            // dispatch(addReview(payload));
-        } catch (error) {
-            console.log("countData error", error);
-        }
-    };
+            } else {
+                updatedProducts.push(product);
+            }
+        });
+        console.log("updatedProducts", updatedProducts);
+
+        countRef
+            .set(
+                {
+                    userProductsInBag: updatedProducts,
+                },
+
+                {merge: true}
+            )
+            .catch((error) => {
+                console.log(
+                    "Something went wrong with added user to firestore: ",
+                    error
+                );
+            });
+        // dispatch(addReview(payload));
+    } catch (error) {
+        console.log("countData error", error);
+    }
+};

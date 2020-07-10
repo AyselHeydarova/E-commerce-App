@@ -7,8 +7,8 @@ import {styles} from "./Plus";
 export const Minus = ({onPress}) => {
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>
-            <View style={styles.icon}>
-                <Svg height={20} viewBox="0 0 512 512" width={20}>
+            <View style={[styles.icon,{top: 14, left: 14,}]}>
+                <Svg height={18} viewBox="0 0 512 512" width={18}>
                     <Rect y="128" width="298.667" height="42.667"
                           fill={COLORS.GRAY}
                     />

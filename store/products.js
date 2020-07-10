@@ -9,11 +9,8 @@ const SET_APP_NEW_PRODUCTS = "SET_APP_NEW_PRODUCTS";
 const SET_CURRENT_PRODUCT = "SET_CURRENT_PRODUCT";
 const ADD_TO_BAG = "ADD_TO_BAG";
 const ADD_REVIEW = "ADD_REVIEW";
-const SET_CURRENT_PRODUCT = "SET_CURRENT_PRODUCT";
 
 export const MODULE_NAME = "products";
-export const selectCurrentProduct = (state) =>
-  state[MODULE_NAME].currentProduct;
 export const selectAllProductData = (state) => state[MODULE_NAME];
 export const selectSaleProductData = (state) => state[MODULE_NAME].saleProducts;
 export const selectNewProductData = (state) => state[MODULE_NAME].newProducts;
@@ -87,10 +84,6 @@ export function productsReducer(state = initialState, { type, payload }) {
 
 export const setAppProducts = (payload) => ({
   type: SET_APP_PRODUCTS,
-  payload,
-});
-export const setCurrentProduct = (payload) => ({
-  type: SET_CURRENT_PRODUCT,
   payload,
 });
 export const setAppSaleProducts = (payload) => ({

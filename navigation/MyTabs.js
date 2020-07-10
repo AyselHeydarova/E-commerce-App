@@ -4,11 +4,10 @@ import Home from "../Screens/Home";
 import { StyleSheet, Text, View, Image } from "react-native";
 import MyTabBar from "../components/TabBar";
 import { MyBag } from "../Screens/MyBag";
-import { Favorites } from "../Screens/Favorites";
-
 import { ProfileStack, ShopStack } from "./index";
 import { HomeStack } from "./HomeStack";
 import {COLORS} from "../style/colors";
+import {FavoriteStack} from "./FavoriteStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -26,7 +25,7 @@ function MyTabs() {
         <Tab.Screen name="Home" component={HomeStack} />
         <Tab.Screen name="Shop" component={ShopStack} />
         <Tab.Screen name="Bag" component={MyBag} />
-        <Tab.Screen name="Favorites" component={Favorites} />
+        <Tab.Screen name="Favorites" component={FavoriteStack} />
         <Tab.Screen name="Profile" component={ProfileStack} />
       </Tab.Navigator>
     </View>

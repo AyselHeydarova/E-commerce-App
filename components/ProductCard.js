@@ -11,12 +11,6 @@ import {Counter} from "./Counter";
 import {averageRatingCalc, totalRatingCalc} from "../Utils/Calculations";
 import {selectAllProductData, setAddToBag} from "../store/products";
 import {connect} from "react-redux";
-import {
-    addProductToUsersBag,
-    selectCount,
-    setCount,
-    setCountSize,
-} from "../store/users";
 import {columnStyles} from "../style/globalStyles";
 
 const mapStateToProps = (state) => ({
@@ -42,11 +36,6 @@ export const ProductCard = connect(mapStateToProps, {
      }) => {
 
 
-        const cardWrapperStyles = [
-            isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
-            {opacity: count === 0 ? 0.5 : 1},
-        ];
-
         const {
             id,
             brandName,
@@ -62,21 +51,16 @@ export const ProductCard = connect(mapStateToProps, {
         } = product;
         const [isHeartClicked, setIsHeartClicked] = useState(false);
         const [defaultCount, setDefaultCount] = useState(selectedCount);
-        // const allRatingsArray = isInCatalog ? rating.map((obj) => {
-        //     for (let key in obj) {
-        //         const value = obj[key];
-        //         return value;
-        //     }
-        // }) : null;
+        const cardWrapperStyles = [
+            isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
+            {opacity: count === 0 ? 0.5 : 1},
+        ];
+
 
         const handleFavoriteProduct = () => {
             addProductToUsersBag(product, true);
             setIsHeartClicked(!isHeartClicked)
         };
-        // let totalStarCount = 0;
-        // for (let i = 0; i <= 4; i++) {
-        //     totalStarCount += isInCatalog ? allRatingsArray[i] * (i + 1) : 0;
-        // }
         const salePrice = isOnSale
             ? Math.floor((+price * (100 - +onSale.discount)) / 100)
             : null;
@@ -231,7 +215,13 @@ export const ProductCard = connect(mapStateToProps, {
                     {isInFavs || isInOrders ? null :
                         <Heart width={15} height={15}
                                isHeartClicked={isHeartClicked}
-                               onPress={() => handleFavoriteProduct()}/>
+                               onPress={() => handleFavoriteProduct()}
+                               style={{
+                                   position: "absolute",
+                                   right: 0,
+                                   bottom: -16,
+                               }}
+                        />
                     }
                 </View>
             </TouchableWithoutFeedback>

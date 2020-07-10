@@ -47,16 +47,17 @@ export const ProfileScreen = connect(mapStateToProps, {
     }, []);
 
     console.log("product profile", product);
+    console.log("user profile", user);
 
     const profileSections = [
       {
         sectionName: "My Orders",
-        dutyOfSection: `Already have ${orderCount} orders`,
+        dutyOfSection: `Already have ${user.orders.length} orders`,
         screenTo: "MyOrders",
       },
       {
         sectionName: "Shipping addresses",
-        dutyOfSection: `${user.shippingAddresses.length} addresses`,
+        dutyOfSection: `${(user.shippingAddresses||[]).length} addresses`,
         screenTo: "ShippingAddressesScreen",
       },
       {
