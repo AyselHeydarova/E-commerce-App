@@ -5,37 +5,36 @@ import {Minus} from "../Icons/Minus";
 import {CustomText} from "./CustomText";
 import {COLORS} from "../style/colors";
 
-export const Counter = ({count}) => {
+export const Counter = ({count,handleMinus, handlePlus}) => {
     return (
         <View style={styles.container}>
-            <Minus/>
+            <Minus onPress={handleMinus}/>
            <View style={styles.countContainer}>
                <CustomText style={styles.count}>
-                   18
+                   {count}
                </CustomText>
            </View>
-            <Plus/>
+            <Plus onPress={handlePlus}/>
         </View>
     );
 };
 const styles = StyleSheet.create({
 
     container: {
-        width: 120,
-        height: 45,
+        width: 100,
+        height: 40,
         flexDirection: "row",
         justifyContent: "space-between"
     },
     count: {
-        fontSize: 21,
-        lineHeight: 20,
+        fontSize: 18,
         color:COLORS.TEXT
     },
     countContainer:{
-        width: 60,
-        height:30,
-        paddingTop:17,
-        paddingLeft:21,
+        width: 40,
+        height:40,
+        justifyContent: "center",
+        alignItems:"center"
     }
 
 });

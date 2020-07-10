@@ -71,6 +71,7 @@ export const AuthForm = connect(mapStateToProps, {
         name={"Password"}
         onChangeHandler={(value) => fieldChangeHandler("password", value)}
         value={fields.password}
+        secureTextEntry={true}
       />
 
       {!isLogin && (

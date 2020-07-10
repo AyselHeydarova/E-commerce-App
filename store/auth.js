@@ -33,14 +33,6 @@ const initialState = [
     userID: null,
     username: null,
     photo: null,
-    ratingReviews: [
-      {
-        productID: "0DfEDzHyyUuQkqEo5OLd",
-        comment: "I like it very much",
-        rating: "4star",
-      },
-      { productID: "2utQmBZllB7TqnUiGqG4", comment: "Superr", rating: "5star" },
-    ],
   },
 ];
 export function authReducer(state = initialState, { type, payload }) {
@@ -86,6 +78,9 @@ export const signupUser = (userDetails) => async (dispatch) => {
             username: username,
             email: email,
             password: password,
+            userFavorites:[],
+            userProductsInBag:[],
+            orders:[]
           })
           .catch((error) => {
             console.log(

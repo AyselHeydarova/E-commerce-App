@@ -1,44 +1,43 @@
 import * as firebase from "firebase";
-// import "./firebase";
+import "firebase/firestore";
 
 import { getData, getOnSaleData } from "../API";
 
 const SET_APP_PRODUCTS = "SET_APP_PRODUCTS";
 const SET_APP_SALE_PRODUCTS = "SET_APP_SALE_PRODUCTS";
 const SET_APP_NEW_PRODUCTS = "SET_APP_NEW_PRODUCTS";
+const SET_CURRENT_PRODUCT = "SET_CURRENT_PRODUCT";
 const ADD_TO_BAG = "ADD_TO_BAG";
 const ADD_REVIEW = "ADD_REVIEW";
+const SET_CURRENT_PRODUCT = "SET_CURRENT_PRODUCT";
 
 export const MODULE_NAME = "products";
-
+export const selectCurrentProduct = (state) =>
+  state[MODULE_NAME].currentProduct;
 export const selectAllProductData = (state) => state[MODULE_NAME];
 export const selectSaleProductData = (state) => state[MODULE_NAME].saleProducts;
 export const selectNewProductData = (state) => state[MODULE_NAME].newProducts;
-export const selectProductReviews = (state, ID) =>
-  state[MODULE_NAME].newProducts.filter((product) => product.id === ID).reviews;
+export const selectCurrentProduct = (state) =>
+  state[MODULE_NAME].currentProduct;
+export const selectCurrentProductRating = (state) =>
+  state[MODULE_NAME].currentProduct.rating;
 
 export const selectCategory = (state, category) =>
   state[MODULE_NAME].allProducts[category];
 
 const initialState = {
+  currentProduct: [],
   allProducts: [],
   saleProducts: [],
   newProducts: [],
-  bagProducts: [],
 };
 
 export function productsReducer(state = initialState, { type, payload }) {
-  console.log(state.allProducts);
   switch (type) {
     case SET_APP_PRODUCTS:
       return {
         ...state,
         allProducts: payload,
-      };
-    case SET_APP_SALE_PRODUCTS:
-      return {
-        ...state,
-        saleProducts: payload,
       };
 
     case SET_APP_NEW_PRODUCTS:
@@ -47,20 +46,18 @@ export function productsReducer(state = initialState, { type, payload }) {
         newProducts: payload,
       };
 
-    case ADD_TO_BAG:
+    case SET_APP_SALE_PRODUCTS:
       return {
         ...state,
-        bagProducts: state.allProducts.products.map((product) => {
-          if (product.id === payload.productID) {
-            return {
-              ...product,
-              isBought: !product.isBought,
-            };
-          }
-
-          return product;
-        }),
+        saleProducts: payload,
       };
+
+    case SET_CURRENT_PRODUCT:
+      return {
+        ...state,
+        currentProduct: payload,
+      };
+
     case ADD_REVIEW:
       return {
         ...state,
@@ -71,7 +68,8 @@ export function productsReducer(state = initialState, { type, payload }) {
               reviews: [
                 ...product.reviews,
                 {
-                  authorID: payload.authorID,
+                  username: payload.username,
+                  userPhoto: payload.userPhoto,
                   review_text: payload.review_text,
                   givenRating: payload.givenRating,
                 },
@@ -82,7 +80,6 @@ export function productsReducer(state = initialState, { type, payload }) {
           }
         }),
       };
-
     default:
       return state;
   }
@@ -90,6 +87,10 @@ export function productsReducer(state = initialState, { type, payload }) {
 
 export const setAppProducts = (payload) => ({
   type: SET_APP_PRODUCTS,
+  payload,
+});
+export const setCurrentProduct = (payload) => ({
+  type: SET_CURRENT_PRODUCT,
   payload,
 });
 export const setAppSaleProducts = (payload) => ({
@@ -102,6 +103,11 @@ export const setAppNewProducts = (payload) => ({
 });
 export const setAddToBag = (payload) => ({
   type: ADD_TO_BAG,
+  payload,
+});
+
+export const setCurrentProduct = (payload) => ({
+  type: SET_CURRENT_PRODUCT,
   payload,
 });
 
@@ -121,7 +127,8 @@ export const sendReview = (payload) => async (dispatch, getState) => {
     const reviewData = reviewSnap.data();
 
     reviewData.reviews.push({
-      authorID: payload.authorID,
+      username: payload.username,
+      userPhoto: payload.userPhoto,
       review_text: payload.review_text,
       givenRating: payload.givenRating,
     });
@@ -143,6 +150,41 @@ export const sendReview = (payload) => async (dispatch, getState) => {
     dispatch(addReview(payload));
   } catch (error) {
     console.log("sendReview error", error);
+  }
+};
+
+export const increaseRating = async (payload) => {
+  try {
+    const ratingRef = firebase
+      .firestore()
+      .collection("products")
+      .doc(payload.productID);
+
+    const ratingSnap = await ratingRef.get();
+    const ratingData = ratingSnap.data();
+
+    const selectedRating = ratingData.rating[payload.givenRating - 1];
+    const newValue = Object.values(selectedRating)[0] + 1;
+    const key = Object.keys(selectedRating)[0];
+
+    selectedRating[key] = newValue;
+
+    ratingRef
+      .set(
+        {
+          rating: ratingData.rating,
+        },
+
+        { merge: true }
+      )
+      .catch((error) => {
+        console.log(
+          "Something went wrong with increaseRating to firestore: ",
+          error
+        );
+      });
+  } catch (error) {
+    console.log("increaseRating error", error);
   }
 };
 
@@ -170,5 +212,20 @@ export const getOnSaleProducts = (sale) => async (dispatch, getState) => {
     dispatch(setAppSaleProducts(saleData));
   } catch (error) {
     console.log("getOnSaleProducts", error);
+  }
+};
+
+export const getCurrentProduct = (productID) => async (dispatch) => {
+  try {
+    firebase
+      .firestore()
+      .collection("products")
+      .doc(productID)
+      .onSnapshot(function (doc) {
+        // console.log("Current Product Snapshotdata: ", doc.data());
+        dispatch(setCurrentProduct(doc.data()));
+      });
+  } catch (e) {
+    console.log("getCurrentProduct error", e);
   }
 };

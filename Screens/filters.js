@@ -10,7 +10,8 @@ import {Buttons} from "../components/Buttons";
 
 
 export const Filters = ({navigation, route}) => {
-    const {finalProducts} = route.params;
+    const {finalProducts, startValue, endValue} = route.params;
+
     const [categories, setCategories] = useState([
             {
                 size: "All",
@@ -82,7 +83,7 @@ export const Filters = ({navigation, route}) => {
 
         ]
     );
-
+    const [filteredProducts, setFilteredProducts] = useState([]);
     const [sizes, setSizes] = useState(
         [
             {
@@ -108,6 +109,7 @@ export const Filters = ({navigation, route}) => {
 
         ]
     );
+
     const handleSize = (size, state, index) => {
         let updatedSizes = [...sizes];
         updatedSizes[index] = {
@@ -115,7 +117,24 @@ export const Filters = ({navigation, route}) => {
             state: !state,
         };
         setSizes(updatedSizes);
+        let products = filteredProducts.length===0 ? finalProducts  : filteredProducts;
 
+        console.log('products', products)
+        console.log('filteredProducts', filteredProducts===true)
+        console.log('finalProducts', finalProducts)
+        const filteredProductsBySize = products.filter((product) => {
+            const s = product.sizes.filter((item) => {
+                console.log('color', item.size)
+                return item.size === size
+
+            });
+
+            console.log('col', s)
+            console.log(size)
+            return product.sizes.includes(s[0]);
+        });
+        setFilteredProducts(filteredProductsBySize);
+        console.log('filteredProductsBySize', filteredProductsBySize)
     };
     const handleColor = (color, state, index) => {
         let updatedColors = [...colors];
@@ -124,23 +143,33 @@ export const Filters = ({navigation, route}) => {
             state: !state,
         };
         setColors(updatedColors);
-        console.log('color', color)
-        console.log('updatedColors', updatedColors)
-        console.log('state', state)
+
+        const filteredProducts = finalProducts.filter((product) => {
+            const col = product.colors.filter((item) => {
+                console.log('color', item.color)
+                return item.color === color
+
+            });
+
+            console.log('col', col)
+            console.log(color)
+            return product.colors.includes(col[0]);
+        });
+        setFilteredProducts(filteredProducts);
+
 
     };
+    console.log('filteredProducts', filteredProducts);
     const handleFilter = () => {
-        console.log(finalProducts)
-        finalProducts.forEach((item)=>{
-            console.log('item.colour',item.colour);
-            Object.keys(item.colour).forEach((color)=>{
-                console.log('color',color)
-            // if (color==="red"){
-            //     console.log(item)
-            // }
-            })
+        navigation.navigate("Catalog", {
+            filteredProducts: filteredProducts.length===0?finalProducts:filteredProducts,
+            isFiltered: true
+
         })
     };
+    useEffect(() => {
+
+    })
     return (
         <View style={styles.container}>
             <StatusBar/>
@@ -149,7 +178,7 @@ export const Filters = ({navigation, route}) => {
                     <CustomText weight={'medium'} style={styles.title}>Price Range </CustomText>
                 </View>
                 <View style={styles.sliderContainer}>
-                    {/*<Slider/>*/}
+                    <Slider/>
                 </View>
             </View>
 
@@ -165,8 +194,7 @@ export const Filters = ({navigation, route}) => {
                             <ColorContainer
                                 onPress={
                                     () => {
-                                        console.log('item.state', item.state),
-                                            handleColor(item.color, item.state, index)
+                                        handleColor(item.color, item.state, index)
                                     }}
                                 bgColor={item.color}
                                 borderColor={item.state ? COLORS.PRIMARY : COLORS.TEXT}
@@ -223,21 +251,23 @@ export const Filters = ({navigation, route}) => {
             {/*    </View>*/}
             {/*</View>*/}
             <TouchableOpacity activeOpacity={0.9} style={[styles.bodyPart, {height: 80}]}
-                              onPress={() => navigation.navigate("BrandsScreen")}>
+                              onPress={() => navigation.navigate("BrandsScreen",{
+                                  finalProducts: filteredProducts.length===0?finalProducts:filteredProducts,
+                              })}>
                 <View style={styles.titleContainer}>
                     <CustomText weight={'medium'} style={styles.title}>Brand </CustomText>
                 </View>
                 <View style={styles.sliderContainer}>
                     <CustomText style={styles.brands}>adidas Originals, Jack & Jones, s.Oliver</CustomText>
 
-                    <TouchableOpacity style={styles.rightIcon} onPress={() => navigation.navigate("BrandsScreen",{
-                        finalProducts:finalProducts
+                    <TouchableOpacity style={styles.rightIcon} onPress={() => navigation.navigate("BrandsScreen", {
+                        finalProducts: filteredProducts.length===0?finalProducts:filteredProducts,
                     })}>
                         <Forward height={15} width={20}/>
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>
-            <Buttons onPressApply={()=>handleFilter()}/>
+            <Buttons onPressApply={() => handleFilter()}/>
         </View>
     );
 };
