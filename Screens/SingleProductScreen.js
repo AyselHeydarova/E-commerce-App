@@ -25,6 +25,118 @@ import { connect } from "react-redux";
 const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),
 });
+{/*<<<<<<< HEAD*/}
+{/*export const SingleProductScreen = connect(mapStateToProps, {setAddToBag, addProductToUsersBag})(*/}
+{/*    ({*/}
+{/*         route,*/}
+{/*         setAddToBag, addProductToUsersBag, navigation*/}
+{/*     }) => {*/}
+{/*        const [isSizeClicked, setIsSizeClicked] = useState(false);*/}
+{/*        const [isColorClicked, setIsColorClicked] = useState(false);*/}
+{/*        const [isHeartClicked, setIsHeartClicked] = useState(false);*/}
+{/*        const {*/}
+{/*            id,*/}
+{/*            about,*/}
+{/*            brandName,*/}
+{/*            price,*/}
+{/*            imagesUrls,*/}
+{/*            name,*/}
+{/*            rating,*/}
+{/*            reviews,*/}
+{/*            sizes,*/}
+{/*            colors,*/}
+{/*            count*/}
+{/*        } = route.params.product;*/}
+{/*        const {products} = route.params;*/}
+{/*        const {product} = route.params;*/}
+{/*        const [addProduct, setAddProduct] = useState({*/}
+{/*            selectedCount:1,*/}
+{/*            id: id,*/}
+{/*            name: name,*/}
+{/*            price: price,*/}
+{/*            count: count,*/}
+{/*            imagesUrls: imagesUrls,*/}
+{/*            size: "",*/}
+{/*            color: "",*/}
+{/*        });*/}
+{/*        const handleAddToCart = () => {*/}
+{/*            setAddToBag(addProduct);*/}
+{/*            addProductToUsersBag(addProduct,false,false,false);*/}
+{/*            setIsSizeClicked(false);*/}
+{/*            setIsColorClicked(false)*/}
+{/*        };*/}
+{/*        const handleFavoriteProduct = () => {*/}
+{/*            addProductToUsersBag(product,true);*/}
+{/*            setIsHeartClicked(!isHeartClicked)*/}
+{/*            console.log('product',product)*/}
+{/*        };*/}
+{/*        const [isClicked, setIsClicked] = useState({*/}
+{/*            S: false,*/}
+{/*            M: false,*/}
+{/*            L: false,*/}
+{/*        });*/}
+{/*        const handleSize = (size) => {*/}
+{/*            setIsClicked({...false, [size]: !isClicked[`${size}`]});*/}
+{/*            setAddProduct(prevState => ({*/}
+{/*                ...prevState,*/}
+{/*                ["size"]: size*/}
+{/*            }));*/}
+{/*            console.log(size)*/}
+{/*            console.log(addProduct)*/}
+{/*        };*/}
+{/*        const handleColor = (color) => {*/}
+{/*            setAddProduct(prevState => ({*/}
+{/*                ...prevState,*/}
+{/*                ["color"]: color*/}
+{/*            }));*/}
+{/*            setIsSizeClicked(!isColorClicked);*/}
+{/*            console.log(size)*/}
+{/*            console.log(addProduct)*/}
+{/*        };*/}
+
+{/*        useEffect(() => {*/}
+{/*            console.log(addProduct)*/}
+{/*        })*/}
+{/*        const size = ["S", "M", "L"];*/}
+{/*        return (*/}
+{/*            <TouchableWithoutFeedback onPress={() => {*/}
+{/*                setIsSizeClicked(false),*/}
+{/*                    setIsColorClicked(false)*/}
+
+{/*            }}>*/}
+{/*                <View style={styles.container}>*/}
+{/*                    <ScrollView>*/}
+{/*                        <SliderBox*/}
+{/*                            images={imagesUrls}*/}
+{/*                            sliderBoxHeight={400}*/}
+{/*                            circleLoop={true}*/}
+{/*                            dotColor={COLORS.PRIMARY}*/}
+{/*                        />*/}
+{/*                        <View style={styles.main}>*/}
+{/*                            <View style={[styles.row,{justifyContent: "space-around"}]}>*/}
+{/*                                <SizeContainer*/}
+{/*                                    width={130}*/}
+{/*                                    name="Size"*/}
+{/*                                    onPress={() => setIsSizeClicked(!isSizeClicked)}*/}
+{/*                                    isClicked={isSizeClicked}*/}
+{/*                                    bgColor={isSizeClicked ? COLORS.PRIMARY : null}*/}
+{/*                                    borderWidth={isSizeClicked ? 0 : 0.4}*/}
+{/*                                />*/}
+{/*                                <SizeContainer*/}
+{/*                                    onPress={() => setIsColorClicked(!isColorClicked)}*/}
+{/*                                    isClicked={isColorClicked}*/}
+{/*                                    width={130}*/}
+{/*                                    name="Color"*/}
+{/*                                    bgColor={isColorClicked ? COLORS.PRIMARY : null}*/}
+{/*                                    borderWidth={isColorClicked ? 0 : 0.4}*/}
+{/*                                />*/}
+{/*                               <View style={{width:38}}>*/}
+{/*                                   <Heart width={25} height={25}*/}
+{/*                                          isHeartClicked={isHeartClicked}*/}
+{/*                                          onPress={()=>handleFavoriteProduct()}/>*/}
+{/*                               </View>*/}
+{/*                            </View>*/}
+{/*=======*/}
 export const SingleProductScreen = connect(mapStateToProps, {
   setAddToBag,
   addProductToUsersBag,

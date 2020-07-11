@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
-import {TouchableWithoutFeedback, Text, View} from "react-native";
-import {COLORS} from "../style/colors";
-import {styles} from "../Screens/filters";
+import { TouchableWithoutFeedback, Text, View } from "react-native";
+import { COLORS } from "../style/colors";
+import { styles } from "../Screens/filters";
 
 class Slider extends Component {
-    state = {
-        values: [0, 100],
-    };
+  state = {
+    values: [0, 100],
+  };
 
     multiSliderValuesChange = (values) => {
         this.setState({
@@ -20,7 +20,6 @@ class Slider extends Component {
 // })
     render() {
         return (
-            <TouchableWithoutFeedback>
                 <>
                     <Text style={[styles.title, {position: 'absolute', left: 0,}]}>${this.state.values[0]}</Text>
                     <Text style={[styles.title, {position: 'absolute', right: 0,}]}>${this.state.values[1]}</Text>
@@ -33,9 +32,7 @@ class Slider extends Component {
                         step={1}
 
                     />
-
-                </>
-            </TouchableWithoutFeedback>
+                    </>
         );
     }
 }

@@ -18,7 +18,9 @@ import {
   selectSaleProductData,
   getOnSaleProducts,
   selectNewProductData,
+  selectFilteredProducts,
   getNewData,
+  getFilteredProducts,
 } from "../store/products";
 import { connect } from "react-redux";
 
@@ -29,12 +31,14 @@ const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),
   saleProducts: selectSaleProductData(state),
   newProducts: selectNewProductData(state),
+  filteredProduct: selectFilteredProducts(state),
 });
 const Home = connect(mapStateToProps, {
   getAllData,
   getOnSaleProducts,
   getNewData,
   setUsersData,
+  getFilteredProducts,
 })(
   ({
     getAllData,
@@ -45,6 +49,8 @@ const Home = connect(mapStateToProps, {
     getOnSaleProducts,
     navigation,
     setUsersData,
+    getFilteredProducts,
+    filteredProduct,
   }) => {
     const [showSale, setShowSale] = useState(false);
 
@@ -92,7 +98,8 @@ const Home = connect(mapStateToProps, {
                     onPress={() =>
                       navigation.navigate("SingleProduct", {
                         product: item,
-                        products:saleProducts,})
+                        products: saleProducts,
+                      })
                     }
                   >
                     <ProductCard
@@ -143,7 +150,7 @@ const Home = connect(mapStateToProps, {
                 onPress={() =>
                   navigation.navigate("SingleProduct", {
                     product: item,
-                    products:newProducts,
+                    products: newProducts,
                   })
                 }
               >

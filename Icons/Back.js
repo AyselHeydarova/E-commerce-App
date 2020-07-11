@@ -1,10 +1,10 @@
 import React from "react";
 import Svg, { Path } from "react-native-svg";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity, StyleSheet } from "react-native";
 
 export const Back = ({ onPress }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} style={styles.icon}>
       <Svg height="26" viewBox="0 0 512 512" width="24">
         <Path
           d="M143.492,221.863L336.226,29.129c6.663-6.664,6.663-17.468,0-24.132c-6.665-6.662-17.468-6.662-24.132,0l-204.8,204.8
@@ -16,3 +16,9 @@ export const Back = ({ onPress }) => {
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  icon: {
+    margin: 10,
+  },
+});

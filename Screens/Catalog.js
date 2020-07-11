@@ -19,47 +19,58 @@ import { Back } from "../Icons/Back";
 import { checkMen } from "./CategoriesOf";
 import store from "../store";
 import { BottomModal } from "../components/bottomModal";
-import { getAllData, selectAllProductData } from "../store/products";
+import {
+  getAllData,
+  selectAllProductData,
+  selectFilteredProducts,
+  getFilteredProducts,
+} from "../store/products";
 import { connect } from "react-redux";
 import { GLOBAL_STYLES } from "../style/globalStyles";
 
 const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),
+  filteredProductsData: selectFilteredProducts(state),
 });
-export const Catalog = connect(mapStateToProps)(
-  ({  allProducts, route, navigation }) => {
+export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
+  ({
+    allProducts,
+    route,
+    navigation,
+    filteredProductsData,
+    getFilteredProducts,
+  }) => {
+    const sortingHandler = async () => await getFilteredProducts(sortedFields);
+
+    // useEffect(() => sortingHandler(), []);
+
     const {
       name,
       isWomanClicked,
       categoryName,
       isOnSale = false,
-        isFiltered,
-        filteredProducts
+      isFiltered = true,
+      filteredProducts,
     } = route.params;
+
     const products = allProducts.allProducts;
     const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
     const [sortOption, setSortOption] = useState({
-      Popular: true,
-      Newest: false,
-      Customer_review: false,
       lowestToHigh: false,
-      highestToLow: false,
+      highestToLow: true,
     });
-    console.log('filteredProducts',filteredProducts);
-    console.log('isFiltered',isFiltered);
+
+    const [isSortingType, setIsSortingType] = useState("Price: highest to low");
+
+    const sortType = isSortingType === "Price: highest to low" ? "asc" : "desc";
+
+    const sortedFields = {
+      category: categoryName,
+      gender: isWomanClicked ? "women" : "men",
+      sortBy: "price",
+      sortType,
+    };
     const sortOptions = [
-      {
-        sortingName: "Popular",
-        sortOptionBool: "Popular",
-      },
-      {
-        sortingName: "Newest",
-        sortOptionBool: "Newest",
-      },
-      {
-        sortingName: "Customer review",
-        sortOptionBool: "Customer_review",
-      },
       {
         sortingName: "Price: lowest to high",
         sortOptionBool: "lowestToHigh",
@@ -69,16 +80,15 @@ export const Catalog = connect(mapStateToProps)(
         sortOptionBool: "highestToLow",
       },
     ];
-    // const gender = isWomanClicked ?  "women" : "men";
-    // const productsSortedByGender = products.filter((product)=>product.tags.includes(gender));
 
-    const [isSortingType, setIsSortingType] = useState("Popular");
     const handleSorting = (name, sortOptionBool) => {
       setIsSortingType(name);
       setSortOption({
         ...false,
         [sortOptionBool]: !sortOption[`${sortOptionBool}`],
       });
+      sortingHandler();
+      setIsBottomModalOpen(false);
     };
 
     const newProducts = products.filter(
@@ -96,21 +106,17 @@ export const Catalog = connect(mapStateToProps)(
     const [isListView, setIsListView] = useState(true);
 
     const numberOfColums = isListView ? 1 : 2;
+
     const handleProductCard = (item) => {
       navigation.navigate("SingleProductScreen", {
         product: item,
         products: products,
       });
     };
+
     return (
       <View style={styles.container}>
         <StatusBar />
-        <TouchableOpacity
-          style={styles.backIcon}
-          onPress={() => navigation.goBack()}
-        >
-          <Back />
-        </TouchableOpacity>
         <CustomText weight={"bold"} style={styles.title}>
           {isOnSale ? "Sale" : name}
         </CustomText>
@@ -146,15 +152,12 @@ export const Catalog = connect(mapStateToProps)(
         </View>
 
         <FlatList
-          data={isFiltered?filteredProducts:finalProducts}
+          data={isFiltered ? filteredProductsData : finalProducts}
           numColumns={numberOfColums}
           key={numberOfColums}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={
-                // console.log(item)
-                () => handleProductCard(item)
-              }
+              onPress={() => handleProductCard(item)}
               activeOpacity={0.9}
             >
               <ProductCard
@@ -169,7 +172,7 @@ export const Catalog = connect(mapStateToProps)(
         />
 
         {isBottomModalOpen ? (
-          <BottomModal name={"SortBy"} height={350} >
+          <BottomModal name={"SortBy"} height={250}>
             <View style={styles.sortBy}>
               <FlatList
                 data={sortOptions}
@@ -183,9 +186,9 @@ export const Catalog = connect(mapStateToProps)(
                           : null,
                       },
                     ]}
-                    onPress={() =>
-                      handleSorting(item.sortingName, item.sortOptionBool)
-                    }
+                    onPress={() => {
+                      handleSorting(item.sortingName, item.sortOptionBool);
+                    }}
                   >
                     <CustomText weight={"medium"} style={styles.sortingName}>
                       {item.sortingName}
@@ -231,14 +234,9 @@ const styles = StyleSheet.create({
     height: 70,
     width: "100%",
   },
-
-  backIcon: {
-    marginTop: 10,
-    marginLeft: 20,
-  },
   sortBy: {
     width: "100%",
-      marginTop: 70
+    marginTop: 70,
   },
   sortingName: {
     fontSize: 18,

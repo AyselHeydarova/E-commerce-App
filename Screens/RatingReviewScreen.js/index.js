@@ -20,8 +20,8 @@ export const RatingReviewScreen = connect(
   mapStateToProps,
   null
 )(({ route, rating }) => {
-  const [showWriteReview, setShowWriteReview] = useState(false);
   const productID = route.params.productID;
+  const [showWriteReview, setShowWriteReview] = useState(false);
 
   return (
     <TouchableWithoutFeedback onPress={() => setShowWriteReview(false)}>

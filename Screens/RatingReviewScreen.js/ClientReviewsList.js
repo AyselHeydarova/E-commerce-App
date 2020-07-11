@@ -20,6 +20,8 @@ export const ClientReviewsList = connect(mapStateToProps, {
   }, []);
 
   const reviews = currentProduct?.reviews;
+
+  console.log("review", reviews);
   return (
     <View>
       <CustomText style={styles.text} weight="medium">
