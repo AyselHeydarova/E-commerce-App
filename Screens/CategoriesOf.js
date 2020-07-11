@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   StyleSheet,
@@ -14,8 +15,9 @@ import { connect } from "react-redux";
 import { GLOBAL_STYLES } from "../style/globalStyles";
 
 const mapStateToProps = (state) => ({
-  allProducts: selectAllProductData(state),
+    allProducts: selectAllProductData(state),
 });
+
 export const CategoriesOf = connect(mapStateToProps, { getAllData })(
   ({ getAllData, allProducts, route, navigation }) => {
     const { isWomanClicked, isOnSale, categoryName } = route.params;

@@ -60,7 +60,6 @@ export const BrandsScreen = ({navigation, route}) => {
         const filteredProductsByBrand = finalProducts.filter((product) => product.brandName === brandName);
         setFilteredProductsByBrand(filteredProductsByBrand);
         console.log('filteredProductsByBrand', filteredProductsByBrand)
-        console.log('brandName', brandName)
 
     };
     return (
@@ -85,7 +84,7 @@ export const BrandsScreen = ({navigation, route}) => {
                     filteredProducts: filteredProductsByBrand,
                     isFiltered: true
                 })}
-                onPressDiscard={() => navigation.navigate("Filters")}/>
+                onPressDiscard={() => navigation.goBack()}/>
         </View>
     );
 };
