@@ -13,6 +13,7 @@ export const Buttons = ({ onPressDiscard,onPressApply }) => {
                 borderColor={COLORS.GRAY}
                 height={40}
                 width={160}
+                onPress={onPressDiscard}
 
 
             />

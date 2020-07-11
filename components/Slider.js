@@ -20,7 +20,6 @@ class Slider extends Component {
 // })
     render() {
         return (
-            <TouchableWithoutFeedback>
                 <>
                     <Text style={[styles.title, {position: 'absolute', left: 0,}]}>${this.state.values[0]}</Text>
                     <Text style={[styles.title, {position: 'absolute', right: 0,}]}>${this.state.values[1]}</Text>
@@ -33,9 +32,7 @@ class Slider extends Component {
                         step={1}
 
                     />
-
-                </>
-            </TouchableWithoutFeedback>
+                    </>
         );
     }
 }
