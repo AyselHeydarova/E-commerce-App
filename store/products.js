@@ -1,22 +1,27 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 
-import { getData, getOnSaleData } from "../API";
+import {
+  getData,
+  getOnSaleData,
+  getDataByCategoryGenderAndFilter,
+} from "../API";
 
 const SET_APP_PRODUCTS = "SET_APP_PRODUCTS";
 const SET_APP_SALE_PRODUCTS = "SET_APP_SALE_PRODUCTS";
 const SET_APP_NEW_PRODUCTS = "SET_APP_NEW_PRODUCTS";
+const SET_FILTERED_PRODUCTS = "SET_FILTERED_PRODUCTS";
 const SET_CURRENT_PRODUCT = "SET_CURRENT_PRODUCT";
 const ADD_TO_BAG = "ADD_TO_BAG";
 const ADD_REVIEW = "ADD_REVIEW";
-const SET_CURRENT_PRODUCT = "SET_CURRENT_PRODUCT";
 
 export const MODULE_NAME = "products";
-export const selectCurrentProduct = (state) =>
-  state[MODULE_NAME].currentProduct;
+
 export const selectAllProductData = (state) => state[MODULE_NAME];
 export const selectSaleProductData = (state) => state[MODULE_NAME].saleProducts;
 export const selectNewProductData = (state) => state[MODULE_NAME].newProducts;
+export const selectFilteredProducts = (state) =>
+  state[MODULE_NAME].filteredProducts;
 export const selectCurrentProduct = (state) =>
   state[MODULE_NAME].currentProduct;
 export const selectCurrentProductRating = (state) =>
@@ -27,6 +32,7 @@ export const selectCategory = (state, category) =>
 
 const initialState = {
   currentProduct: [],
+  filteredProducts: [],
   allProducts: [],
   saleProducts: [],
   newProducts: [],
@@ -44,6 +50,12 @@ export function productsReducer(state = initialState, { type, payload }) {
       return {
         ...state,
         newProducts: payload,
+      };
+
+    case SET_FILTERED_PRODUCTS:
+      return {
+        ...state,
+        filteredProducts: payload,
       };
 
     case SET_APP_SALE_PRODUCTS:
@@ -97,17 +109,16 @@ export const setAppSaleProducts = (payload) => ({
   type: SET_APP_SALE_PRODUCTS,
   payload,
 });
+export const setFilteredProducts = (payload) => ({
+  type: SET_FILTERED_PRODUCTS,
+  payload,
+});
 export const setAppNewProducts = (payload) => ({
   type: SET_APP_NEW_PRODUCTS,
   payload,
 });
 export const setAddToBag = (payload) => ({
   type: ADD_TO_BAG,
-  payload,
-});
-
-export const setCurrentProduct = (payload) => ({
-  type: SET_CURRENT_PRODUCT,
   payload,
 });
 
@@ -222,10 +233,24 @@ export const getCurrentProduct = (productID) => async (dispatch) => {
       .collection("products")
       .doc(productID)
       .onSnapshot(function (doc) {
-        // console.log("Current Product Snapshotdata: ", doc.data());
         dispatch(setCurrentProduct(doc.data()));
       });
   } catch (e) {
     console.log("getCurrentProduct error", e);
+  }
+};
+
+export const getFilteredProducts = (payload) => async (dispatch) => {
+  try {
+    const filteredProducts = await getDataByCategoryGenderAndFilter(
+      payload.category,
+      payload.gender,
+      payload.sortBy,
+      payload.sortType
+    );
+    console.log("filteredProducts from redux", filteredProducts);
+    dispatch(setFilteredProducts(filteredProducts));
+  } catch (error) {
+    console.log("getFilteredProducts error ", error);
   }
 };

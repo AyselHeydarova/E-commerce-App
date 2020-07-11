@@ -215,6 +215,56 @@ export const addProductToUsersBag = (product, isFav, isDeleteFav, isDeleteBag,) 
         // return removeBagProducts;
     };
 
+    userData.orders.push({
+      orderNo: randomString(7, "n"),
+      trackingNo: randomString(12),
+      quantity: products.length,
+      totalAmount: totalAmount(),
+      date: date,
+      orderedProducts: products,
+    });
+    userProductsRef.set(
+      {
+        orders: userData.orders,
+      },
+      { merge: true }
+    );
+  } catch (e) {
+    console.log("error", e);
+  }
+};
+
+export const submitOrder = async (orderInfo) => {
+  const orderId = await firebase.firestore.collection("orders").push(orderInfo)
+    .id;
+  console.log("orderId", orderId);
+  firebase.firestore
+    .collection("users")
+    .doc(firebase.auth().currentUser.uid)
+    .orders.set({
+      [orderId]: true,
+    });
+};
+
+export const selectShippingAddress = async (pressedIndex) => {
+  try {
+    const userRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+
+    const userSnap = await userRef.get();
+    const userData = userSnap.data();
+
+    userData.shippingAddresses.map((address, index) => {
+      if (index === pressedIndex) {
+        address.isSelected = true;
+      } else {
+        address.isSelected = false;
+      }
+    });
+
+
     export const addOrderedProducts = (products) => async () => {
         try {
             const date = new Date(Date.now()).toLocaleString().split(",")[0];

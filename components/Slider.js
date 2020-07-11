@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
-import {TouchableWithoutFeedback, Text, View} from "react-native";
-import {COLORS} from "../style/colors";
-import {styles} from "../Screens/filters";
+import { TouchableWithoutFeedback, Text, View } from "react-native";
+import { COLORS } from "../style/colors";
+import { styles } from "../Screens/filters";
 
 class Slider extends Component {
-    state = {
-        values: [0, 100],
-    };
+  state = {
+    values: [0, 100],
+  };
 
     multiSliderValuesChange = (values) => {
         this.setState({
