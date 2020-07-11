@@ -30,14 +30,14 @@ export const HomeStack = () => {
       <Screen
         name="Rating"
         component={RatingReviewScreen}
-        options={() => ({
+        options={({ navigation }) => ({
           title: "",
           headerStyle: {
             backgroundColor: COLORS.BACKGROUND,
             elevation: 0,
           },
           headerTintColor: COLORS.TEXT,
-          headerLeft: () => <Back />,
+          headerLeft: () => <Back onPress={() => navigation.goBack()} />,
         })}
       />
     </Navigator>

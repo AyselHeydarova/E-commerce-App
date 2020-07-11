@@ -225,25 +225,6 @@ export const addOrderedProducts = (products) => async () => {
   }
 };
 
-export const addProductToUsersBag = (product) => async () => {
-  try {
-    const userProductsRef = firebase
-      .firestore()
-      .collection("users")
-      .doc(firebase.auth().currentUser.uid);
-    const userProductsSnap = await userProductsRef.get();
-    const userData = await userProductsSnap.data();
-    userData.userProductsInBag.push(product);
-    userProductsRef.set(
-      {
-        userProductsInBag: userData.userProductsInBag,
-      },
-      { merge: true }
-    );
-  } catch (e) {
-    console.log("error", e);
-  }
-};
 export const submitOrder = async (orderInfo) => {
   const orderId = await firebase.firestore.collection("orders").push(orderInfo)
     .id;

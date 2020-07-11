@@ -5,11 +5,8 @@ import {
   StatusBar,
   FlatList,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  Image,
 } from "react-native";
 import { CustomText } from "../components/CustomText";
-import { Back } from "../Icons/Back";
 import { COLORS } from "../style/colors";
 import { GLOBAL_STYLES } from "../style/globalStyles";
 import { SaleSlogan } from "../components/SaleSlogan";
@@ -21,7 +18,7 @@ const mapStateToProps = (state) => ({
 });
 
 export const Categories = connect(mapStateToProps, { getAllData })(
-  ({ getAllData, allProducts, route, navigation }) => {
+  ({ allProducts, navigation }) => {
     const categoriesWoman = [
       {
         categoryName: "New",
@@ -81,17 +78,6 @@ export const Categories = connect(mapStateToProps, { getAllData })(
     return (
       <View style={styles.container}>
         <StatusBar />
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backIcon}
-            onPress={() => navigation.goBack()}
-          >
-            <Back />
-          </TouchableOpacity>
-          <CustomText weight={"bold"} style={styles.title}>
-            Categories
-          </CustomText>
-        </View>
         <View style={styles.btns}>
           <TouchableOpacity
             style={[styles.btn, { borderBottomWidth: isWomanClicked ? 4 : 0 }]}
@@ -147,26 +133,10 @@ export const Categories = connect(mapStateToProps, { getAllData })(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: 360,
+    width: "100%",
     backgroundColor: COLORS.BACKGROUND,
     paddingTop: 10,
     alignItems: "center",
-  },
-  header: {
-    flexDirection: "row",
-    // justifyContent: "space-between",
-    marginBottom: 20,
-  },
-  title: {
-    color: COLORS.TEXT,
-    fontSize: 30,
-    lineHeight: 28,
-    margin: 10,
-    marginLeft: 55,
-    marginRight: 75,
-  },
-  backIcon: {
-    marginTop: 10,
   },
   card: {
     marginTop: 20,

@@ -24,8 +24,6 @@ export const ClientReview = connect(mapStateToProps, { sendReview })(
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
 
-    console.log("currentUser review", currentUser);
-
     const increaseRatingFields = {
       productID: productID,
       givenRating: rating,

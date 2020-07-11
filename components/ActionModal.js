@@ -6,17 +6,16 @@ import { GLOBAL_STYLES } from "../style/globalStyles";
 
 export const ActionModal = ({ btnName, onPress }) => {
   return (
-    <View style={styles.btnBox}>
-      <Btn
-        onPress={onPress}
-        btnName={btnName}
-        bgColor={COLORS.PRIMARY}
-        height={48}
-        width={"100%"}
-        titleStyle={{ textTransform: "uppercase" }}
-      />
-      {/*<View style={styles.line} />*/}
-    </View>
+    // <View style={styles.btnBox}>
+    <Btn
+      onPress={onPress}
+      btnName={btnName}
+      bgColor={COLORS.PRIMARY}
+      height={48}
+      width={"100%"}
+      titleStyle={{ textTransform: "uppercase" }}
+    />
+    // </View>
   );
 };
 
@@ -27,16 +26,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
-    bottom: 0,
+    bottom: 10,
     backgroundColor: COLORS.BACKGROUND,
     alignSelf: "center",
-  },
-
-  line: {
-    height: 5,
-    width: 135,
-    backgroundColor: COLORS.TEXT,
-    borderRadius: 100,
-    marginVertical: 18,
   },
 });
