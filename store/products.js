@@ -234,6 +234,8 @@ export const getCurrentProduct = (productID) => async (dispatch) => {
       .doc(productID)
       .onSnapshot(function (doc) {
         dispatch(setCurrentProduct(doc.data()));
+
+        console.log("getCurrentProduct", doc.data());
       });
   } catch (e) {
     console.log("getCurrentProduct error", e);
@@ -245,10 +247,10 @@ export const getFilteredProducts = (payload) => async (dispatch) => {
     const filteredProducts = await getDataByCategoryGenderAndFilter(
       payload.category,
       payload.gender,
-      payload.sortBy,
+      payload.isSortClicked,
       payload.sortType
     );
-    console.log("filteredProducts from redux", filteredProducts);
+    // console.log("filteredProducts from redux", filteredProducts);
     dispatch(setFilteredProducts(filteredProducts));
   } catch (error) {
     console.log("getFilteredProducts error ", error);

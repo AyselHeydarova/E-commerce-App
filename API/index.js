@@ -31,21 +31,36 @@ export const getData = async (category, gender) => {
 export const getDataByCategoryGenderAndFilter = async (
   category,
   gender,
-  sortBy,
+  isSortClicked,
   sortType
 ) => {
   const products = [];
   try {
-    const ref = firebase
-      .firestore()
-      .collection("products")
-      .where("tags", "array-contains", category)
-      .where(
-        "gender",
-        gender === undefined ? "in" : "==",
-        gender === undefined ? ["men", "women"] : gender
-      )
-      .orderBy(sortBy, sortType);
+    let ref;
+    if (isSortClicked) {
+      ref = firebase
+        .firestore()
+        .collection("products")
+        .where("tags", "array-contains", category)
+        .where(
+          "gender",
+          gender === undefined ? "in" : "==",
+          gender === undefined ? ["men", "women"] : gender
+        )
+        .orderBy("price", sortType);
+
+      console.log("sortType firestore ", sortType);
+    } else {
+      ref = firebase
+        .firestore()
+        .collection("products")
+        .where("tags", "array-contains", category)
+        .where(
+          "gender",
+          gender === undefined ? "in" : "==",
+          gender === undefined ? ["men", "women"] : gender
+        );
+    }
 
     const productsSnap = await ref.get();
     productsSnap.forEach((product) => {
