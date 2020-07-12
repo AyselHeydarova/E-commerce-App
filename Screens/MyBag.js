@@ -30,7 +30,8 @@ export const MyBag = connect(mapStateToProps,
       getCurrentUserData,
       usersData,
       addOrderedProducts,
-      deleteBagProducts
+      deleteBagProducts,
+      navigation
   }) => {
     const bagProducts = usersData.userProductsInBag || [];
     const totalAmount = () => {
@@ -40,6 +41,7 @@ export const MyBag = connect(mapStateToProps,
         });
         return total;
     };
+
     const handleUserData = async () => {
         try {
             await getCurrentUserData();
@@ -55,9 +57,10 @@ export const MyBag = connect(mapStateToProps,
         }
     };
     const handleCheckOut = () => {
-        addOrderedProducts(bagProducts);
-        handleDeleteBagProducts();
-        console.log('bagProducts', bagProducts)
+        // addOrderedProducts(bagProducts);
+        // handleDeleteBagProducts();
+        // console.log('bagProducts', bagProducts)
+        navigation.navigate("Checkout");
 
     };
 

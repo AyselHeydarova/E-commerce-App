@@ -15,6 +15,8 @@ const mapStateToProps = (state) => ({
 export const ClientReviewsList = connect(mapStateToProps, {
   getCurrentProduct,
 })(({ currentProduct, getCurrentProduct, productID }) => {
+
+
   useEffect(() => {
     getCurrentProduct(productID);
   }, []);

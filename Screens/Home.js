@@ -28,7 +28,7 @@ import { connect } from "react-redux";
 
 import banner from "../assets/Small_banner.png";
 import { setUsersData, getCurrentUserData } from "../store/users";
-import { generalFiltering } from "../API";
+import { LogOut } from "../Icons/LogOut";
 
 const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),

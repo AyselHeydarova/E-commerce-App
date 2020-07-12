@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 20,
     marginBottom: 10,
-    borderBottomWidth: 0.3,
+    borderBottomWidth: 0.8,
     borderColor: COLORS.GRAY,
   },
   categoryText: {

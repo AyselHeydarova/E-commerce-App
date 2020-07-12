@@ -17,18 +17,19 @@ const ADD_REVIEW = "ADD_REVIEW";
 
 export const MODULE_NAME = "products";
 
+
 export const selectAllProductData = (state) => state[MODULE_NAME];
 export const selectSaleProductData = (state) => state[MODULE_NAME].saleProducts;
 export const selectNewProductData = (state) => state[MODULE_NAME].newProducts;
 export const selectFilteredProducts = (state) =>
   state[MODULE_NAME].filteredProducts;
 export const selectCurrentProduct = (state) =>
-  state[MODULE_NAME].currentProduct;
+    state[MODULE_NAME].currentProduct;
 export const selectCurrentProductRating = (state) =>
-  state[MODULE_NAME].currentProduct.rating;
+    state[MODULE_NAME].currentProduct.rating;
 
 export const selectCategory = (state, category) =>
-  state[MODULE_NAME].allProducts[category];
+    state[MODULE_NAME].allProducts[category];
 
 const initialState = {
   currentProduct: [],
@@ -101,10 +102,6 @@ export const setAppProducts = (payload) => ({
   type: SET_APP_PRODUCTS,
   payload,
 });
-export const setCurrentProduct = (payload) => ({
-  type: SET_CURRENT_PRODUCT,
-  payload,
-});
 export const setAppSaleProducts = (payload) => ({
   type: SET_APP_SALE_PRODUCTS,
   payload,
@@ -130,9 +127,9 @@ export const addReview = (payload) => ({
 export const sendReview = (payload) => async (dispatch, getState) => {
   try {
     const reviewRef = firebase
-      .firestore()
-      .collection("products")
-      .doc(payload.productID);
+        .firestore()
+        .collection("products")
+        .doc(payload.productID);
 
     const reviewSnap = await reviewRef.get();
     const reviewData = reviewSnap.data();
@@ -145,19 +142,19 @@ export const sendReview = (payload) => async (dispatch, getState) => {
     });
 
     reviewRef
-      .set(
-        {
-          reviews: reviewData.reviews,
-        },
+        .set(
+            {
+              reviews: reviewData.reviews,
+            },
 
-        { merge: true }
-      )
-      .catch((error) => {
-        console.log(
-          "Something went wrong with added user to firestore: ",
-          error
-        );
-      });
+            { merge: true }
+        )
+        .catch((error) => {
+          console.log(
+              "Something went wrong with added user to firestore: ",
+              error
+          );
+        });
     dispatch(addReview(payload));
   } catch (error) {
     console.log("sendReview error", error);
@@ -167,9 +164,9 @@ export const sendReview = (payload) => async (dispatch, getState) => {
 export const increaseRating = async (payload) => {
   try {
     const ratingRef = firebase
-      .firestore()
-      .collection("products")
-      .doc(payload.productID);
+        .firestore()
+        .collection("products")
+        .doc(payload.productID);
 
     const ratingSnap = await ratingRef.get();
     const ratingData = ratingSnap.data();
@@ -181,19 +178,19 @@ export const increaseRating = async (payload) => {
     selectedRating[key] = newValue;
 
     ratingRef
-      .set(
-        {
-          rating: ratingData.rating,
-        },
+        .set(
+            {
+              rating: ratingData.rating,
+            },
 
-        { merge: true }
-      )
-      .catch((error) => {
-        console.log(
-          "Something went wrong with increaseRating to firestore: ",
-          error
-        );
-      });
+            { merge: true }
+        )
+        .catch((error) => {
+          console.log(
+              "Something went wrong with increaseRating to firestore: ",
+              error
+          );
+        });
   } catch (error) {
     console.log("increaseRating error", error);
   }

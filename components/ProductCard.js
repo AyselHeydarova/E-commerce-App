@@ -23,6 +23,7 @@ import { averageRatingCalc, totalRatingCalc } from "../Utils/Calculations";
 import { selectAllProductData, setAddToBag } from "../store/products";
 import { connect } from "react-redux";
 import { columnStyles } from "../style/globalStyles";
+import { Bag } from "../Icons/Bag";
 
 const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),
@@ -46,11 +47,6 @@ export const ProductCard = connect(mapStateToProps, {
     isInOrders = false,
     onPress,
   }) => {
-    const cardWrapperStyles = [
-      isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
-      { opacity: count === 0 ? 0.5 : 1 },
-    ];
-
     const {
       id,
       brandName,
@@ -64,26 +60,24 @@ export const ProductCard = connect(mapStateToProps, {
       onSale,
       selectedCount,
     } = product;
+
+    const cardWrapperStyles = [
+      isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
+      { opacity: count === 0 ? 0.5 : 1 },
+    ];
+
     const [isHeartClicked, setIsHeartClicked] = useState(false);
     const [defaultCount, setDefaultCount] = useState(selectedCount);
-    // const allRatingsArray = isInCatalog ? rating.map((obj) => {
-    //     for (let key in obj) {
-    //         const value = obj[key];
-    //         return value;
-    //     }
-    // }) : null;
 
     const handleFavoriteProduct = () => {
       addProductToUsersBag(product, true);
       setIsHeartClicked(!isHeartClicked);
     };
-    // let totalStarCount = 0;
-    // for (let i = 0; i <= 4; i++) {
-    //     totalStarCount += isInCatalog ? allRatingsArray[i] * (i + 1) : 0;
-    // }
+
     const salePrice = isOnSale
       ? Math.floor((+price * (100 - +onSale.discount)) / 100)
       : null;
+
     const handleCount = async () => {
       try {
         await setCountSize({
@@ -97,10 +91,10 @@ export const ProductCard = connect(mapStateToProps, {
 
     return (
       <TouchableOpacity
+        onPress={onPress}
         onLongPress={() =>
           isInFavs ? addProductToUsersBag(product, true, true, false) : {}
         }
-        onPress={onPress}
       >
         <View style={cardWrapperStyles}>
           <View style={isRowView ? styles.imgWrapper : columnStyles.imgWrapper}>
@@ -145,11 +139,6 @@ export const ProductCard = connect(mapStateToProps, {
                 </CustomText>
               </View>
 
-              <CustomText style={{ color: COLORS.GRAY }}>
-                {brandName}
-              </CustomText>
-              <CustomText weight="medium">{name.toLowerCase()}</CustomText>
-
               <View style={styles.priceRow}>
                 <CustomText
                   weight="bold"
@@ -160,6 +149,7 @@ export const ProductCard = connect(mapStateToProps, {
                 >
                   {`${price}$`}
                 </CustomText>
+
                 {isOnSale ? (
                   <CustomText
                     weight="bold"
@@ -196,6 +186,7 @@ export const ProductCard = connect(mapStateToProps, {
                   </CustomText>
                   <CustomText> {color} </CustomText>
                 </View>
+
                 <View style={styles.row}>
                   <CustomText style={{ color: COLORS.GRAY }}>Size:</CustomText>
                   <CustomText>{size}</CustomText>
@@ -223,33 +214,12 @@ export const ProductCard = connect(mapStateToProps, {
                     }}
                   />
                 )}
-
-                <View>
-                  {isOnSale ? (
-                    <CustomText
-                      weight="bold"
-                      style={{ color: COLORS.SALE, marginLeft: 10 }}
-                    >
-                      {`${salePrice}$`}
-                    </CustomText>
-                  ) : (
-                    <CustomText
-                      weight="bold"
-                      style={{
-                        color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
-                        lineHeight: 45,
-                        fontSize: 19,
-                        textDecorationLine: isOnSale ? "line-through" : null,
-                      }}
-                    >
-                      {`${price * defaultCount}$`}
-                    </CustomText>
-                  )}
-                </View>
               </View>
             </View>
           )}
-          {isInFavs || isInOrders ? null : (
+          {isInFavs ? (
+            <Bag width={20} height={20} />
+          ) : isInOrders ? null : (
             <Heart
               width={15}
               height={15}
