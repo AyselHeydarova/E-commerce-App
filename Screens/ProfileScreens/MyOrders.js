@@ -110,7 +110,8 @@ export const MyOrders = connect(mapStateToProps,
                                quantity:item.quantity,
                                date:item.date,
                                status:'Delivered',
-                               total:item.totalAmount
+                               total:item.totalAmount,
+                               shippingAddresses:usersData.shippingAddresses
 
                            })}/>
                 )}

@@ -11,13 +11,8 @@ import {Counter} from "./Counter";
 import {averageRatingCalc, totalRatingCalc} from "../Utils/Calculations";
 import {selectAllProductData, setAddToBag} from "../store/products";
 import {connect} from "react-redux";
-import {
-    addProductToUsersBag,
-    selectCount,
-    setCount,
-    setCountSize,
-} from "../store/users";
 import {columnStyles} from "../style/globalStyles";
+import {Bag} from "../Icons/Bag";
 
 const mapStateToProps = (state) => ({
     allProducts: selectAllProductData(state),
@@ -39,13 +34,9 @@ export const ProductCard = connect(mapStateToProps, {
          isNew,
          isOnSale,
          isInOrders = false,
+         onPress
      }) => {
 
-
-        const cardWrapperStyles = [
-            isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
-            {opacity: count === 0 ? 0.5 : 1},
-        ];
 
         const {
             id,
@@ -60,26 +51,24 @@ export const ProductCard = connect(mapStateToProps, {
             onSale,
             selectedCount
         } = product;
+
+        const cardWrapperStyles = [
+            isRowView ? styles.cardWrapper : columnStyles.cardWrapper,
+            {opacity: count === 0 ? 0.5 : 1},
+        ];
+
         const [isHeartClicked, setIsHeartClicked] = useState(false);
         const [defaultCount, setDefaultCount] = useState(selectedCount);
-        // const allRatingsArray = isInCatalog ? rating.map((obj) => {
-        //     for (let key in obj) {
-        //         const value = obj[key];
-        //         return value;
-        //     }
-        // }) : null;
 
         const handleFavoriteProduct = () => {
             addProductToUsersBag(product, true);
             setIsHeartClicked(!isHeartClicked)
         };
-        // let totalStarCount = 0;
-        // for (let i = 0; i <= 4; i++) {
-        //     totalStarCount += isInCatalog ? allRatingsArray[i] * (i + 1) : 0;
-        // }
+
         const salePrice = isOnSale
             ? Math.floor((+price * (100 - +onSale.discount)) / 100)
             : null;
+
         const handleCount = async () => {
             try {
                 await setCountSize({
@@ -93,8 +82,10 @@ export const ProductCard = connect(mapStateToProps, {
 
 
         return (
-            <TouchableWithoutFeedback
+            <TouchableOpacity
+                onPress={onPress}
                 onLongPress={() => isInFavs ? addProductToUsersBag(product, true, true, false) : {}}>
+
                 <View style={cardWrapperStyles}>
                     <View style={isRowView ? styles.imgWrapper : columnStyles.imgWrapper}>
                         {isNew ? <ProductTag style={styles.tag} title="new"/> : null}
@@ -144,6 +135,7 @@ export const ProductCard = connect(mapStateToProps, {
 
 
                             <View style={styles.priceRow}>
+
                                 <CustomText
                                     weight="bold"
                                     style={{
@@ -153,25 +145,32 @@ export const ProductCard = connect(mapStateToProps, {
                                 >
                                     {`${price}$`}
                                 </CustomText>
+
                                 {isOnSale ? (
+
                                     <CustomText
                                         weight="bold"
                                         style={{color: COLORS.SALE, marginLeft: 10}}
                                     >{`${salePrice}$`}
                                     </CustomText>
+
                                 ) : null}
                             </View>
 
                         </View>
+
                         : (
+
                             <View style={styles.description}>
                                 <CustomText style={{marginTop: 5, marginBottom: 5}}
                                             weight="medium">{name.toUpperCase()}</CustomText>
 
-                                {isInOrders ? null : <TouchableOpacity style={styles.cross}
-                                                                       onPress={() => addProductToUsersBag(product, false, false, true)}>
-                                    <Cross width={15} height={15}/>
-                                </TouchableOpacity>
+                                {isInOrders ? null :
+                                    <TouchableOpacity
+                                        style={styles.cross}
+                                        onPress={() => addProductToUsersBag(product, false, false, true)}>
+                                        <Cross width={15} height={15}/>
+                                    </TouchableOpacity>
                                 }
                                 <View style={styles.rowBag}>
 
@@ -179,18 +178,20 @@ export const ProductCard = connect(mapStateToProps, {
                                         <CustomText style={{color: COLORS.GRAY}}>Color: </CustomText>
                                         <CustomText> {color} </CustomText>
                                     </View>
+
                                     <View style={styles.row}>
                                         <CustomText style={{color: COLORS.GRAY}}>Size:</CustomText>
                                         <CustomText>{size}</CustomText>
                                     </View>
+
                                 </View>
                                 <View style={styles.row}>
                                     {isInOrders ?
+
                                         <View style={[styles.row, {marginRight: 10}]}>
                                             <CustomText style={{color: COLORS.GRAY}}>Units: </CustomText>
                                             <CustomText> {selectedCount} </CustomText>
                                         </View>
-
                                         :
                                         <Counter
                                             count={defaultCount}
@@ -228,13 +229,13 @@ export const ProductCard = connect(mapStateToProps, {
 
                             </View>
                         )}
-                    {isInFavs || isInOrders ? null :
+                    {isInFavs? <Bag width={20} height={20}/> : isInOrders ?null:
                         <Heart width={15} height={15}
                                isHeartClicked={isHeartClicked}
                                onPress={() => handleFavoriteProduct()}/>
                     }
                 </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         );
     });
 

@@ -9,15 +9,11 @@ import {
 } from "react-native";
 import { COLORS } from "../style/colors";
 import { CustomText } from "../components/CustomText";
-import { Btn } from "../components/Btn";
 import { Filter } from "../Icons/Filter";
 import { PriceArrows } from "../Icons/PriceArrows";
 import { ListViewChanger } from "../Icons/ListViewChanger";
 import { ProductCard } from "../components/ProductCard";
 import { CardView } from "../Icons/CardView";
-import { Back } from "../Icons/Back";
-import { checkMen } from "./CategoriesOf";
-import store from "../store";
 import { BottomModal } from "../components/bottomModal";
 import {
   getAllData,
@@ -102,7 +98,8 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
 
     const finalProducts =
       categoryName === "New" ? newProducts : isOnSale ? saleProducts : products;
-
+    console.log('finalProducts',finalProducts)
+    console.log('filteredProductsData',filteredProductsData)
     const [isListView, setIsListView] = useState(true);
 
     const numberOfColums = isListView ? 1 : 2;

@@ -26,97 +26,167 @@ export const setCount = (payload) => ({
 });
 
 export const addProductToUsersBag = (product, isFav, isDeleteFav, isDeleteBag,) => async () => {
-    try {
-        const userProductsRef = firebase.firestore()
-            .collection("users")
-            .doc(firebase.auth().currentUser.uid);
-        const userProductsSnap = await userProductsRef.get();
-        const userData = await userProductsSnap.data();
-        if (isFav) {
-            if (isDeleteFav) {
-                const favs = userData.userFavorites;
-                favs.push(product);
-                const filteredFavs = favs.filter((item) => {
-                    return item.id !== product.id
-                });
-                userProductsRef.set({
-                        userFavorites: filteredFavs,
-                    },
-                    {merge: true})
-            } else {
-                console.log(userData)
+  try {
+    const userProductsRef = firebase.firestore()
+        .collection("users")
+        .doc(firebase.auth().currentUser.uid);
+    const userProductsSnap = await userProductsRef.get();
+    const userData = await userProductsSnap.data();
+    if (isFav) {
+      if (isDeleteFav) {
+        const favs = userData.userFavorites;
+        favs.push(product);
+        const filteredFavs = favs.filter((item) => {
+          return item.id !== product.id
+        });
+        userProductsRef.set({
+              userFavorites: filteredFavs,
+            },
+            {merge: true})
+      } else {
+        console.log(userData)
 
-                let shouldBeAdded = true;
-                shouldBeAdded = userData.userFavorites.find(item => item.id === product.id)
-                shouldBeAdded ? null : userData.userFavorites.push(product)
+        let shouldBeAdded = true;
+        shouldBeAdded = userData.userFavorites.find(item => item.id === product.id)
+        shouldBeAdded ? null : userData.userFavorites.push(product)
 
-                userProductsRef.set({
-                        userFavorites: userData.userFavorites,
-                    },
-                    {merge: true})
-            }
+        userProductsRef.set({
+              userFavorites: userData.userFavorites,
+            },
+            {merge: true})
+      }
+    } else {
+      if (isDeleteBag) {
+        const bagProducts = userData.userProductsInBag;
+        bagProducts.push(product);
+        const filteredBagProducts = bagProducts.filter((item) => {
+
+          if(item.id === product.id && item.color === product.color && item.size === product.size) {
+            return false;
+          }
+          else {
+            return true;
+          }
+
+        });
+
+        userProductsRef.set({
+              userProductsInBag: filteredBagProducts,
+            },
+            {merge: true})
+      } else {
+        if (userData.userProductsInBag === undefined) {
+          const userProductsInBag = [];
+          userProductsInBag.push(product)
+          userProductsRef.set({
+                userProductsInBag
+              },
+              {merge: true})
         } else {
-            if (isDeleteBag) {
-                const bagProducts = userData.userProductsInBag;
-                bagProducts.push(product);
-                const filteredBagProducts = bagProducts.filter((item) => {
-                    return (item.id !== product.id && (item.color !== product.color || item.size !== product.size))
-                });
-                console.log('deleted');
-                console.log('filteredBagProducts', filteredBagProducts);
+          let shouldBeAddedToBag = true;
+          shouldBeAddedToBag = userData.userProductsInBag.find(
+              item => (item.id === product.id && (item.color === product.color && item.size === product.size))
+          );
 
-                userProductsRef.set({
-                        userProductsInBag: filteredBagProducts,
-                    },
-                    {merge: true})
-            } else {
-                if (userData.userProductsInBag === undefined) {
-                    const userProductsInBag = [];
-                    userProductsInBag.push(product)
-                    userProductsRef.set({
-                            userProductsInBag
-                        },
-                        {merge: true})
-                } else {
-                    let shouldBeAddedToBag = true;
-                    shouldBeAddedToBag = userData.userProductsInBag.find(item => item.id === product.id
-                        && (item.color === product.color || item.size === product.size)
-                    )
-                    console.log('shouldBeAddedToBag', shouldBeAddedToBag)
-                    shouldBeAddedToBag ? userData.userProductsInBag.push(product) : null;
-                    // userData.userProductsInBag.push(product);
-                    userProductsRef.set({
-                            userProductsInBag: userData.userProductsInBag,
-                        },
-                        {merge: true})
-                }
-            }
+          shouldBeAddedToBag ? null : userData.userProductsInBag.push(product);
+          // userData.userProductsInBag.push(product);
+          userProductsRef.set({
+                userProductsInBag: userData.userProductsInBag,
+              },
+              {merge: true})
         }
-    } catch (e) {
-        console.log('error', e)
+      }
     }
+  } catch (e) {
+    console.log('error', e)
+  }
 
 }
 
 
+export const addShippingAddress = (payload) => ({
+  type: ADD_SHIPPING_ADDRESS,
+  payload,
+});
 
+export const setAuthData = (payload) => ({
+  type: SET_AUTH_DATA,
+  payload,
+});
 
+const initialState = {
+  usersData: {},
+  count: 0,
+};
+// export function usersReducer(state = initialState, {type, payload}) {
+//   switch (type) {
+//     case SET_USERS:
+//       return [...state, ...payload];
+//
+//     case SET_COUNT:
+//       return {
+//         count: payload.count,
+//         id: payload.id,
+//       };
+//     case SET_AUTH_DATA:
+//       return {
+//         ...state,
+//         usersData: payload,
+//       };
+//       // FIX shipping redux________________
+//
+//     case ADD_SHIPPING_ADDRESS:
+//       return {
+//         ...state,
+//         usersData: [...state.usersData, {shippingAddresses: payload}],
+//       };
+//
+//     default:
+//       return state;
+//   }
+// }
 
-    export const addShippingAddress = (payload) => ({
-        type: ADD_SHIPPING_ADDRESS,
-        payload,
-    });
+// export const getCurrentUserData = () => async (dispatch) => {
+//   try {
+//     firebase
+//         .firestore()
+//         .collection("users")
+//         .doc(firebase.auth().currentUser.uid)
+//         .onSnapshot(function (doc) {
+//           console.log("Current Snapshotdata: ", doc.data());
+//           dispatch(setAuthData(doc.data()));
+//         });
+//     console.log("currentUserData", currentUserData);
+//   } catch (e) {
+//     console.log("getCurrentUserData error", e);
+//   }
+// };
 
-    export const setAuthData = (payload) => ({
-        type: SET_AUTH_DATA,
-        payload,
-    });
-
-    const initialState = {
-        usersData: {},
-        count: 0,
-    };
-
+// export const saveShippingAddress = (payload) => async (dispatch, getState) => {
+//   try {
+//     const userRef = firebase
+//         .firestore()
+//         .collection("users")
+//         .doc(firebase.auth().currentUser.uid);
+//     userRef
+//         .set(
+//             {
+//               shippingAddresses: userData.shippingAddresses,
+//             },
+//
+//             {merge: true}
+//         )
+//         .catch((error) => {
+//           console.log(
+//               "Something went wrong with added shipping address to firestore: ",
+//               error
+//           );
+//         });
+//     dispatch(addShippingAddress(payload));
+//   } catch (error) {
+//     console.log("sendReview error", error);
+//   }
+// };
     export function usersReducer(state = initialState, {type, payload}) {
         switch (type) {
             case SET_USERS:
@@ -195,6 +265,7 @@ export const addProductToUsersBag = (product, isFav, isDeleteFav, isDeleteBag,) 
         }
     };
 
+
 // ________________________________________________________________________________
 // // FIRESTORE ACTIONS -- WE SHOULD MOVE THEM TO ANOTHER FILE , MAYBE INSIDE API
 // _________________________________________________________________________________
@@ -215,55 +286,62 @@ export const addProductToUsersBag = (product, isFav, isDeleteFav, isDeleteBag,) 
         // return removeBagProducts;
     };
 
-    userData.orders.push({
-      orderNo: randomString(7, "n"),
-      trackingNo: randomString(12),
-      quantity: products.length,
-      totalAmount: totalAmount(),
-      date: date,
-      orderedProducts: products,
-    });
-    userProductsRef.set(
-      {
-        orders: userData.orders,
-      },
-      { merge: true }
-    );
-  } catch (e) {
-    console.log("error", e);
-  }
-};
 
-export const submitOrder = async (orderInfo) => {
-  const orderId = await firebase.firestore.collection("orders").push(orderInfo)
-    .id;
-  console.log("orderId", orderId);
-  firebase.firestore
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
-    .orders.set({
-      [orderId]: true,
-    });
-};
+// export const submitOrder = async (orderInfo) => {
+//   const orderId = await firebase.firestore.collection("orders").push(orderInfo)
+//     .id;
+//   console.log("orderId", orderId);
+//   firebase.firestore
+//     .collection("users")
+//     .doc(firebase.auth().currentUser.uid)
+//     .orders.set({
+//       [orderId]: true,
+//     });
+// };
 
-export const selectShippingAddress = async (pressedIndex) => {
+
+export const setCountSize = async (payload) => {
   try {
-    const userRef = firebase
-      .firestore()
-      .collection("users")
-      .doc(firebase.auth().currentUser.uid);
+    const countRef = firebase
+        .firestore()
+        .collection("users")
+        .doc(firebase.auth().currentUser.uid);
 
-    const userSnap = await userRef.get();
-    const userData = userSnap.data();
-
-    userData.shippingAddresses.map((address, index) => {
-      if (index === pressedIndex) {
-        address.isSelected = true;
+    const countSnap = await countRef.get();
+    const countData = countSnap.data();
+    const updatedProducts = [];
+    countData.userProductsInBag.forEach((product) => {
+        console.log('payload.selectedCount',payload.selectedCount)
+      if (product.id === payload.productID) {
+        updatedProducts.push({
+          ...product,
+          selectedCount: payload.selectedCount ,
+        });
       } else {
-        address.isSelected = false;
+        updatedProducts.push(product);
       }
     });
+    console.log("updatedProducts", updatedProducts);
 
+    countRef
+        .set(
+            {
+              userProductsInBag: updatedProducts,
+            },
+
+            {merge: true}
+        )
+        .catch((error) => {
+          console.log(
+              "Something went wrong with added user to firestore: ",
+              error
+          );
+        });
+    // dispatch(addReview(payload));
+  } catch (error) {
+    console.log("countData error", error);
+  }
+};
 
     export const addOrderedProducts = (products) => async () => {
         try {
@@ -302,36 +380,6 @@ export const selectShippingAddress = async (pressedIndex) => {
         }
     };
 
-// export const addProductToUsersBag = (product) => async () => {
-//   try {
-//     const userProductsRef = firebase
-//       .firestore()
-//       .collection("users")
-//       .doc(firebase.auth().currentUser.uid);
-//     const userProductsSnap = await userProductsRef.get();
-//     const userData = await userProductsSnap.data();
-//     userData.userProductsInBag.push(product);
-//     userProductsRef.set(
-//       {
-//         userProductsInBa g: userData.userProductsInBag,
-//       },
-//       { merge: true }
-//     );
-//   } catch (e) {
-//     console.log("error", e);
-//   }
-// };
-// export const submitOrder = async (orderInfo) => {
-//   const orderId = await firebase.firestore.collection("orders").push(orderInfo)
-//     .id;
-//   console.log("orderId", orderId);
-//   firebase.firestore
-//     .collection("users")
-//     .doc(firebase.auth().currentUser.uid)
-//     .orders.set({
-//       [orderId]: true,
-//     });
-// };
 
     export const selectShippingAddress = async (pressedIndex) => {
         try {
@@ -404,48 +452,5 @@ export const selectShippingAddress = async (pressedIndex) => {
                 });
         } catch (error) {
             console.log("changeUsernameAndPhoto error", error);
-        }
-    };
-    export const setCountSize = async (payload) => {
-        try {
-            const countRef = firebase
-                .firestore()
-                .collection("users")
-                .doc(firebase.auth().currentUser.uid);
-
-            const countSnap = await countRef.get();
-            const countData = countSnap.data();
-            const updatedProducts = [];
-            console.log("payload", payload);
-            console.log("countData", countData);
-            countData.userProductsInBag.forEach((product) => {
-                if (product.id === payload.productID) {
-                    updatedProducts.push({
-                        ...product,
-                        selectedCount: payload.selectedCount + 1,
-                    });
-                } else {
-                    updatedProducts.push(product);
-                }
-            });
-            console.log("updatedProducts", updatedProducts);
-
-            countRef
-                .set(
-                    {
-                        userProductsInBag: updatedProducts,
-                    },
-
-                    {merge: true}
-                )
-                .catch((error) => {
-                    console.log(
-                        "Something went wrong with added user to firestore: ",
-                        error
-                    );
-                });
-            // dispatch(addReview(payload));
-        } catch (error) {
-            console.log("countData error", error);
         }
     };

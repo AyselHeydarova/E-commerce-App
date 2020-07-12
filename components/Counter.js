@@ -5,15 +5,15 @@ import {Minus} from "../Icons/Minus";
 import {CustomText} from "./CustomText";
 import {COLORS} from "../style/colors";
 
-export const Counter = ({count,handleMinus, handlePlus}) => {
+export const Counter = ({count, handleMinus, handlePlus}) => {
     return (
         <View style={styles.container}>
             <Minus onPress={handleMinus}/>
-           <View style={styles.countContainer}>
-               <CustomText style={styles.count}>
-                   {count}
-               </CustomText>
-           </View>
+            <View style={styles.countContainer}>
+                <CustomText style={styles.count}>
+                    {count}
+                </CustomText>
+            </View>
             <Plus onPress={handlePlus}/>
         </View>
     );
@@ -28,13 +28,13 @@ const styles = StyleSheet.create({
     },
     count: {
         fontSize: 18,
-        color:COLORS.TEXT
+        color: COLORS.TEXT
     },
-    countContainer:{
+    countContainer: {
         width: 40,
-        height:40,
+        height: 40,
         justifyContent: "center",
-        alignItems:"center"
+        alignItems: "center"
     }
 
 });
