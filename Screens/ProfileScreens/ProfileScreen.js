@@ -13,7 +13,6 @@ import { Forward } from "../../Icons/Forward";
 import { selectAuthUsername, selectAuthUserID } from "../../store/auth";
 import { connect } from "react-redux";
 import {
-  selectUsernameByID,
   getCurrentUserData,
   selectUserData,
 } from "../../store/users";
@@ -26,92 +25,93 @@ const mapStateToProps = (state) => ({
 
 export const ProfileScreen = connect(mapStateToProps, {
   getCurrentUserData,
-  getCurrentProduct,
+  // getCurrentProduct,
 })(
-  ({
-    orderCount,
-    shippingAddresses,
-    getCurrentUserData,
-    paymentMethods,
-    navigation,
-    getCurrentProduct,
-    username,
-    user,
-    product,
-    email = "matildabrown@mail.com",
-    avatar = "https://i1.sndcdn.com/avatars-000530040327-sk6iwk-t500x500.jpg",
-  }) => {
-    useEffect(() => {
-      getCurrentUserData();
-      getCurrentProduct("5i8J0RpW0Yl0fZ6NsNFi");
-    }, []);
+    ({
+       orderCount,
+       shippingAddresses,
+       getCurrentUserData,
+       paymentMethods,
+       navigation,
+       getCurrentProduct,
+       username,
+       user,
+       product,
+       email = "matildabrown@mail.com",
+       avatar = "https://i1.sndcdn.com/avatars-000530040327-sk6iwk-t500x500.jpg",
+     }) => {
+      useEffect(() => {
+        getCurrentUserData();
+        // getCurrentProduct("5i8J0RpW0Yl0fZ6NsNFi");
+      }, []);
 
-    console.log("product profile", product);
+      console.log("product profile", product);
+      console.log("user profile", user);
 
-    const profileSections = [
-      {
-        sectionName: "My Orders",
-        dutyOfSection: `Already have ${orderCount} orders`,
-        screenTo: "MyOrders",
-      },
-      {
-        sectionName: "Shipping addresses",
-        dutyOfSection: `${user.shippingAddresses.length} addresses`,
-        screenTo: "ShippingAddressesScreen",
-      },
-      {
-        sectionName: "Payment methods",
-        dutyOfSection: `Visa ${paymentMethods} `,
-        screenTo: "PasswordChange",
-      },
-      {
-        sectionName: "Settings",
-        dutyOfSection: "Change photo and username",
-        screenTo: "Settings",
-      },
-    ];
-    return (
-      <View style={styles.container}>
-        <StatusBar />
-        <CustomText weight={"bold"} style={styles.title}>
-          My Profile
-        </CustomText>
-
-        <View style={styles.userInfoSection}>
-          <Image style={styles.avatar} source={{ uri: user.userPhoto }} />
-          <View style={styles.text}>
-            <CustomText weight={"bold"} style={styles.name}>
-              {user.username}
+      const profileSections = [
+        {
+          sectionName: "My Orders",
+          dutyOfSection: `Already have ${user.orders.length} orders`,
+          screenTo: "MyOrders",
+        },
+        {
+          sectionName: "Shipping addresses",
+          dutyOfSection: `${(user.shippingAddresses||[]).length} addresses`,
+          screenTo: "ShippingAddressesScreen",
+        },
+        {
+          sectionName: "Payment methods",
+          dutyOfSection: `Visa ${paymentMethods} `,
+          screenTo: "PasswordChange",
+        },
+        {
+          sectionName: "Settings",
+          dutyOfSection: "Change photo and username",
+          screenTo: "Settings",
+        },
+      ];
+      return (
+          <View style={styles.container}>
+            <StatusBar />
+            <CustomText weight={"bold"} style={styles.title}>
+              My Profile
             </CustomText>
-            <CustomText weight={"medium"} style={styles.email}>
-              {user.email}
-            </CustomText>
-          </View>
-        </View>
-        <FlatList
-          data={profileSections}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.profileSection}
-              key={`${item.sectionName}`}
-              onPress={() => navigation.navigate(item.screenTo)}
-            >
+
+            <View style={styles.userInfoSection}>
+              <Image style={styles.avatar} source={{ uri: user.userPhoto }} />
               <View style={styles.text}>
                 <CustomText weight={"bold"} style={styles.name}>
-                  {item.sectionName}
+                  {user.username}
                 </CustomText>
-                <CustomText style={styles.email}>
-                  {item.dutyOfSection}
+                <CustomText weight={"medium"} style={styles.email}>
+                  {user.email}
                 </CustomText>
               </View>
-              <Forward height={20} width={20} color={COLORS.GRAY} />
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.sectionName}
-        />
-      </View>
-    );
-  }
+            </View>
+            <FlatList
+                data={profileSections}
+                renderItem={({ item }) => (
+                    <TouchableOpacity
+                        style={styles.profileSection}
+                        key={`${item.sectionName}`}
+                        onPress={() => navigation.navigate(item.screenTo)}
+                    >
+                      <View style={styles.text}>
+                        <CustomText weight={"bold"} style={styles.name}>
+                          {item.sectionName}
+                        </CustomText>
+                        <CustomText style={styles.email}>
+                          {item.dutyOfSection}
+                        </CustomText>
+                      </View>
+                      <Forward height={20} width={20} color={COLORS.GRAY} />
+                    </TouchableOpacity>
+                )}
+                keyExtractor={(item) => item.sectionName}
+            />
+          </View>
+      );
+    }
 );
 
 const styles = StyleSheet.create({

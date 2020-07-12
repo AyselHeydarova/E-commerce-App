@@ -311,10 +311,11 @@ export const setCountSize = async (payload) => {
     const countData = countSnap.data();
     const updatedProducts = [];
     countData.userProductsInBag.forEach((product) => {
+        console.log('payload.selectedCount',payload.selectedCount)
       if (product.id === payload.productID) {
         updatedProducts.push({
           ...product,
-          selectedCount: payload.selectedCount + 1,
+          selectedCount: payload.selectedCount ,
         });
       } else {
         updatedProducts.push(product);

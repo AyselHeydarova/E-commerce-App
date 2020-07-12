@@ -6,7 +6,7 @@ import { Btn } from "../components/Btn";
 import { COLORS } from "../style/colors";
 import { ScrollView } from "react-native-gesture-handler";
 import { CustomText } from "../components/CustomText";
-import { CheckBox } from 'react-native-elements'
+// import { CheckBox } from 'react-native-elements'
 
 
 export const AddPayCardScreen = () => {
@@ -27,10 +27,10 @@ export const AddPayCardScreen = () => {
                     titleStyle={{ color: "#F5F5F5" }}
                 
                 />
-                <CheckBox
-                    title='Click Here'
-                    checked={this.state.checked}
-                />
+                {/*<CheckBox*/}
+                {/*    title='Click Here'*/}
+                {/*    checked={this.state.checked}*/}
+                {/*/>*/}
 
             </ScrollView>
         </View>

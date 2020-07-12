@@ -19,6 +19,6 @@ export const Back = ({ onPress }) => {
 
 const styles = StyleSheet.create({
   icon: {
-    margin: 10,
+    marginLeft: 10,
   },
 });

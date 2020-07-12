@@ -88,17 +88,15 @@ export const Favorites = connect(mapStateToProps, {getCurrentUserData})(({getCur
                 <FlatList
                     data={favorites}
                     renderItem={({item}) => (
-                        <TouchableWithoutFeedback onPress={() => navigation.navigate("SingleProductScreen", {
-                            product: item,
-                        })
-                        } style={styles.card}>
                             <ProductCard
                                 product={item}
                                 isInFavs={true}
                                 isRowView={isListView}
                                 isInCatalog={true}
+                                onPress={() => navigation.navigate("SingleProductScreen", {
+                                    product: item,
+                                })}
                             />
-                        </TouchableWithoutFeedback>
                     )}
                     keyExtractor={item => item.id}
                 />
@@ -106,10 +104,7 @@ export const Favorites = connect(mapStateToProps, {getCurrentUserData})(({getCur
                 <View style={styles.cardContainer}>
                     <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
                         {favorites.map((name) => (
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate("SingleProductScreen", {
-                                    product: name,
-                                })}
+                            <View
                                 style={{marginLeft: 1, marginBottom: 15}}
                                 key={`${name}-${Date.now()}`}>
                                 <ProductCard
@@ -117,8 +112,11 @@ export const Favorites = connect(mapStateToProps, {getCurrentUserData})(({getCur
                                     isInFavs={true}
                                     isRowView={isListView}
                                     isInCatalog={true}
+                                    onPress={() => navigation.navigate("SingleProductScreen", {
+                                        product: name,
+                                    })}
                                 />
-                            </TouchableOpacity>
+                            </View>
                         ))}
                     </ScrollView>
 

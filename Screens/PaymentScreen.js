@@ -5,9 +5,10 @@ import {CustomText} from "../components/CustomText";
 import {COLORS} from "../style/colors"
 import {GLOBAL_STYLES} from "../style/globalStyles"
 import {Plus} from "../Icons/Plus"
+import {styles} from "./filters";
 
 
-export const PaymentScreen = () => {
+export const PaymentScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
     <StatusBar/>

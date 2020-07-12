@@ -26,6 +26,7 @@ import { connect } from "react-redux";
 
 import banner from "../assets/Small_banner.png";
 import { setUsersData, getCurrentUserData } from "../store/users";
+import {LogOut} from "../Icons/LogOut";
 
 const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),
@@ -94,21 +95,18 @@ const Home = connect(mapStateToProps, {
                 }}
                 data={saleProducts}
                 renderItem={({ item }) => (
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("SingleProduct", {
-                        product: item,
-                        products: saleProducts,
-                      })
-                    }
-                  >
                     <ProductCard
                       product={item}
                       isOnSale={true}
                       isInCatalog={true}
                       navigation={navigation}
+                      onPress={() =>
+                          navigation.navigate("SingleProduct", {
+                            product: item,
+                            products: saleProducts,
+                          })
+                      }
                     />
-                  </TouchableOpacity>
                 )}
                 keyExtractor={(item) => item.productType}
               />
@@ -146,21 +144,18 @@ const Home = connect(mapStateToProps, {
             }}
             data={newProducts}
             renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("SingleProduct", {
-                    product: item,
-                    products: newProducts,
-                  })
-                }
-              >
                 <ProductCard
                   product={item}
                   isNew={true}
                   isInCatalog={true}
                   navigation={navigation}
+                  onPress={() =>
+                      navigation.navigate("SingleProduct", {
+                        product: item,
+                        products: newProducts,
+                      })
+                  }
                 />
-              </TouchableOpacity>
             )}
             keyExtractor={(item) => item.id}
           />

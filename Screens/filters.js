@@ -260,7 +260,7 @@ export const Filters = ({navigation, route}) => {
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>
-            <Buttons onPressApply={() => handleFilter()}/>
+            <Buttons onPressApply={() => handleFilter()}  onPressDiscard={() => navigation.navigate("Catalog")}/>
         </View>
     );
 };
