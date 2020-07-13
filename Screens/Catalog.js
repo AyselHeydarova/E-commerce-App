@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import { COLORS } from "../style/colors";
 import { CustomText } from "../components/CustomText";
@@ -26,26 +27,16 @@ import { GLOBAL_STYLES } from "../style/globalStyles";
 
 const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),
-  filteredProductsData: selectFilteredProducts(state),
+  sortedProducts: selectFilteredProducts(state),
 });
 export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
-  ({
-    allProducts,
-    route,
-    navigation,
-    filteredProductsData,
-    getFilteredProducts,
-  }) => {
-    const sortingHandler = async () => await getFilteredProducts(sortedFields);
-
-    // useEffect(() => sortingHandler(), []);
-
+  ({ allProducts, route, navigation, sortedProducts, getFilteredProducts }) => {
     const {
       name,
       isWomanClicked,
       categoryName,
       isOnSale = false,
-      isFiltered = true,
+      isFiltered = false,
       filteredProducts,
     } = route.params;
 
@@ -53,19 +44,26 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
     const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
     const [sortOption, setSortOption] = useState({
       lowestToHigh: false,
-      highestToLow: true,
+      highestToLow: false,
     });
 
-    const [isSortingType, setIsSortingType] = useState("Price: highest to low");
+    const [isSortingType, setIsSortingType] = useState("Price");
+    const [isSorted, setIsSorted] = useState(false);
 
-    const sortType = isSortingType === "Price: highest to low" ? "asc" : "desc";
+    const sortType =
+      isSortingType === "Price: highest to low"
+        ? "desc"
+        : isSortingType === "Price: lowest to high"
+        ? "asc"
+        : null;
 
     const sortedFields = {
       category: categoryName,
       gender: isWomanClicked ? "women" : "men",
-      sortBy: "price",
+      isSortClicked: true,
       sortType,
     };
+
     const sortOptions = [
       {
         sortingName: "Price: lowest to high",
@@ -77,15 +75,21 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
       },
     ];
 
+    const sortingHandler = async () => await getFilteredProducts(sortedFields);
+
     const handleSorting = (name, sortOptionBool) => {
       setIsSortingType(name);
       setSortOption({
         ...false,
         [sortOptionBool]: !sortOption[`${sortOptionBool}`],
       });
-      sortingHandler();
+      setIsSorted(true);
       setIsBottomModalOpen(false);
     };
+
+    useEffect(() => {
+      sortingHandler();
+    }, [sortedFields.sortType]);
 
     const newProducts = products.filter(
       (product) =>
@@ -110,6 +114,11 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
         products: products,
       });
     };
+    const result = isFiltered
+      ? filteredProducts
+      : isSorted
+      ? sortedProducts
+      : finalProducts;
 
     return (
       <View style={styles.container}>
@@ -131,7 +140,14 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.filter}
-            onPress={() => setIsBottomModalOpen(!isBottomModalOpen)}
+            onPress={() => {
+              isFiltered
+                ? Alert.alert(
+                    "Sorry",
+                    "You can not sort products after filtering"
+                  )
+                : setIsBottomModalOpen(!isBottomModalOpen);
+            }}
           >
             <PriceArrows width={20} height={20} />
             <CustomText>{isSortingType}</CustomText>
@@ -149,7 +165,7 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
         </View>
 
         <FlatList
-          data={isFiltered ? filteredProductsData : finalProducts}
+          data={result}
           numColumns={numberOfColums}
           key={numberOfColums}
           renderItem={({ item }) => (

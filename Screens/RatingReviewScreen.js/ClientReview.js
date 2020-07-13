@@ -4,6 +4,8 @@ import {
   StyleSheet,
   TextInput,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { COLORS } from "../../style/colors";
 import { CustomText } from "../../components/CustomText";
@@ -38,52 +40,54 @@ export const ClientReview = connect(mapStateToProps, { sendReview })(
     };
 
     return (
-      <View style={styles.container}>
-        <View style={styles.shortLine} />
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.container}>
+          <View style={styles.shortLine} />
 
-        <CustomText style={styles.heading} weight="bold">
-          What is your rate?
-        </CustomText>
+          <CustomText style={styles.heading} weight="bold">
+            What is your rate?
+          </CustomText>
 
-        <StarRating
-          starStyle={{ margin: 3 }}
-          starSize={36}
-          fullStarColor={COLORS.STAR}
-          rating={rating}
-          selectedStar={(rating) => setRating(rating)}
-          containerStyle={{ width: 276, alignSelf: "center" }}
-        />
-
-        <CustomText
-          style={{ ...styles.heading, paddingHorizontal: 30 }}
-          weight="bold"
-        >
-          Please share your opinion about the product
-        </CustomText>
-
-        <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoid}>
-          <TextInput
-            style={styles.comment}
-            multiline={true}
-            textAlignVertical="top"
-            placeholder="Your review"
-            onChangeText={(v) => setComment(v)}
+          <StarRating
+            starStyle={{ margin: 3 }}
+            starSize={36}
+            fullStarColor={COLORS.STAR}
+            rating={rating}
+            selectedStar={(rating) => setRating(rating)}
+            containerStyle={{ width: 276, alignSelf: "center" }}
           />
-        </KeyboardAvoidingView>
 
-        <Btn
-          btnName="SEND REVIEW"
-          bgColor={COLORS.PRIMARY}
-          width="100%"
-          height={48}
-          onPress={() => {
-            sendReview(fields);
-            increaseRating(increaseRatingFields);
-          }}
-        />
+          <CustomText
+            style={{ ...styles.heading, paddingHorizontal: 30 }}
+            weight="bold"
+          >
+            Please share your opinion about the product
+          </CustomText>
 
-        {/* <ActionModal btnName="send review" /> */}
-      </View>
+          <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoid}>
+            <TextInput
+              style={styles.comment}
+              multiline={true}
+              textAlignVertical="top"
+              placeholder="Your review"
+              onChangeText={(v) => setComment(v)}
+            />
+          </KeyboardAvoidingView>
+
+          <Btn
+            btnName="SEND REVIEW"
+            bgColor={COLORS.PRIMARY}
+            width="100%"
+            height={48}
+            onPress={() => {
+              sendReview(fields);
+              increaseRating(increaseRatingFields);
+            }}
+          />
+
+          {/* <ActionModal btnName="send review" /> */}
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 );

@@ -5,7 +5,7 @@ import { CustomText } from "../../components/CustomText";
 import { COLORS } from "../../style/colors";
 import { GLOBAL_STYLES } from "../../style/globalStyles";
 import { connect } from "react-redux";
-import { selectUserData } from "../../store/users";
+// import { selectUserData } from "../../store/users";
 import { selectCurrentProduct, getCurrentProduct } from "../../store/products";
 
 const mapStateToProps = (state) => ({
@@ -21,6 +21,8 @@ export const ClientReviewsList = connect(mapStateToProps, {
     getCurrentProduct(productID);
   }, []);
 
+  console.log("productID", productID);
+
   const reviews = currentProduct?.reviews;
 
   console.log("review", reviews);
@@ -29,9 +31,9 @@ export const ClientReviewsList = connect(mapStateToProps, {
       <CustomText style={styles.text} weight="medium">
         {reviews.length} reviews
       </CustomText>
-      {reviews && (
+      {reviews ? (
         <FlatList
-          data={reviews || []}
+          data={reviews}
           contentContainerStyle={styles.container}
           renderItem={({ item, index }) => (
             <ReviewItem
@@ -44,7 +46,7 @@ export const ClientReviewsList = connect(mapStateToProps, {
             />
           )}
         />
-      )}
+      ) : null}
     </View>
   );
 });

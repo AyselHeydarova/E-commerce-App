@@ -21,18 +21,21 @@ import {
   selectFilteredProducts,
   getNewData,
   getFilteredProducts,
+  getCurrentProduct,
+  selectCurrentProduct,
 } from "../store/products";
 import { connect } from "react-redux";
 
 import banner from "../assets/Small_banner.png";
 import { setUsersData, getCurrentUserData } from "../store/users";
-import {LogOut} from "../Icons/LogOut";
+import { LogOut } from "../Icons/LogOut";
 
 const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),
   saleProducts: selectSaleProductData(state),
   newProducts: selectNewProductData(state),
   filteredProduct: selectFilteredProducts(state),
+  currentProduct: selectCurrentProduct(state),
 });
 const Home = connect(mapStateToProps, {
   getAllData,
@@ -40,6 +43,7 @@ const Home = connect(mapStateToProps, {
   getNewData,
   setUsersData,
   getFilteredProducts,
+  getCurrentProduct,
 })(
   ({
     getAllData,
@@ -52,6 +56,7 @@ const Home = connect(mapStateToProps, {
     setUsersData,
     getFilteredProducts,
     filteredProduct,
+    getCurrentProduct,
   }) => {
     const [showSale, setShowSale] = useState(false);
 
@@ -72,8 +77,17 @@ const Home = connect(mapStateToProps, {
       console.log(saleProducts);
     };
 
+    const handleFilter = async () => {
+      try {
+        await generalFiltering("Skirts", "women", "blue");
+      } catch (error) {
+        console.log("handleFilter err", error);
+      }
+    };
+
     useEffect(() => {
       handleNewProducts();
+      handleFilter();
     }, []);
 
     return (
@@ -95,18 +109,18 @@ const Home = connect(mapStateToProps, {
                 }}
                 data={saleProducts}
                 renderItem={({ item }) => (
-                    <ProductCard
-                      product={item}
-                      isOnSale={true}
-                      isInCatalog={true}
-                      navigation={navigation}
-                      onPress={() =>
-                          navigation.navigate("SingleProduct", {
-                            product: item,
-                            products: saleProducts,
-                          })
-                      }
-                    />
+                  <ProductCard
+                    product={item}
+                    isOnSale={true}
+                    isInCatalog={true}
+                    navigation={navigation}
+                    onPress={() =>
+                      navigation.navigate("SingleProduct", {
+                        product: item,
+                        products: saleProducts,
+                      })
+                    }
+                  />
                 )}
                 keyExtractor={(item) => item.productType}
               />
@@ -144,18 +158,18 @@ const Home = connect(mapStateToProps, {
             }}
             data={newProducts}
             renderItem={({ item }) => (
-                <ProductCard
-                  product={item}
-                  isNew={true}
-                  isInCatalog={true}
-                  navigation={navigation}
-                  onPress={() =>
-                      navigation.navigate("SingleProduct", {
-                        product: item,
-                        products: newProducts,
-                      })
-                  }
-                />
+              <ProductCard
+                product={item}
+                isNew={true}
+                isInCatalog={true}
+                navigation={navigation}
+                onPress={() =>
+                  navigation.navigate("SingleProduct", {
+                    product: item,
+                    products: newProducts,
+                  })
+                }
+              />
             )}
             keyExtractor={(item) => item.id}
           />

@@ -10,18 +10,27 @@ import { ActionModal } from "../../components/ActionModal";
 import { ClientReview } from "./ClientReview";
 import { Btn } from "../../components/Btn";
 import { connect } from "react-redux";
-import { selectCurrentProductRating } from "../../store/products";
+import {
+  selectCurrentProductRating,
+  getCurrentProduct,
+} from "../../store/products";
 
 const mapStateToProps = (state) => ({
   rating: selectCurrentProductRating(state),
 });
 
-export const RatingReviewScreen = connect(
-  mapStateToProps,
-  null
-)(({ route, rating }) => {
+export const RatingReviewScreen = connect(mapStateToProps, {
+  getCurrentProduct,
+})(({ route, rating, getCurrentProduct }) => {
   const productID = route.params.productID;
   const [showWriteReview, setShowWriteReview] = useState(false);
+
+  // useEffect(() => {
+  //   getCurrentProduct(productID);
+  //   console.log("RatingReviewScreen mounted");
+  // }, []);
+
+  console.log("rating ", rating);
 
   return (
     <TouchableWithoutFeedback onPress={() => setShowWriteReview(false)}>
