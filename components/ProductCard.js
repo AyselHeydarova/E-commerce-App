@@ -74,9 +74,10 @@ export const ProductCard = connect(mapStateToProps, {
       setIsHeartClicked(!isHeartClicked);
     };
 
-    const salePrice = isOnSale
-      ? Math.floor((+price * (100 - +onSale.discount)) / 100)
-      : null;
+    const salePrice =
+      onSale !== undefined && onSale.discount !== undefined
+        ? Math.floor((+price * (100 - +onSale.discount)) / 100)
+        : null;
 
     const handleCount = async (count) => {
       try {
@@ -168,7 +169,7 @@ export const ProductCard = connect(mapStateToProps, {
           ) : (
             <View style={styles.description}>
               <CustomText
-                style={{ marginTop: 5, marginBottom: 5 }}
+                style={{ marginTop: 5, marginBottom: 5, marginRight: 15 }}
                 weight="medium"
               >
                 {name.toUpperCase()}
@@ -222,12 +223,16 @@ export const ProductCard = connect(mapStateToProps, {
                 )}
 
                 <View>
-                  {isOnSale ? (
+                  {onSale !== undefined && onSale.discount !== undefined ? (
                     <CustomText
                       weight="bold"
-                      style={{ color: COLORS.SALE, marginLeft: 10 }}
+                      style={{
+                        color: COLORS.SALE,
+                        marginLeft: 10,
+                        fontSize: 17,
+                      }}
                     >
-                      {`${salePrice}$`}
+                      {`${salePrice * defaultCount}$`}
                     </CustomText>
                   ) : (
                     <CustomText
@@ -236,19 +241,20 @@ export const ProductCard = connect(mapStateToProps, {
                         color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
                         lineHeight: 45,
                         fontSize: 19,
-                        textDecorationLine: isOnSale ? "line-through" : null,
+                        textDecorationLine:
+                          onSale !== undefined && onSale.discount !== undefined
+                            ? "line-through"
+                            : null,
                       }}
                     >
-                      {Number.parseFloat(price * defaultCount).toFixed(2)}$
+                      {`${price * defaultCount}$`}
                     </CustomText>
                   )}
                 </View>
               </View>
             </View>
           )}
-          {isInFavs ? (
-            <Bag width={20} height={20} />
-          ) : isInOrders ? null : (
+          {isInFavs || isInOrders ? null : (
             <Heart
               width={15}
               height={15}
@@ -269,7 +275,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     flexDirection: "row",
     backgroundColor: COLORS.DARK,
-    marginBottom: 25,
+    marginVertical: 13,
     position: "relative",
   },
 
@@ -324,8 +330,14 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   cross: {
+    width: 35,
+    height: 35,
+    backgroundColor: "white",
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
     position: "absolute",
-    top: 7,
-    right: 7,
+    top: -13,
+    right: 0,
   },
 });

@@ -11,12 +11,7 @@ import {
 import { COLORS } from "../style/colors";
 import { CustomText } from "../components/CustomText";
 import { Btn } from "../components/Btn";
-import { Filter } from "../Icons/Filter";
-import { PriceArrows } from "../Icons/PriceArrows";
-import { ListViewChanger } from "../Icons/ListViewChanger";
 import { ProductCard } from "../components/ProductCard";
-import { CardView } from "../Icons/CardView";
-import { Back } from "../Icons/Back";
 import { getCurrentUserData, selectUserData } from "../store/users";
 import { connect } from "react-redux";
 import { GLOBAL_STYLES } from "../style/globalStyles";
@@ -35,7 +30,6 @@ export const Favorites = connect(mapStateToProps, { getCurrentUserData })(
       "Dresses",
       "Trousers",
     ];
-
     const [favoritesData, setFavData] = useState(favorites);
 
     let favoritesSortedByCategory = [];

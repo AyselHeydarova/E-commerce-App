@@ -163,23 +163,27 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
             )}
           </TouchableOpacity>
         </View>
-
-        <FlatList
-          data={result}
-          numColumns={numberOfColums}
-          key={numberOfColums}
-          renderItem={({ item }) => (
-            <ProductCard
-              product={item}
-              isInCatalog={true}
-              isRowView={isListView}
-              isOnSale={isOnSale}
-              onPress={() => handleProductCard(item)}
-            />
-          )}
-          keyExtractor={(item) => item.name}
-        />
-
+        {finalProducts.length === 0 ? (
+          <CustomText style={{ fontSize: 16.6, color: COLORS.SALE }}>
+            Sorry, We don't have any products in {`${categoryName}`} yet!
+          </CustomText>
+        ) : (
+          <FlatList
+            data={result}
+            numColumns={numberOfColums}
+            key={numberOfColums}
+            renderItem={({ item }) => (
+              <ProductCard
+                product={item}
+                isInCatalog={true}
+                isRowView={isListView}
+                isOnSale={isOnSale}
+                onPress={() => handleProductCard(item)}
+              />
+            )}
+            keyExtractor={(item) => item.name}
+          />
+        )}
         {isBottomModalOpen ? (
           <BottomModal name={"SortBy"} height={250}>
             <View style={styles.sortBy}>

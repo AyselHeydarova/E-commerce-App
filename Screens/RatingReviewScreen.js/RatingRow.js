@@ -7,24 +7,24 @@ import { COLORS } from "../../style/colors";
 export const RatingRow = ({ starCount, ratingCount, totalRatingCount }) => {
   const ratingInPercentage = (ratingCount / totalRatingCount) * 100;
   return (
-    <View style={styles.row}>
-      <StarRating
-        disabled={true}
-        fullStarColor={COLORS.STAR}
-        starSize={14}
-        starStyle={{ margin: 3 }}
-        maxStars={starCount}
-        rating={starCount}
-      />
-
-      <View style={styles.progressWrapper}>
-        <View
-          style={[styles.progressBar, { width: `${ratingInPercentage}%` }]}
+      <View style={styles.row}>
+        <StarRating
+            disabled={true}
+            fullStarColor={COLORS.STAR}
+            starSize={14}
+            starStyle={{ margin: 3 }}
+            maxStars={starCount}
+            rating={starCount}
         />
-      </View>
 
-      <CustomText style={styles.ratingCount}>{ratingCount}</CustomText>
-    </View>
+        <View style={styles.progressWrapper}>
+          <View
+              style={[styles.progressBar, { width: `${ratingInPercentage}%` }]}
+          />
+        </View>
+
+        <CustomText style={styles.ratingCount}>{ratingCount}</CustomText>
+      </View>
   );
 };
 

@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { COLORS } from "../../style/colors";
 import { CustomText } from "../../components/CustomText";
-import { Back } from "../../Icons/Back";
 import { Btn } from "../../components/Btn";
 import { ProductCard } from "../../components/ProductCard";
 

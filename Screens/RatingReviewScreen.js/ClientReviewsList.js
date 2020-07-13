@@ -21,33 +21,30 @@ export const ClientReviewsList = connect(mapStateToProps, {
     getCurrentProduct(productID);
   }, []);
 
-  console.log("productID", productID);
-
   const reviews = currentProduct?.reviews;
 
-  console.log("review", reviews);
   return (
-    <View>
-      <CustomText style={styles.text} weight="medium">
-        {reviews.length} reviews
-      </CustomText>
-      {reviews ? (
-        <FlatList
-          data={reviews}
-          contentContainerStyle={styles.container}
-          renderItem={({ item, index }) => (
-            <ReviewItem
-              username={item.username}
-              key={index}
-              userImg={item.userPhoto}
-              rating={item.givenRating}
-              comment={item.review_text}
-              date={item.date}
+      <View>
+        <CustomText style={styles.text} weight="medium">
+          {reviews.length} reviews
+        </CustomText>
+        {reviews ? (
+            <FlatList
+                data={reviews}
+                contentContainerStyle={styles.container}
+                renderItem={({ item, index }) => (
+                    <ReviewItem
+                        username={item.username}
+                        key={index}
+                        userImg={item.userPhoto}
+                        rating={item.givenRating}
+                        comment={item.review_text}
+                        date={item.date}
+                    />
+                )}
             />
-          )}
-        />
-      ) : null}
-    </View>
+        ) : null}
+      </View>
   );
 });
 

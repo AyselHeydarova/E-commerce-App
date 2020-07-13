@@ -45,6 +45,7 @@ export const SingleProductScreen = connect(mapStateToProps, {
     sizes,
     colors,
     count,
+    onSale,
   } = route.params.product;
   const { products } = route.params;
   const { product } = route.params;
@@ -57,6 +58,7 @@ export const SingleProductScreen = connect(mapStateToProps, {
     imagesUrls: imagesUrls,
     size: "",
     color: "",
+    onSale: onSale == undefined ? {} : onSale,
   });
   const handleAddToCart = () => {
     setAddToBag(addProduct);
@@ -197,7 +199,7 @@ export const SingleProductScreen = connect(mapStateToProps, {
           </View>
         </ScrollView>
         {isSizeClicked ? (
-          <BottomModal name={"Select Size"} height={200}>
+          <BottomModal name={"Select Size"} height={300}>
             <ScrollView
               contentContainerStyle={{ flexDirection: "row", flexWrap: "wrap" }}
             >
@@ -218,7 +220,7 @@ export const SingleProductScreen = connect(mapStateToProps, {
           </BottomModal>
         ) : null}
         {isColorClicked ? (
-          <BottomModal name={"Select Color"} height={250}>
+          <BottomModal name={"Select Color"} height={350}>
             <ScrollView
               contentContainerStyle={{ flexDirection: "row", flexWrap: "wrap" }}
             >

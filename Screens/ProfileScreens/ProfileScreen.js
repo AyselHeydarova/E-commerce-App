@@ -164,6 +164,22 @@ const styles = StyleSheet.create({
     marginLeft: 30,
   },
 
+  text: {
+    marginTop: 10,
+  },
+  userInfoSection: {
+    width: "100%",
+    height: 120,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
+  avatar: {
+    width: 70,
+    height: 70,
+    borderRadius: 40,
+    marginLeft: 30,
+  },
+
   logoutWrapper: {
     flexDirection: "row",
     justifyContent: "space-between",

@@ -30,8 +30,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 7,
     borderColor: "#ABB4BD",
-    marginVertical: 20,
-    marginHorizontal: 20,
+    margin: 10,
   },
   containerText: {
     fontSize: 16,

@@ -237,6 +237,55 @@ export const deleteBagProducts = () => {
   // return removeBagProducts;
 };
 
+// export const submitOrder = async (orderInfo) => {
+//   const orderId = await firebase.firestore.collection("orders").push(orderInfo)
+//     .id;
+//   console.log("orderId", orderId);
+//   firebase.firestore
+//     .collection("users")
+//     .doc(firebase.auth().currentUser.uid)
+//     .orders.set({
+//       [orderId]: true,
+//     });
+// };
+
+export const addOrderedProducts = (products) => async () => {
+  try {
+    const date = new Date(Date.now()).toLocaleString().split(",")[0];
+    const userProductsRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+    const userProductsSnap = await userProductsRef.get();
+    const userData = await userProductsSnap.data();
+    console.log("userData", userData);
+    console.log("length", products.length);
+    const totalAmount = () => {
+      let total = 0;
+      products.forEach((product) => {
+        total = total + product.price * product.selectedCount;
+      });
+      return total;
+    };
+    userData.orders.push({
+      orderNo: randomString(7, "n"),
+      trackingNo: randomString(12),
+      quantity: products.length,
+      totalAmount: totalAmount(),
+      date: date,
+      orderedProducts: products,
+    });
+    userProductsRef.set(
+      {
+        orders: userData.orders,
+      },
+      { merge: true }
+    );
+  } catch (e) {
+    console.log("error", e);
+  }
+};
+
 export const setCountSize = async (payload) => {
   try {
     const countRef = firebase
@@ -277,43 +326,6 @@ export const setCountSize = async (payload) => {
     // dispatch(addReview(payload));
   } catch (error) {
     console.log("countData error", error);
-  }
-};
-
-export const addOrderedProducts = (products) => async () => {
-  try {
-    const date = new Date(Date.now()).toLocaleString().split(",")[0];
-    const userProductsRef = firebase
-      .firestore()
-      .collection("users")
-      .doc(firebase.auth().currentUser.uid);
-    const userProductsSnap = await userProductsRef.get();
-    const userData = await userProductsSnap.data();
-    console.log("userData", userData);
-    console.log("length", products.length);
-    const totalAmount = () => {
-      let total = 0;
-      products.forEach((product) => {
-        total = total + product.price * product.selectedCount;
-      });
-      return total;
-    };
-    userData.orders.push({
-      orderNo: randomString(7, "n"),
-      trackingNo: randomString(12),
-      quantity: products.length,
-      totalAmount: totalAmount(),
-      date: date,
-      orderedProducts: products,
-    });
-    userProductsRef.set(
-      {
-        orders: userData.orders,
-      },
-      { merge: true }
-    );
-  } catch (e) {
-    console.log("error", e);
   }
 };
 

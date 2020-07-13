@@ -22,6 +22,7 @@ import {
   deleteBagProducts,
 } from "../store/users";
 import { connect } from "react-redux";
+import { totalAmount } from "../Utils/Calculations";
 
 const mapStateToProps = (state) => ({
   usersData: selectUserData(state),
@@ -31,84 +32,61 @@ export const MyBag = connect(mapStateToProps, {
   getCurrentUserData,
   addOrderedProducts,
   deleteBagProducts,
-})(
-  ({
-    getCurrentUserData,
-    usersData,
-    addOrderedProducts,
-    deleteBagProducts,
-    navigation,
-  }) => {
-    const bagProducts = usersData.userProductsInBag || [];
-    const totalAmount = () => {
-      let total = 0;
-      bagProducts.forEach((product) => {
-        total = total + product.price * product.selectedCount;
-      });
-      return total;
-    };
+})(({ getCurrentUserData, usersData, deleteBagProducts, navigation }) => {
+  const bagProducts = usersData.userProductsInBag || [];
 
-    const handleUserData = async () => {
-      try {
-        await getCurrentUserData();
-      } catch (error) {
-        console.log("getCurrentUserData", error);
-      }
-    };
-    const handleDeleteBagProducts = async () => {
-      try {
-        await deleteBagProducts();
-      } catch (error) {
-        console.log("getCurrentUserData", error);
-      }
-    };
-    const handleCheckOut = () => {
-      // addOrderedProducts(bagProducts);
-      // handleDeleteBagProducts();
-      // console.log('bagProducts', bagProducts)
-      navigation.navigate("Checkout");
-    };
+  const handleUserData = async () => {
+    try {
+      await getCurrentUserData();
+    } catch (error) {
+      console.log("getCurrentUserData", error);
+    }
+  };
+  const handleCheckOut = () => {
+    navigation.navigate("Checkout", {
+      bagProducts: bagProducts,
+    });
+  };
 
-    useEffect(() => {
-      handleUserData();
-    }, []);
-    return (
-      <View style={styles.container}>
-        <StatusBar />
-        <CustomText weight={"bold"} style={styles.title}>
-          My Bag
+  useEffect(() => {
+    handleUserData();
+  }, []);
+  return (
+    <View style={styles.container}>
+      <StatusBar />
+      <CustomText weight={"bold"} style={styles.title}>
+        My Bag
+      </CustomText>
+
+      <FlatList
+        data={bagProducts}
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <ProductCard isInFavs={true} product={item} isRowView={true} />
+          </View>
+        )}
+        keyExtractor={(item) => `${item.id}${item.size}${item.color}`}
+      />
+      <View style={styles.amountContainer}>
+        <CustomText weight={"bold"} style={styles.amount}>
+          Total amount:
         </CustomText>
-
-        <FlatList
-          data={bagProducts}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <ProductCard isInFavs={true} product={item} isRowView={true} />
-            </View>
-          )}
-          keyExtractor={(item) => `${item.id}${item.size}${item.color}`}
-        />
-        <View style={styles.amountContainer}>
-          <CustomText weight={"bold"} style={styles.amount}>
-            Total amount:
-          </CustomText>
-          <CustomText weight={"bold"} style={styles.totalCost}>
-            ${Math.floor(totalAmount())}
-          </CustomText>
-        </View>
-        <TouchableOpacity style={styles.btn}>
-          <Btn
-            onPress={() => handleCheckOut()}
-            width={345}
-            height={50}
-            bgColor={COLORS.PRIMARY}
-            btnName={"CHECK OUT"}
-          />
-        </TouchableOpacity>
+        <CustomText weight={"bold"} style={styles.totalCost}>
+          ${Math.floor(totalAmount(bagProducts))}
+        </CustomText>
       </View>
-    );
-  }
-);
+      <TouchableOpacity style={styles.btn}>
+        <Btn
+          onPress={() => handleCheckOut()}
+          width={345}
+          height={50}
+          bgColor={COLORS.PRIMARY}
+          btnName={"CHECK OUT"}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+});
 
 const styles = StyleSheet.create({
   container: {
