@@ -186,15 +186,15 @@ export const Filters = ({navigation, route}) => {
                 <View style={styles.sliderContainer}>
                     <Text style={[styles.title, {position: 'absolute', left: 0,}]}>${values[0]}</Text>
                     <Text style={[styles.title, {position: 'absolute', right: 0,}]}>${values[1]}</Text>
-                    <MultiSlider
-                        values={[values[0], values[1]]}
-                        sliderLength={300}
-                        onValuesChange={multiSliderValuesChange}
-                        min={0}
-                        max={2000}
-                        step={1}
+                    {/*<MultiSlider*/}
+                    {/*    values={[values[0], values[1]]}*/}
+                    {/*    sliderLength={300}*/}
+                    {/*    onValuesChange={multiSliderValuesChange}*/}
+                    {/*    min={0}*/}
+                    {/*    max={2000}*/}
+                    {/*    step={1}*/}
 
-                    />
+                    {/*/>*/}
                 </View>
             </View>
 

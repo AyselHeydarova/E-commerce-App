@@ -36,8 +36,6 @@ export const ProductCard = connect(mapStateToProps, {
          isInOrders = false,
          onPress
      }) => {
-
-
         const {
             id,
             brandName,
@@ -65,7 +63,7 @@ export const ProductCard = connect(mapStateToProps, {
             setIsHeartClicked(!isHeartClicked)
         };
 
-        const salePrice = isOnSale
+        const salePrice = (onSale!==undefined && onSale.discount!==undefined)
             ? Math.floor((+price * (100 - +onSale.discount)) / 100)
             : null;
 
@@ -162,7 +160,7 @@ export const ProductCard = connect(mapStateToProps, {
                         : (
 
                             <View style={styles.description}>
-                                <CustomText style={{marginTop: 5, marginBottom: 5}}
+                                <CustomText style={{marginTop: 5, marginBottom: 5,marginRight:15}}
                                             weight="medium">{name.toUpperCase()}</CustomText>
 
                                 {isInOrders ? null :
@@ -207,11 +205,12 @@ export const ProductCard = connect(mapStateToProps, {
                                     }
 
                                     <View>
-                                        {isOnSale ? (
+                                        {
+                                            (onSale!==undefined && onSale.discount!==undefined)? (
                                             <CustomText
                                                 weight="bold"
-                                                style={{color: COLORS.SALE, marginLeft: 10}}
-                                            >{`${salePrice}$`}
+                                                style={{color: COLORS.SALE, marginLeft: 10,fontSize:17}}
+                                            >{`${salePrice * defaultCount}$`}
                                             </CustomText>
                                         ) : <CustomText
                                             weight="bold"
@@ -219,7 +218,7 @@ export const ProductCard = connect(mapStateToProps, {
                                                 color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
                                                 lineHeight: 45,
                                                 fontSize: 19,
-                                                textDecorationLine: isOnSale ? "line-through" : null,
+                                                textDecorationLine: (onSale!==undefined && onSale.discount!==undefined) ? "line-through" : null,
                                             }}
                                         >
                                             {`${price * defaultCount}$`}
@@ -229,7 +228,7 @@ export const ProductCard = connect(mapStateToProps, {
 
                             </View>
                         )}
-                    {isInFavs? <Bag width={20} height={20}/> : isInOrders ?null:
+                    {(isInFavs || isInOrders) ? null :
                         <Heart width={15} height={15}
                                isHeartClicked={isHeartClicked}
                                onPress={() => handleFavoriteProduct()}/>
@@ -247,7 +246,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         flexDirection: "row",
         backgroundColor: COLORS.DARK,
-        marginBottom: 25,
+        marginVertical: 13,
         position: "relative",
     },
 
@@ -302,8 +301,14 @@ const styles = StyleSheet.create({
         marginLeft: 15
     },
     cross: {
+        width:35,
+        height:35,
+        backgroundColor:'white',
+        borderRadius:20,
+        alignItems:'center',
+        justifyContent:'center',
         position: 'absolute',
-        top: 7,
-        right: 7
+        top: -13,
+        right: 0,
     }
 });

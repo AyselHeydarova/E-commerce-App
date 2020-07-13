@@ -3,18 +3,38 @@ import {StyleSheet, StatusBar, View, Image, TouchableOpacity, TouchableWithoutFe
 import {CustomText} from "../../components";
 import {COLORS} from "../../style/colors";
 import {AddressCard} from "../AddressCard";
-import {getCurrentUserData, selectShippingAddress, selectUserData} from "../../store/users";
+import {
+    addOrderedProducts,
+    deleteBagProducts,
+    getCurrentUserData,
+    selectShippingAddress,
+    selectUserData
+} from "../../store/users";
 import {connect} from "react-redux";
 import {Btn} from "../../components/Btn";
+import {totalAmount} from "../../Utils/Calculations";
 
 const mapStateToProps = (state) => ({
     user: selectUserData(state),
 });
 export const Checkout = connect(mapStateToProps, {
+    addOrderedProducts,
+    deleteBagProducts,
     getCurrentUserData,
-})(({navigation, route, user, isVisa = true}) => {
+})(({navigation, addOrderedProducts, deleteBagProducts, route, user, isVisa = true}) => {
+    const {bagProducts} = route.params;
     const shippingAddresses = user.shippingAddresses.filter((address) => address.isSelected == true);
-
+    const handleDeleteBagProducts = async () => {
+        try {
+            await deleteBagProducts();
+        } catch (error) {
+            console.log("getCurrentUserData", error);
+        }
+    };
+    const handleSubmit = () => {
+        addOrderedProducts(bagProducts);
+        handleDeleteBagProducts();
+    }
     return (
         <View style={styles.container}>
             <StatusBar/>
@@ -38,6 +58,9 @@ export const Checkout = connect(mapStateToProps, {
             <View style={styles.bodyPart}>
                 <View style={styles.titleContainer}>
                     <CustomText weight={'medium'} style={styles.title}>Payment </CustomText>
+                    <TouchableOpacity style={styles.change}>
+                        <CustomText weight={'medium'} style={{color: COLORS.PRIMARY,}}>Change </CustomText>
+                    </TouchableOpacity>
                 </View>
                 <View style={[styles.section, {height: 60}]}>
 
@@ -51,9 +74,6 @@ export const Checkout = connect(mapStateToProps, {
             <View style={styles.bodyPart}>
                 <View style={styles.titleContainer}>
                     <CustomText weight={'medium'} style={styles.title}>Delivery Method </CustomText>
-                    <TouchableOpacity style={styles.change}>
-                        <CustomText weight={'medium'} style={{color: COLORS.PRIMARY,}}>Change </CustomText>
-                    </TouchableOpacity>
                 </View>
                 <View style={[styles.section, {height: 100}]}>
 
@@ -71,17 +91,23 @@ export const Checkout = connect(mapStateToProps, {
             <View style={styles.bodyPart}>
                 <View style={styles.titleContainer}>
                     <CustomText weight={'medium'} style={styles.text}>Order: </CustomText>
-                    <CustomText weight={'medium'} style={styles.price}> 127$ </CustomText>
+                    <CustomText weight={'medium'} style={styles.price}>
+                        ${Math.floor(totalAmount(bagProducts))}
+                    </CustomText>
                 </View>
 
                 <View style={styles.titleContainer}>
                     <CustomText weight={'medium'} style={styles.text}>Delivery: </CustomText>
-                    <CustomText weight={'medium'} style={styles.price}> 127$ </CustomText>
+                    <CustomText weight={'medium'} style={styles.price}>
+                        $127
+                    </CustomText>
                 </View>
 
                 <View style={styles.titleContainer}>
                     <CustomText weight={'medium'} style={styles.text}>Summary: </CustomText>
-                    <CustomText weight={'medium'} style={styles.price}> 127$ </CustomText>
+                    <CustomText weight={'medium'} style={styles.price}>
+                        ${Math.floor(totalAmount(bagProducts))}
+                    </CustomText>
                 </View>
 
 
@@ -90,10 +116,10 @@ export const Checkout = connect(mapStateToProps, {
                  width={340}
                  bgColor={COLORS.PRIMARY}
                  btnName={'Submit Order'}
-                 titleStyle={{fontSize:18}}
-                 containerStyle={{marginTop: 25,marginLeft:10}}
+                 titleStyle={{fontSize: 18}}
+                 containerStyle={{marginTop: 25, marginLeft: 10}}
+                 onPress={() => handleSubmit()}
             />
-
         </View>
     );
 });

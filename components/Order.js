@@ -64,7 +64,7 @@ export const Order = ({orderNo, trackingNo, quantity, total, date, status='Deliv
 export const styles = StyleSheet.create({
 
     container: {
-        width: 345,
+        width: '100%',
         height: 170,
         borderRadius: 8,
         backgroundColor: COLORS.DARK,

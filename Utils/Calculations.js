@@ -43,3 +43,10 @@ export function randomString(len, an) {
   }
   return str;
 }
+export  const totalAmount = (products) => {
+  let total = 0;
+  products.forEach((product) => {
+    total = total + product.price * product.selectedCount
+  });
+  return total;
+};

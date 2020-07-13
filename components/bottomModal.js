@@ -28,10 +28,10 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderTopRightRadius: 34,
         borderTopLeftRadius: 34,
-        // position:"absolute",
-        // bottom:0,
-        // left:0,
-        // right:0
+        position:"absolute",
+        bottom:0,
+        left:0,
+        right:0
 
     },
     bodyContainer:{
