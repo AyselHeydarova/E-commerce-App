@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import {
     StyleSheet,
     View,
@@ -8,19 +8,19 @@ import {
     TouchableWithoutFeedback,
     ScrollView,
 } from "react-native";
-import { COLORS } from "../style/colors";
-import { CustomText } from "../components/CustomText";
-import { Btn } from "../components/Btn";
-import { ProductCard } from "../components/ProductCard";
-import { getCurrentUserData, selectUserData } from "../store/users";
-import { connect } from "react-redux";
-import { GLOBAL_STYLES } from "../style/globalStyles";
+import {COLORS} from "../style/colors";
+import {CustomText} from "../components/CustomText";
+import {Btn} from "../components/Btn";
+import {ProductCard} from "../components/ProductCard";
+import {getCurrentUserData, selectUserData} from "../store/users";
+import {connect} from "react-redux";
+import {GLOBAL_STYLES} from "../style/globalStyles";
 
 const mapStateToProps = (state) => ({
     usersData: selectUserData(state),
 });
-export const Favorites = connect(mapStateToProps, { getCurrentUserData })(
-    ({ getCurrentUserData, usersData, navigation }) => {
+export const Favorites = connect(mapStateToProps, {getCurrentUserData})(
+    ({getCurrentUserData, usersData, navigation}) => {
         const favorites = usersData.userFavorites || [];
         const clothes = [
             "T-Shirts",
@@ -30,7 +30,6 @@ export const Favorites = connect(mapStateToProps, { getCurrentUserData })(
             "Dresses",
             "Trousers",
         ];
-        console.log('favorites',favorites)
         const [favoritesData, setFavData] = useState(favorites);
 
         let favoritesSortedByCategory = [];
@@ -54,7 +53,7 @@ export const Favorites = connect(mapStateToProps, { getCurrentUserData })(
 
         return (
             <View style={styles.container}>
-                <StatusBar />
+                <StatusBar/>
 
                 <CustomText weight={"bold"} style={styles.title}>
                     Favorites
@@ -63,14 +62,14 @@ export const Favorites = connect(mapStateToProps, { getCurrentUserData })(
                     <FlatList
                         horizontal={true}
                         data={clothes}
-                        renderItem={({ item }) => (
+                        renderItem={({item}) => (
                             <View style={styles.btn}>
                                 <Btn
                                     width={100}
                                     height={30}
                                     bgColor={COLORS.TEXT}
                                     btnName={item}
-                                    titleStyle={{ color: COLORS.BACKGROUND }}
+                                    titleStyle={{color: COLORS.BACKGROUND}}
                                     onPress={() => handleSortByCategory(item)}
                                 />
                             </View>
@@ -80,7 +79,7 @@ export const Favorites = connect(mapStateToProps, { getCurrentUserData })(
 
                 <FlatList
                     data={favoritesData}
-                    renderItem={({ item }) => (
+                    renderItem={({item}) => (
                         <ProductCard
                             product={item}
                             isInFavs={true}

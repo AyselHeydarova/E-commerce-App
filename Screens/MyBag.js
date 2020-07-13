@@ -30,13 +30,10 @@ export const MyBag = connect(mapStateToProps,
 (({
       getCurrentUserData,
       usersData,
-      addOrderedProducts,
       deleteBagProducts,
       navigation
   }) => {
     const bagProducts = usersData.userProductsInBag || [];
-
-    console.log('bagProducts',bagProducts)
 
     const handleUserData = async () => {
         try {
@@ -45,17 +42,7 @@ export const MyBag = connect(mapStateToProps,
             console.log("getCurrentUserData", error);
         }
     };
-    const handleDeleteBagProducts = async () => {
-        try {
-            await deleteBagProducts();
-        } catch (error) {
-            console.log("getCurrentUserData", error);
-        }
-    };
     const handleCheckOut = () => {
-        // addOrderedProducts(bagProducts);
-        // handleDeleteBagProducts();
-        // console.log('bagProducts', bagProducts)
         navigation.navigate("Checkout",{
             bagProducts:bagProducts
         });
