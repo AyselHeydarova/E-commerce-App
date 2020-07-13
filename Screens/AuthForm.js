@@ -20,7 +20,6 @@ import {
   signIn,
   selectAuthStatus,
   selectAuthUserID,
-  logOut,
 } from "../store/auth";
 
 const mapStateToProps = (state) => ({
@@ -31,8 +30,7 @@ const mapStateToProps = (state) => ({
 export const AuthForm = connect(mapStateToProps, {
   signupUser,
   signIn,
-  logOut,
-})(({ signIn, signupUser, authStatus, userID, logOut }) => {
+})(({ signIn, signupUser, authStatus, userID }) => {
   const [isLogin, setIsLogin] = useState(false);
   const [fields, setFields] = useState({
     username: "",
@@ -98,15 +96,6 @@ export const AuthForm = connect(mapStateToProps, {
         onPress={() => {
           isLogin ? signIn(fields) : signupUser(fields);
         }}
-      />
-      <Btn
-        btnName="Log Out"
-        width={"100%"}
-        height={48}
-        bgColor="black"
-        titleStyle={{ color: "#F5F5F5" }}
-        style={{ marginTop: 30 }}
-        onPress={() => logOut()}
       />
     </View>
   );

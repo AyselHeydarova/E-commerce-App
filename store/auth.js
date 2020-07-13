@@ -78,9 +78,9 @@ export const signupUser = (userDetails) => async (dispatch) => {
             username: username,
             email: email,
             password: password,
-            userFavorites:[],
-            userProductsInBag:[],
-            orders:[]
+            userFavorites: [],
+            userProductsInBag: [],
+            orders: [],
           })
           .catch((error) => {
             console.log(

@@ -102,8 +102,8 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
 
     const finalProducts =
       categoryName === "New" ? newProducts : isOnSale ? saleProducts : products;
-    console.log('finalProducts',finalProducts)
-    console.log('filteredProductsData',filteredProductsData)
+    console.log("finalProducts", finalProducts);
+    // console.log('filteredProductsData',filteredProductsData)
     const [isListView, setIsListView] = useState(true);
 
     const numberOfColums = isListView ? 1 : 2;
@@ -169,17 +169,13 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
           numColumns={numberOfColums}
           key={numberOfColums}
           renderItem={({ item }) => (
-            <TouchableOpacity
+            <ProductCard
+              product={item}
+              isInCatalog={true}
+              isRowView={isListView}
+              isOnSale={isOnSale}
               onPress={() => handleProductCard(item)}
-              activeOpacity={0.9}
-            >
-              <ProductCard
-                product={item}
-                isInCatalog={true}
-                isRowView={isListView}
-                isOnSale={isOnSale}
-              />
-            </TouchableOpacity>
+            />
           )}
           keyExtractor={(item) => item.name}
         />

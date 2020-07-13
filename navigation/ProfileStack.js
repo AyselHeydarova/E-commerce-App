@@ -7,7 +7,7 @@ import { ProfileScreen } from "../Screens/ProfileScreens/ProfileScreen";
 import { OrderDetails } from "../Screens/ProfileScreens/OrderDetails";
 import { PasswordChange } from "../Screens/ProfileScreens/PasswordChange";
 import { MyOrders } from "../Screens/ProfileScreens/MyOrders";
-import {PaymentScreen} from '../Screens/PaymentScreen';
+import { PaymentScreen } from "../Screens/PaymentScreen";
 import { Settings } from "../Screens/ProfileScreens/Settings";
 import { AddingShippingAddress } from "../Screens/AddingShippingAddress";
 import { ShippingAddressesScreen } from "../Screens/ShippingAddressesScreen";
@@ -24,11 +24,19 @@ export const ProfileStack = () => {
         component={ProfileScreen}
       />
       <Screen
-        options={{ headerShown: false }}
+        options={({ navigation }) => ({
+          title: "Order Details",
+          headerStyle: {
+            backgroundColor: COLORS.BACKGROUND,
+            elevation: 0,
+          },
+          headerTintColor: COLORS.TEXT,
+          headerLeft: () => <Back onPress={() => navigation.goBack()} />,
+        })}
         name="OrderDetails"
         component={OrderDetails}
       />
-         <Screen
+      <Screen
         options={{ headerShown: false }}
         name="Payment"
         component={PaymentScreen}
@@ -52,7 +60,15 @@ export const ProfileStack = () => {
         component={Settings}
       />
       <Screen
-        options={{ headerShown: false }}
+        options={({ navigation }) => ({
+          title: "",
+          headerStyle: {
+            backgroundColor: COLORS.BACKGROUND,
+            elevation: 0,
+          },
+          headerTintColor: COLORS.TEXT,
+          headerLeft: () => <Back onPress={() => navigation.goBack()} />,
+        })}
         name="MyOrders"
         component={MyOrders}
       />

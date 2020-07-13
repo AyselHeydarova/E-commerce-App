@@ -78,11 +78,11 @@ export const ProductCard = connect(mapStateToProps, {
       ? Math.floor((+price * (100 - +onSale.discount)) / 100)
       : null;
 
-    const handleCount = async () => {
+    const handleCount = async (count) => {
       try {
         await setCountSize({
           productID: id,
-          selectedCount: defaultCount,
+          selectedCount: count,
         });
       } catch (error) {
         console.log("getCurrentUserData", error);
@@ -138,6 +138,11 @@ export const ProductCard = connect(mapStateToProps, {
                   ({totalRatingCalc(rating)})
                 </CustomText>
               </View>
+
+              <CustomText style={{ color: COLORS.GRAY }}>
+                {brandName}
+              </CustomText>
+              <CustomText weight="medium">{name.toLowerCase()}</CustomText>
 
               <View style={styles.priceRow}>
                 <CustomText
@@ -207,13 +212,37 @@ export const ProductCard = connect(mapStateToProps, {
                       setDefaultCount(
                         defaultCount === 1 ? defaultCount : defaultCount - 1
                       ),
-                        handleCount();
+                        handleCount(defaultCount - 1);
                     }}
                     handlePlus={() => {
-                      setDefaultCount(defaultCount + 1), handleCount();
+                      setDefaultCount(defaultCount + 1),
+                        handleCount(defaultCount + 1);
                     }}
                   />
                 )}
+
+                <View>
+                  {isOnSale ? (
+                    <CustomText
+                      weight="bold"
+                      style={{ color: COLORS.SALE, marginLeft: 10 }}
+                    >
+                      {`${salePrice}$`}
+                    </CustomText>
+                  ) : (
+                    <CustomText
+                      weight="bold"
+                      style={{
+                        color: isOnSale ? COLORS.GRAY : COLORS.TEXT,
+                        lineHeight: 45,
+                        fontSize: 19,
+                        textDecorationLine: isOnSale ? "line-through" : null,
+                      }}
+                    >
+                      {Number.parseFloat(price * defaultCount).toFixed(2)}$
+                    </CustomText>
+                  )}
+                </View>
               </View>
             </View>
           )}

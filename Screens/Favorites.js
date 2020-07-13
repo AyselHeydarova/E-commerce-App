@@ -1,45 +1,62 @@
-import React, {useState,useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import {
-    StyleSheet,
-    View,
-    StatusBar,
-    FlatList,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    ScrollView
+  StyleSheet,
+  View,
+  StatusBar,
+  FlatList,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
-import {COLORS} from "../style/colors";
-import {CustomText} from "../components/CustomText";
-import {Btn} from "../components/Btn";
-import {Filter} from "../Icons/Filter";
-import {PriceArrows} from "../Icons/PriceArrows";
-import {ListViewChanger} from "../Icons/ListViewChanger";
-import {ProductCard} from "../components/ProductCard";
-import {CardView} from "../Icons/CardView";
-import {Back} from "../Icons/Back";
-import {getCurrentUserData, selectUserData} from "../store/users";
-import {connect} from "react-redux";
+import { COLORS } from "../style/colors";
+import { CustomText } from "../components/CustomText";
+import { Btn } from "../components/Btn";
+import { Filter } from "../Icons/Filter";
+import { PriceArrows } from "../Icons/PriceArrows";
+import { ListViewChanger } from "../Icons/ListViewChanger";
+import { ProductCard } from "../components/ProductCard";
+import { CardView } from "../Icons/CardView";
+import { Back } from "../Icons/Back";
+import { getCurrentUserData, selectUserData } from "../store/users";
+import { connect } from "react-redux";
+import { GLOBAL_STYLES } from "../style/globalStyles";
 
 const mapStateToProps = (state) => ({
-    usersData: selectUserData(state),
+  usersData: selectUserData(state),
 });
-export const Favorites = connect(mapStateToProps, {getCurrentUserData})(({getCurrentUserData, usersData, navigation}) => {
+export const Favorites = connect(mapStateToProps, { getCurrentUserData })(
+  ({ getCurrentUserData, usersData, navigation }) => {
     const favorites = usersData.userFavorites || [];
-    console.log(usersData, 'usersData')
-    const clothes = ["T-Shirt", "Shirt", "Skirt", "Shoes", "Short",];
+    const clothes = [
+      "T-Shirts",
+      "Skirts",
+      "Shoes",
+      "Shorts",
+      "Dresses",
+      "Trousers",
+    ];
 
-    const [isListView, setIsListView] = useState(true);
+    const [favoritesData, setFavData] = useState(favorites);
 
+    let favoritesSortedByCategory = [];
     const handleFavs = async () => {
-        try {
-            await getCurrentUserData();
-        } catch (error) {
-            console.log("getNewData", error);
-        }
+      try {
+        await getCurrentUserData();
+      } catch (error) {
+        console.log("getNewData", error);
+      }
     };
-    useEffect(()=>{
-        handleFavs();
-    },[])
+
+    useEffect(() => {
+      handleFavs();
+    }, []);
+    const handleSortByCategory = (category) => {
+      favoritesSortedByCategory = favorites.filter((fav) =>
+        fav.tags.includes(category)
+      );
+      setFavData(favoritesSortedByCategory);
+    };
+
     return (
       <View style={styles.container}>
         <StatusBar />
@@ -59,114 +76,72 @@ export const Favorites = connect(mapStateToProps, {getCurrentUserData})(({getCur
                   bgColor={COLORS.TEXT}
                   btnName={item}
                   titleStyle={{ color: COLORS.BACKGROUND }}
+                  onPress={() => handleSortByCategory(item)}
                 />
-            </View>
-                )}/>
+              </View>
+            )}
+          />
         </View>
-            <View style={styles.filters}>
-                <TouchableOpacity style={styles.filter}>
-                    <Filter width={20} height={20}/>
-                    <CustomText>
-                        Filters
-                    </CustomText>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.filter}>
-                    <PriceArrows width={20} height={20}/>
-                    <CustomText>
-                        Price: lowest to high
-                    </CustomText>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.filter} onPress={() => setIsListView(!isListView)}>
-                    {isListView ?
-                        <ListViewChanger width={20} height={20}/>
-                        :
-                        <CardView width={20} height={20}/>
-                    }
-                </TouchableOpacity>
-            </View>
-            {isListView ?
-                <FlatList
-                    data={favorites}
-                    renderItem={({item}) => (
-                            <ProductCard
-                                product={item}
-                                isInFavs={true}
-                                isRowView={isListView}
-                                isInCatalog={true}
-                                onPress={() => navigation.navigate("SingleProductScreen", {
-                                    product: item,
-                                })}
-                            />
-                    )}
-                    keyExtractor={item => item.id}
-                />
-                :
-                <View style={styles.cardContainer}>
-                    <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                        {favorites.map((name) => (
-                            <View
-                                style={{marginLeft: 1, marginBottom: 15}}
-                                key={`${name}-${Date.now()}`}>
-                                <ProductCard
-                                    product={name}
-                                    isInFavs={true}
-                                    isRowView={isListView}
-                                    isInCatalog={true}
-                                    onPress={() => navigation.navigate("SingleProductScreen", {
-                                        product: name,
-                                    })}
-                                />
-                            </View>
-                        ))}
-                    </ScrollView>
 
-                </View>
-        }
+        <FlatList
+          data={favoritesData}
+          renderItem={({ item }) => (
+            <ProductCard
+              product={item}
+              isInFavs={true}
+              isRowView={true}
+              isInCatalog={true}
+              onPress={() =>
+                navigation.navigate("SingleProductScreen", {
+                  product: item,
+                })
+              }
+            />
+          )}
+          keyExtractor={(item) => item.id}
+        />
       </View>
     );
   }
 );
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: COLORS.BACKGROUND,
-
-    },
-    title: {
-        color: COLORS.TEXT,
-        fontSize: 34,
-        lineHeight: 34,
-        margin: 20,
-
-    },
-    btn: {
-        margin: 10
-    },
-    filters: {
-        height: 60,
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "space-around"
-    },
-    filter: {
-        flexDirection: "row",
-        justifyContent: "space-around"
-
-    },
-    btns: {
-        height: 70,
-        width: "100%",
-
-    },
-    card: {
-        marginLeft: 30,
-        marginBottom: 20
-    },
-    cardContainer: {
-        width: "100%",
-        display: "flex",
-        justifyContent: "space-around",
-    },
-
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.BACKGROUND,
+    paddingHorizontal: GLOBAL_STYLES.PADDING,
+  },
+  title: {
+    color: COLORS.TEXT,
+    fontSize: 34,
+    lineHeight: 34,
+    margin: 20,
+  },
+  btn: {
+    margin: 10,
+  },
+  filters: {
+    height: 60,
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  filter: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  btns: {
+    height: 70,
+    width: "100%",
+  },
+  card: {
+    marginLeft: 30,
+    marginBottom: 20,
+  },
+  cardContainer: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-around",
+    paddingLeft: 15,
+  },
 });
