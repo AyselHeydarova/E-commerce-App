@@ -286,37 +286,6 @@ export const addOrderedProducts = (products) => async () => {
   }
 };
 
-// export const addProductToUsersBag = (product) => async () => {
-//   try {
-//     const userProductsRef = firebase
-//       .firestore()
-//       .collection("users")
-//       .doc(firebase.auth().currentUser.uid);
-//     const userProductsSnap = await userProductsRef.get();
-//     const userData = await userProductsSnap.data();
-//     userData.userProductsInBag.push(product);
-//     userProductsRef.set(
-//       {
-//         userProductsInBa g: userData.userProductsInBag,
-//       },
-//       { merge: true }
-//     );
-//   } catch (e) {
-//     console.log("error", e);
-//   }
-// };
-// export const submitOrder = async (orderInfo) => {
-//   const orderId = await firebase.firestore.collection("orders").push(orderInfo)
-//     .id;
-//   console.log("orderId", orderId);
-//   firebase.firestore
-//     .collection("users")
-//     .doc(firebase.auth().currentUser.uid)
-//     .orders.set({
-//       [orderId]: true,
-//     });
-// };
-
 export const setCountSize = async (payload) => {
   try {
     const countRef = firebase
@@ -360,42 +329,6 @@ export const setCountSize = async (payload) => {
   }
 };
 
-export const addOrderedProducts = (products) => async () => {
-  try {
-    const date = new Date(Date.now()).toLocaleString().split(",")[0];
-    const userProductsRef = firebase
-      .firestore()
-      .collection("users")
-      .doc(firebase.auth().currentUser.uid);
-    const userProductsSnap = await userProductsRef.get();
-    const userData = await userProductsSnap.data();
-    console.log("userData", userData);
-    console.log("length", products.length);
-    const totalAmount = () => {
-      let total = 0;
-      products.forEach((product) => {
-        total = total + product.price * product.selectedCount;
-      });
-      return total;
-    };
-    userData.orders.push({
-      orderNo: randomString(7, "n"),
-      trackingNo: randomString(12),
-      quantity: products.length,
-      totalAmount: totalAmount(),
-      date: date,
-      orderedProducts: products,
-    });
-    userProductsRef.set(
-      {
-        orders: userData.orders,
-      },
-      { merge: true }
-    );
-  } catch (e) {
-    console.log("error", e);
-  }
-};
 
 export const selectShippingAddress = async (pressedIndex) => {
   try {
@@ -470,46 +403,4 @@ export const changeUsernameAndPhoto = async (payload) => {
     console.log("changeUsernameAndPhoto error", error);
   }
 };
-export const setCountSize = async (payload) => {
-  try {
-    const countRef = firebase
-      .firestore()
-      .collection("users")
-      .doc(firebase.auth().currentUser.uid);
 
-    const countSnap = await countRef.get();
-    const countData = countSnap.data();
-    const updatedProducts = [];
-    console.log("payload", payload);
-    console.log("countData", countData);
-    countData.userProductsInBag.forEach((product) => {
-      if (product.id === payload.productID) {
-        updatedProducts.push({
-          ...product,
-          selectedCount: payload.selectedCount + 1,
-        });
-      } else {
-        updatedProducts.push(product);
-      }
-    });
-    console.log("updatedProducts", updatedProducts);
-
-    countRef
-      .set(
-        {
-          userProductsInBag: updatedProducts,
-        },
-
-        { merge: true }
-      )
-      .catch((error) => {
-        console.log(
-          "Something went wrong with added user to firestore: ",
-          error
-        );
-      });
-    // dispatch(addReview(payload));
-  } catch (error) {
-    console.log("countData error", error);
-  }
-};

@@ -22,7 +22,7 @@ export const selectAllProductData = (state) => state[MODULE_NAME];
 export const selectSaleProductData = (state) => state[MODULE_NAME].saleProducts;
 export const selectNewProductData = (state) => state[MODULE_NAME].newProducts;
 export const selectFilteredProducts = (state) =>
-  state[MODULE_NAME].filteredProducts;
+    state[MODULE_NAME].filteredProducts;
 export const selectCurrentProduct = (state) =>
     state[MODULE_NAME].currentProduct;
 export const selectCurrentProductRating = (state) =>
@@ -226,14 +226,14 @@ export const getOnSaleProducts = (sale) => async (dispatch, getState) => {
 export const getCurrentProduct = (productID) => async (dispatch) => {
   try {
     firebase
-      .firestore()
-      .collection("products")
-      .doc(productID)
-      .onSnapshot(function (doc) {
-        dispatch(setCurrentProduct(doc.data()));
+        .firestore()
+        .collection("products")
+        .doc(productID)
+        .onSnapshot(function (doc) {
+          dispatch(setCurrentProduct(doc.data()));
 
-        console.log("getCurrentProduct", doc.data());
-      });
+          console.log("getCurrentProduct", doc.data());
+        });
   } catch (e) {
     console.log("getCurrentProduct error", e);
   }
@@ -242,10 +242,10 @@ export const getCurrentProduct = (productID) => async (dispatch) => {
 export const getFilteredProducts = (payload) => async (dispatch) => {
   try {
     const filteredProducts = await getDataByCategoryGenderAndFilter(
-      payload.category,
-      payload.gender,
-      payload.isSortClicked,
-      payload.sortType
+        payload.category,
+        payload.gender,
+        payload.isSortClicked,
+        payload.sortType
     );
     // console.log("filteredProducts from redux", filteredProducts);
     dispatch(setFilteredProducts(filteredProducts));

@@ -1,11 +1,19 @@
-import React from 'react';
-import Svg, {Path} from 'react-native-svg';
+import React from "react";
+import Svg, { Path } from "react-native-svg";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-    export const LogOut = ({width,height}) => {
+export const LogOut = ({ width, height, onPress }) => {
     return (
-        <Svg height={height} viewBox="0 0 512 512" width={width} style="enable-background:new 0 0 520.349 520.349"  space="preserve">
-            <Path
-                d="M445.223,0H142.589c-6.683,0-12.105,5.423-12.105,12.105v180.979h16.65c-5.006-6.392-7.725-14.224-7.725-22.467
+        <TouchableOpacity onPress={onPress}>
+            <Svg
+                height={height}
+                viewBox="0 0 512 512"
+                width={width}
+                style="enable-background:new 0 0 520.349 520.349"
+                space="preserve"
+            >
+                <Path
+                    d="M445.223,0H142.589c-6.683,0-12.105,5.423-12.105,12.105v180.979h16.65c-5.006-6.392-7.725-14.224-7.725-22.467
 		c-0.006-9.764,3.8-18.943,10.708-25.845c1.421-1.421,2.973-2.687,4.583-3.845V24.211h278.417v8.697l-127.104,92.285v395.155
 		l127.796-92.787c1.626,4.77,6.095,8.228,11.414,8.228c6.685,0,12.105-5.426,12.105-12.105V12.105
 		C457.328,5.417,451.907,0,445.223,0z M354.031,331.973c-5.71,0-10.468-7.046-11.691-16.485h-13.63v-10.592h13.819
@@ -16,7 +24,9 @@ import Svg, {Path} from 'react-native-svg';
 		c-4.811-4.817-4.805-12.613,0-17.419l37.974-37.977H75.336c-6.803,0-12.315-5.512-12.315-12.315
 		c0-6.803,5.506-12.318,12.321-12.318h122.917l-37.968-37.974c-4.805-4.805-4.811-12.608,0-17.413
 		c4.812-4.812,12.614-4.812,17.425,0L236.706,218.385z"
-                fill="#ffffff"/>
-        </Svg>
+                    fill="#ffffff"
+                />
+            </Svg>
+        </TouchableOpacity>
     );
 };

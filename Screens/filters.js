@@ -19,20 +19,6 @@ import { Buttons } from "../components/Buttons";
 export const Filters = ({ navigation, route }) => {
   const { finalProducts } = route.params;
 
-  const [categories, setCategories] = useState([
-    {
-      size: "All",
-      state: false,
-    },
-    {
-      size: "Women",
-      state: false,
-    },
-    {
-      size: "Men",
-      state: false,
-    },
-  ]);
   const [colors, setColors] = useState([
     {
       color: "black",
@@ -140,12 +126,9 @@ export const Filters = ({ navigation, route }) => {
         return item.size === size;
       });
 
-      console.log("col", s);
-      console.log(size);
       return product.sizes.includes(s[0]);
     });
     setFilteredProducts(filteredProductsBySize);
-    console.log("filteredProductsBySize", filteredProductsBySize);
   };
   const handleColor = (color, state, index) => {
     let updatedColors = [...colors];
@@ -158,16 +141,12 @@ export const Filters = ({ navigation, route }) => {
       filteredProducts.length === 0 ? finalProducts : filteredProducts;
     const filteredProductsByColor = products.filter((product) => {
       const col = product.colors.filter((item) => {
-        console.log("color", item.color);
         return item.color === color;
       });
-
       return product.colors.includes(col[0]);
     });
     setFilteredProducts(filteredProductsByColor);
-    console.log("filteredProductsByColor", filteredProductsByColor);
   };
-  console.log("filteredProducts", filteredProducts);
   const handleFilter = () => {
     navigation.navigate("Catalog", {
       filteredProducts:

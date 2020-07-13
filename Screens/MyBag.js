@@ -15,6 +15,7 @@ import {
     deleteBagProducts
 } from "../store/users";
 import {connect} from "react-redux";
+import {totalAmount} from "../Utils/Calculations";
 
 const mapStateToProps = (state) => ({
     usersData: selectUserData(state),
@@ -29,18 +30,10 @@ export const MyBag = connect(mapStateToProps,
 (({
       getCurrentUserData,
       usersData,
-      addOrderedProducts,
       deleteBagProducts,
       navigation
   }) => {
     const bagProducts = usersData.userProductsInBag || [];
-    const totalAmount = () => {
-        let total = 0;
-        bagProducts.forEach((product) => {
-            total = total + product.price * product.selectedCount
-        });
-        return total;
-    };
 
     const handleUserData = async () => {
         try {
@@ -49,18 +42,10 @@ export const MyBag = connect(mapStateToProps,
             console.log("getCurrentUserData", error);
         }
     };
-    const handleDeleteBagProducts = async () => {
-        try {
-            await deleteBagProducts();
-        } catch (error) {
-            console.log("getCurrentUserData", error);
-        }
-    };
     const handleCheckOut = () => {
-        // addOrderedProducts(bagProducts);
-        // handleDeleteBagProducts();
-        // console.log('bagProducts', bagProducts)
-        navigation.navigate("Checkout");
+        navigation.navigate("Checkout",{
+            bagProducts:bagProducts
+        });
 
     };
 
@@ -92,7 +77,7 @@ export const MyBag = connect(mapStateToProps,
                     Total amount:
                 </CustomText>
                 <CustomText weight={'bold'} style={styles.totalCost}>
-                    ${Math.floor(totalAmount())}
+                    ${Math.floor(totalAmount(bagProducts))}
                 </CustomText>
             </View>
             <TouchableOpacity style={styles.btn}>
