@@ -21,11 +21,8 @@ export const ClientReviewsList = connect(mapStateToProps, {
     getCurrentProduct(productID);
   }, []);
 
-  console.log("productID", productID);
-
   const reviews = currentProduct?.reviews;
 
-  console.log("review", reviews);
   return (
       <View>
         <CustomText style={styles.text} weight="medium">

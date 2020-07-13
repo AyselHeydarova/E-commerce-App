@@ -160,6 +160,7 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
                     <ListViewChanger width={20} height={20} />
                 ) : (
                     <CardView width={20} height={20} />
+
                 )}
               </TouchableOpacity>
             </View>

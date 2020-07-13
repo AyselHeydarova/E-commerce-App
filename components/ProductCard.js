@@ -1,28 +1,39 @@
-import React, {useState} from "react";
-import {addProductToUsersBag, selectCount, setCount, setCountSize} from "../store/users";
-import {Cross} from "../Icons/Cross";
-import {View, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback} from "react-native";
-import {CustomText} from "./CustomText";
-import {COLORS} from "../style/colors";
+import React, { useState } from "react";
+import {
+  addProductToUsersBag,
+  selectCount,
+  setCount,
+  setCountSize,
+} from "../store/users";
+import { Cross } from "../Icons/Cross";
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { CustomText } from "./CustomText";
+import { COLORS } from "../style/colors";
 import StarRating from "react-native-star-rating";
-import {ProductTag} from "../commons/ProductTag";
-import {Heart} from "../Icons/Heart";
-import {Counter} from "./Counter";
-import {averageRatingCalc, totalRatingCalc} from "../Utils/Calculations";
-import {selectAllProductData, setAddToBag} from "../store/products";
-import {connect} from "react-redux";
-import {columnStyles} from "../style/globalStyles";
-import {Bag} from "../Icons/Bag";
+import { ProductTag } from "../commons/ProductTag";
+import { Heart } from "../Icons/Heart";
+import { Counter } from "./Counter";
+import { averageRatingCalc, totalRatingCalc } from "../Utils/Calculations";
+import { selectAllProductData, setAddToBag } from "../store/products";
+import { connect } from "react-redux";
+import { columnStyles } from "../style/globalStyles";
+import { Bag } from "../Icons/Bag";
 
 const mapStateToProps = (state) => ({
-    allProducts: selectAllProductData(state),
-    count: selectCount(state),
+  allProducts: selectAllProductData(state),
+  count: selectCount(state),
 });
 export const ProductCard = connect(mapStateToProps, {
-    setAddToBag,
-    setCount,
-    setCountSize,
-    addProductToUsersBag,
+  setAddToBag,
+  setCount,
+  setCountSize,
+  addProductToUsersBag,
 })(
     ({
          addProductToUsersBag,
@@ -233,11 +244,13 @@ export const ProductCard = connect(mapStateToProps, {
                                isHeartClicked={isHeartClicked}
                                onPress={() => handleFavoriteProduct()}/>
                     }
-                </View>
-            </TouchableOpacity>
-        );
-    });
 
+                </View>
+
+      </TouchableOpacity>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
     cardWrapper: {
@@ -311,4 +324,5 @@ const styles = StyleSheet.create({
         top: -13,
         right: 0,
     }
+
 });

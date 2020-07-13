@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import {
-    View,
-    StyleSheet,
-    TextInput,
-    KeyboardAvoidingView,
-    TouchableWithoutFeedback,
-    Keyboard,
+
+  View,
+  StyleSheet,
+  TextInput,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { COLORS } from "../../style/colors";
 import { CustomText } from "../../components/CustomText";
@@ -84,8 +85,6 @@ export const ClientReview = connect(mapStateToProps, { sendReview })(
                             increaseRating(increaseRatingFields);
                         }}
                     />
-
-                    {/* <ActionModal btnName="send review" /> */}
                 </View>
             </TouchableWithoutFeedback>
         );
