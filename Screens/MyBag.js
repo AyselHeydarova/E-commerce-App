@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import * as firebase from "firebase";
+import React, { useEffect } from "react";
 import "firebase/firestore";
 import {
   StyleSheet,
@@ -7,34 +6,27 @@ import {
   StatusBar,
   FlatList,
   TouchableOpacity,
-  ScrollView,
 } from "react-native";
 import { COLORS } from "../style/colors";
 import { CustomText } from "../components/CustomText";
 import { Btn } from "../components/Btn";
 import { ProductCard } from "../components/ProductCard";
-import { CardView } from "../Icons/CardView";
-import {
-  selectUserData,
-  getCurrentUserData,
-  addOrderedProducts,
-  selectCount,
-  deleteBagProducts,
-} from "../store/users";
+import { selectUserData, getCurrentUserData } from "../store/users";
 import { connect } from "react-redux";
 import { totalAmount } from "../Utils/Calculations";
 
 const mapStateToProps = (state) => ({
   usersData: selectUserData(state),
-  count: selectCount(state),
 });
 export const MyBag = connect(mapStateToProps, {
   getCurrentUserData,
-  addOrderedProducts,
-  deleteBagProducts,
-})(({ getCurrentUserData, usersData, deleteBagProducts, navigation }) => {
-  const bagProducts = usersData.userProductsInBag || [];
-
+})(({ getCurrentUserData, usersData, navigation }) => {
+  let bagProducts;
+  if (usersData.userProductsInBag) {
+    bagProducts = usersData.userProductsInBag;
+  } else {
+    bagProducts = [];
+  }
   const handleUserData = async () => {
     try {
       await getCurrentUserData();

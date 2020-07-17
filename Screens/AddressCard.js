@@ -14,16 +14,18 @@ export const AddressCard = ({
   editPressHandler,
   isSelected,
   onPress,
+  isInCheckout = false,
 }) => {
-  // const [clicked, setClicked] = useState(false);
   return (
     <View style={styles.container}>
       <View style={styles.row}>
         <CustomText weight="medium">{fullName}</CustomText>
         <TouchableOpacity onPress={editPressHandler}>
-          <CustomText style={styles.edit} weight="bold">
-            Edit
-          </CustomText>
+          {isInCheckout ? null : (
+            <CustomText style={styles.edit} weight="bold">
+              Edit
+            </CustomText>
+          )}
         </TouchableOpacity>
       </View>
 
@@ -31,21 +33,23 @@ export const AddressCard = ({
       <CustomText>
         {city}, {state} {zipCode}, {country}
       </CustomText>
-      <TouchableOpacity style={styles.checkboxWrapper} onPress={onPress}>
-        <View
-          style={[
-            styles.checkbox,
-            {
-              backgroundColor: isSelected ? COLORS.TEXT : null,
-              borderColor: isSelected ? null : COLORS.GRAY,
-              borderWidth: isSelected ? null : 2,
-            },
-          ]}
-        >
-          <AcceptIcon width={20} height={20} color={COLORS.DARK} />
-        </View>
-        <CustomText>Use as the shipping address</CustomText>
-      </TouchableOpacity>
+      {isInCheckout ? null : (
+        <TouchableOpacity style={styles.checkboxWrapper} onPress={onPress}>
+          <View
+            style={[
+              styles.checkbox,
+              {
+                backgroundColor: isSelected ? COLORS.TEXT : null,
+                borderColor: isSelected ? null : COLORS.GRAY,
+                borderWidth: isSelected ? null : 2,
+              },
+            ]}
+          >
+            <AcceptIcon width={20} height={20} color={COLORS.DARK} />
+          </View>
+          <CustomText>Use as the shipping address</CustomText>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

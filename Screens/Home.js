@@ -1,62 +1,42 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Image,
-  ScrollView,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
-import homeImage from "../assets/homeImage.png";
+import { StyleSheet, View, Image, ScrollView, FlatList } from "react-native";
+import { connect } from "react-redux";
+
 import { Btn } from "../components/Btn";
-import { ProductCard } from "../components/ProductCard";
-import { COLORS } from "../style/colors";
 import { CustomText } from "../components/CustomText";
+import { getCurrentUserData } from "../store/users";
+import { ProductCard } from "../components/ProductCard";
 import {
-  getAllData,
-  selectAllProductData,
   selectSaleProductData,
   getOnSaleProducts,
   selectNewProductData,
-  selectFilteredProducts,
   getNewData,
   getFilteredProducts,
-  getCurrentProduct,
-  selectCurrentProduct,
 } from "../store/products";
-import { connect } from "react-redux";
+import { COLORS } from "../style/colors";
 
+import homeImage from "../assets/homeImage.png";
 import banner from "../assets/Small_banner.png";
-import { setUsersData, getCurrentUserData } from "../store/users";
-import { LogOut } from "../Icons/LogOut";
+import { getDataByCategoryGenderAndFilter } from "../API";
 
 const mapStateToProps = (state) => ({
-  allProducts: selectAllProductData(state),
   saleProducts: selectSaleProductData(state),
   newProducts: selectNewProductData(state),
-  filteredProduct: selectFilteredProducts(state),
-  currentProduct: selectCurrentProduct(state),
 });
 const Home = connect(mapStateToProps, {
-  getAllData,
   getOnSaleProducts,
   getNewData,
-  setUsersData,
+  getCurrentUserData,
   getFilteredProducts,
-  getCurrentProduct,
 })(
   ({
-    getAllData,
     getNewData,
     newProducts,
-    allProducts,
     saleProducts,
     getOnSaleProducts,
     navigation,
-    setUsersData,
+    getCurrentUserData,
     getFilteredProducts,
-    filteredProduct,
-    getCurrentProduct,
   }) => {
     const [showSale, setShowSale] = useState(false);
 
@@ -72,22 +52,31 @@ const Home = connect(mapStateToProps, {
       try {
         await getOnSaleProducts("sale");
       } catch (error) {
-        console.log("getAllData", error);
+        console.log("getOnSaleProducts", error);
       }
       console.log(saleProducts);
     };
-
-    const handleFilter = async () => {
+    const handleGetCurrentUserData = async () => {
       try {
-        await generalFiltering("Skirts", "women", "blue");
+        const user = await getCurrentUserData();
+        console.log("user home", user);
       } catch (error) {
-        console.log("handleFilter err", error);
+        console.log("getCurrentUserData", error);
       }
     };
 
+    const sortedFields = {
+      category: "Trousers",
+      gender: "women",
+      sortType: "desc",
+    };
+    const sort = async () => await getFilteredProducts(sortedFields);
+    // await getDataByCategoryGenderAndFilter("Trousers", "women", "asc");
+
     useEffect(() => {
       handleNewProducts();
-      handleFilter();
+      handleGetCurrentUserData();
+      sort();
     }, []);
 
     return (

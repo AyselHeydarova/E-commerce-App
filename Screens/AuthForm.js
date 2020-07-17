@@ -1,16 +1,9 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  KeyboardAvoidingView,
-  Text,
-  Image,
-} from "react-native";
+import { StyleSheet, View, Image, ActivityIndicator } from "react-native";
 import { connect } from "react-redux";
 
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { Input } from "../components/Field";
-import rightIcon from "../assets/rightArrow.png";
 import { Btn } from "../components/Btn";
 import { COLORS } from "../style/colors";
 import { GLOBAL_STYLES } from "../style/globalStyles";
@@ -31,6 +24,8 @@ export const AuthForm = connect(mapStateToProps, {
   signupUser,
   signIn,
 })(({ signIn, signupUser, authStatus, userID }) => {
+  const [ind, setInd] = useState(true);
+
   const [isLogin, setIsLogin] = useState(false);
   const [fields, setFields] = useState({
     username: "",
@@ -50,7 +45,7 @@ export const AuthForm = connect(mapStateToProps, {
       <CustomText weight="bold" style={{ fontSize: 34, marginBottom: 70 }}>
         {isLogin ? "Login" : "Sign up"}
       </CustomText>
-
+      {ind ? null : <ActivityIndicator size="small" color="#0000ff" />}
       {!isLogin && (
         <Input
           name={"Name"}
@@ -94,7 +89,7 @@ export const AuthForm = connect(mapStateToProps, {
         bgColor={COLORS.PRIMARY}
         titleStyle={{ color: "#F5F5F5" }}
         onPress={() => {
-          isLogin ? signIn(fields) : signupUser(fields);
+          isLogin ? signIn(fields) : signupUser(fields), setInd(false);
         }}
       />
     </View>

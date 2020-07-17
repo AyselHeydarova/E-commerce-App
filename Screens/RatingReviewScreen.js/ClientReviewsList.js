@@ -15,36 +15,49 @@ const mapStateToProps = (state) => ({
 export const ClientReviewsList = connect(mapStateToProps, {
   getCurrentProduct,
 })(({ currentProduct, getCurrentProduct, productID }) => {
-
-
+  const handleGetCurrentProduct = async () => {
+    try {
+      await getCurrentProduct(productID);
+    } catch (error) {
+      console.log("handleGetCurrentProduct", error);
+    }
+  };
   useEffect(() => {
-    getCurrentProduct(productID);
+    handleGetCurrentProduct();
   }, []);
 
-  const reviews = currentProduct?.reviews;
+  let reviews;
+
+  if (currentProduct.reviews) {
+    reviews = currentProduct.reviews;
+  } else {
+    reviews = [];
+  }
+
+  console.log("reviews client", reviews);
 
   return (
-      <View>
-        <CustomText style={styles.text} weight="medium">
-          {reviews.length} reviews
-        </CustomText>
-        {reviews ? (
-            <FlatList
-                data={reviews}
-                contentContainerStyle={styles.container}
-                renderItem={({ item, index }) => (
-                    <ReviewItem
-                        username={item.username}
-                        key={index}
-                        userImg={item.userPhoto}
-                        rating={item.givenRating}
-                        comment={item.review_text}
-                        date={item.date}
-                    />
-                )}
+    <View>
+      <CustomText style={styles.text} weight="medium">
+        {reviews.length} reviews
+      </CustomText>
+      {reviews ? (
+        <FlatList
+          data={reviews || []}
+          contentContainerStyle={styles.container}
+          renderItem={({ item, index }) => (
+            <ReviewItem
+              username={item.username}
+              key={index}
+              userImg={item.userPhoto}
+              rating={item.givenRating}
+              comment={item.review_text}
+              date={item.date}
             />
-        ) : null}
-      </View>
+          )}
+        />
+      ) : null}
+    </View>
   );
 });
 

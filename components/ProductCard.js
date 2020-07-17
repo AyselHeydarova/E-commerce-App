@@ -1,18 +1,7 @@
 import React, { useState } from "react";
-import {
-  addProductToUsersBag,
-  selectCount,
-  setCount,
-  setCountSize,
-} from "../store/users";
+import { setCount } from "../store/users";
 import { Cross } from "../Icons/Cross";
-import {
-  View,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { CustomText } from "./CustomText";
 import { COLORS } from "../style/colors";
 import StarRating from "react-native-star-rating";
@@ -23,11 +12,10 @@ import { averageRatingCalc, totalRatingCalc } from "../Utils/Calculations";
 import { selectAllProductData, setAddToBag } from "../store/products";
 import { connect } from "react-redux";
 import { columnStyles } from "../style/globalStyles";
-import { Bag } from "../Icons/Bag";
+import { setCountSize, addProductToUsersBag } from "../API";
 
 const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),
-  count: selectCount(state),
 });
 export const ProductCard = connect(mapStateToProps, {
   setAddToBag,

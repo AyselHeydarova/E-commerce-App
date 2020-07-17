@@ -5,11 +5,9 @@ import { COLORS } from "../style/colors";
 import { GLOBAL_STYLES } from "../style/globalStyles";
 import { Plus } from "../Icons/Plus";
 import { connect } from "react-redux";
-import {
-  selectCurrentUserShippingAddresses,
-  selectShippingAddress,
-} from "../store/users";
+import { selectCurrentUserShippingAddresses } from "../store/users";
 import { CustomText } from "../components/CustomText";
+import { selectShippingAddress } from "../API";
 
 const mapStateToProps = (state) => ({
   shippingAddresses: selectCurrentUserShippingAddresses(state),

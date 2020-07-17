@@ -12,8 +12,7 @@ const SET_APP_SALE_PRODUCTS = "SET_APP_SALE_PRODUCTS";
 const SET_APP_NEW_PRODUCTS = "SET_APP_NEW_PRODUCTS";
 const SET_FILTERED_PRODUCTS = "SET_FILTERED_PRODUCTS";
 const SET_CURRENT_PRODUCT = "SET_CURRENT_PRODUCT";
-const ADD_TO_BAG = "ADD_TO_BAG";
-const ADD_REVIEW = "ADD_REVIEW";
+const TOGGLE_MODAL = "TOGGLE_MODAL";
 
 export const MODULE_NAME = "products";
 
@@ -21,7 +20,7 @@ export const selectAllProductData = (state) => state[MODULE_NAME];
 export const selectSaleProductData = (state) => state[MODULE_NAME].saleProducts;
 export const selectNewProductData = (state) => state[MODULE_NAME].newProducts;
 export const selectFilteredProducts = (state) =>
-    state[MODULE_NAME].filteredProducts;
+  state[MODULE_NAME].filteredProducts;
 export const selectCurrentProduct = (state) =>
   state[MODULE_NAME].currentProduct;
 export const selectCurrentProductRating = (state) =>
@@ -30,7 +29,10 @@ export const selectCurrentProductRating = (state) =>
 export const selectCategory = (state, category) =>
   state[MODULE_NAME].allProducts[category];
 
+export const selectIsModalOpen = (state) => state[MODULE_NAME].isModalOpen;
+
 const initialState = {
+  isModalOpen: true,
   currentProduct: [],
   filteredProducts: [],
   allProducts: [],
@@ -70,27 +72,10 @@ export function productsReducer(state = initialState, { type, payload }) {
         currentProduct: payload,
       };
 
-    case ADD_REVIEW:
+    case TOGGLE_MODAL:
       return {
         ...state,
-        newProducts: state.newProducts.map((product) => {
-          if (product.id === payload.productID) {
-            return {
-              ...product,
-              reviews: [
-                ...product.reviews,
-                {
-                  username: payload.username,
-                  userPhoto: payload.userPhoto,
-                  review_text: payload.review_text,
-                  givenRating: payload.givenRating,
-                },
-              ],
-            };
-          } else {
-            return product;
-          }
-        }),
+        isModalOpen: payload,
       };
     default:
       return state;
@@ -118,91 +103,15 @@ export const setAppNewProducts = (payload) => ({
   type: SET_APP_NEW_PRODUCTS,
   payload,
 });
-export const setAddToBag = (payload) => ({
-  type: ADD_TO_BAG,
+
+export const toggleModal = (payload) => ({
+  type: TOGGLE_MODAL,
   payload,
 });
 
-export const addReview = (payload) => ({
-  type: ADD_REVIEW,
-  payload,
-});
-
-export const sendReview = (payload) => async (dispatch, getState) => {
+export const getAllData = (gender, category) => async (dispatch, getState) => {
   try {
-    const reviewRef = firebase
-      .firestore()
-      .collection("products")
-      .doc(payload.productID);
-
-    const reviewSnap = await reviewRef.get();
-    const reviewData = reviewSnap.data();
-
-    reviewData.reviews.push({
-      username: payload.username,
-      userPhoto: payload.userPhoto,
-      review_text: payload.review_text,
-      givenRating: payload.givenRating,
-    });
-
-    reviewRef
-      .set(
-        {
-          reviews: reviewData.reviews,
-        },
-
-        { merge: true }
-      )
-      .catch((error) => {
-        console.log(
-          "Something went wrong with added user to firestore: ",
-          error
-        );
-      });
-    dispatch(addReview(payload));
-  } catch (error) {
-    console.log("sendReview error", error);
-  }
-};
-
-export const increaseRating = async (payload) => {
-  try {
-    const ratingRef = firebase
-      .firestore()
-      .collection("products")
-      .doc(payload.productID);
-
-    const ratingSnap = await ratingRef.get();
-    const ratingData = ratingSnap.data();
-
-    const selectedRating = ratingData.rating[payload.givenRating - 1];
-    const newValue = Object.values(selectedRating)[0] + 1;
-    const key = Object.keys(selectedRating)[0];
-
-    selectedRating[key] = newValue;
-
-    ratingRef
-      .set(
-        {
-          rating: ratingData.rating,
-        },
-
-        { merge: true }
-      )
-      .catch((error) => {
-        console.log(
-          "Something went wrong with increaseRating to firestore: ",
-          error
-        );
-      });
-  } catch (error) {
-    console.log("increaseRating error", error);
-  }
-};
-
-export const getAllData = (category, gender) => async (dispatch, getState) => {
-  try {
-    const allProducts = await getData(category, gender);
+    const allProducts = await getData(gender, category);
     dispatch(setAppProducts(allProducts));
   } catch (error) {
     console.log("getAllData", error);
@@ -230,14 +139,13 @@ export const getOnSaleProducts = (sale) => async (dispatch, getState) => {
 export const getCurrentProduct = (productID) => async (dispatch) => {
   try {
     firebase
-        .firestore()
-        .collection("products")
-        .doc(productID)
-        .onSnapshot(function (doc) {
-          dispatch(setCurrentProduct(doc.data()));
-
-          console.log("getCurrentProduct", doc.data());
-        });
+      .firestore()
+      .collection("products")
+      .doc(productID)
+      .onSnapshot(function (doc) {
+        dispatch(setCurrentProduct(doc.data()));
+        console.log("getCurrentProduct redux", doc.data());
+      });
   } catch (e) {
     console.log("getCurrentProduct error", e);
   }
@@ -246,12 +154,13 @@ export const getCurrentProduct = (productID) => async (dispatch) => {
 export const getFilteredProducts = (payload) => async (dispatch) => {
   try {
     const filteredProducts = await getDataByCategoryGenderAndFilter(
-        payload.category,
-        payload.gender,
-        payload.isSortClicked,
-        payload.sortType
+      payload.category,
+      payload.gender,
+      // payload.isSortClicked,
+      payload.sortType
     );
-    // console.log("filteredProducts from redux", filteredProducts);
+    console.log("payload", payload);
+    console.log("filteredProducts from redux", filteredProducts);
     dispatch(setFilteredProducts(filteredProducts));
   } catch (error) {
     console.log("getFilteredProducts error ", error);
