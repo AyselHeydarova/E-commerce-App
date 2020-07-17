@@ -21,7 +21,7 @@ import { connect } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import * as FileSystem from "expo-file-system";
-import { changeUsernameAndPhoto } from "../../store/users";
+import { changeUsernameAndPhoto } from "../../API";
 
 const getPermissions = async () => {
   try {

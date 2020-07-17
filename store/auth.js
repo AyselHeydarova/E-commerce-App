@@ -11,9 +11,6 @@ export const selectAuthUserID = (state) => state[MODULE_NAME].userID;
 export const selectAuthUsername = (state) => state[MODULE_NAME].username;
 export const selectAuthPhoto = (state) => state[MODULE_NAME].photo;
 
-// export const selectUsernameByID = (state, ID) =>
-//   state[MODULE_NAME].filter((user) => user.userID === ID).username;
-
 // ACTION CREATORS
 export const setAuthSuccess = (payload) => ({
   type: SET_AUTH_SUCCESS,
@@ -69,18 +66,20 @@ export const signupUser = (userDetails) => async (dispatch) => {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(async () => {
+        const { currentUser } = await firebase.auth();
+        let userUid = currentUser.uid;
         firebase
           .firestore()
           .collection("users")
-          .doc(firebase.auth().currentUser.uid)
+          .doc(userUid)
           .set({
             username: username,
             email: email,
-            password: password,
-            userFavorites:[],
-            userProductsInBag:[],
-            orders:[]
+            userFavorites: [],
+            userProductsInBag: [],
+            orders: [],
+            paymentMethods: [],
           })
           .catch((error) => {
             console.log(
@@ -89,17 +88,16 @@ export const signupUser = (userDetails) => async (dispatch) => {
             );
           });
 
-        let uid = firebase.auth().currentUser.uid;
-        console.log("uid", uid);
+        // let uid = firebase.auth().currentUser.uid;
+        // console.log("uid", uid);
 
         dispatch(
           setAuthSuccess({
             userID: uid,
             username,
-            // photo,
           })
         );
-        console.log("firebase auth", firebase.auth());
+        // console.log("firebase auth", firebase.auth());
       });
   } catch (error) {
     console.log("Something went wrong with sign up: ", error);
@@ -112,27 +110,30 @@ export const signIn = (userDetails) => async (dispatch) => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(async () => {
+        const { currentUser } = await firebase.auth();
+        let userUid = currentUser.uid;
+
+        console.log("signIN uid", userUid);
         firebase
           .firestore()
           .collection("users")
-          .doc(firebase.auth().currentUser.uid)
+          .doc(userUid)
           .get()
           .then(function (doc) {
             console.log("userDattaaa", doc.data());
           });
+
+        dispatch(
+          setAuthSuccess({
+            userID: userUid,
+            username,
+            // photo,
+          })
+        );
       });
 
-    let uid = firebase.auth().currentUser.uid;
-    console.log("uid", uid);
-
-    dispatch(
-      setAuthSuccess({
-        userID: uid,
-        username,
-        // photo,
-      })
-    );
+    // let uid = firebase.auth().currentUser.uid;
   } catch (error) {
     console.log("signIN error", error);
   }

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { COLORS } from "../style/colors";
 import { CustomText } from "../components/CustomText";
-import MultiSlider from "@ptomasroos/react-native-multi-slider";
+// import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import { ColorContainer } from "../components/ColorContainer";
 import { SizeContainer } from "../components/SizeContainer";
 import { Forward } from "../Icons/Forward";
@@ -170,14 +170,14 @@ export const Filters = ({ navigation, route }) => {
           <Text style={[styles.title, { position: "absolute", right: 0 }]}>
             ${values[1]}
           </Text>
-          <MultiSlider
+          {/* <MultiSlider
             values={[values[0], values[1]]}
             sliderLength={300}
             onValuesChange={multiSliderValuesChange}
             min={0}
             max={2000}
             step={1}
-          />
+          /> */}
         </View>
       </View>
 

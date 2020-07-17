@@ -6,7 +6,8 @@ import { ActionModal } from "../components/ActionModal";
 import { COLORS } from "../style/colors";
 import { Btn } from "../components/Btn";
 import { connect } from "react-redux";
-import { saveShippingAddress } from "../store/users";
+import { saveShippingAddress } from "../API";
+// import { saveShippingAddress } from "../store/users";
 
 export const AddingShippingAddress = connect(null, { saveShippingAddress })(
   ({ saveShippingAddress, route, navigation }) => {
@@ -81,6 +82,7 @@ export const AddingShippingAddress = connect(null, { saveShippingAddress })(
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: COLORS.BACKGROUND,
     padding: GLOBAL_STYLES.PADDING,
   },

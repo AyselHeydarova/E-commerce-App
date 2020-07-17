@@ -4,13 +4,11 @@ import { persistStore, persistReducer } from "redux-persist";
 
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { listsReducer, updateListContent } from "./lists";
 import { productsReducer } from "./products";
 import { authReducer } from "./auth";
 import { usersReducer } from "./users";
 
 const rootReducer = combineReducers({
-  lists: listsReducer,
   auth: authReducer,
   users: usersReducer,
   products: productsReducer,
