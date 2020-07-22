@@ -1,11 +1,11 @@
 import React from "react";
 import { CategoriesOf } from "../Screens/CategoriesOf";
-
 import { createStackNavigator } from "@react-navigation/stack";
 import { Categories } from "../Screens/Categories";
 import { Catalog } from "../Screens/Catalog";
 import { SingleProductScreen } from "../Screens/SingleProductScreen";
 import { BrandsScreen } from "../Screens/BrandsScreen";
+import { RatingReviewScreen } from "../Screens/RatingReviewScreen.js";
 import { Filters } from "../Screens/filters";
 import { COLORS } from "../style/colors";
 import { Back } from "../Icons/Back";
@@ -75,6 +75,19 @@ export const ShopStack = () => {
         })}
         name="Filters"
         component={Filters}
+      />
+      <Screen
+        name="Rating"
+        component={RatingReviewScreen}
+        options={({ navigation }) => ({
+          title: "",
+          headerStyle: {
+            backgroundColor: COLORS.BACKGROUND,
+            elevation: 0,
+          },
+          headerTintColor: COLORS.TEXT,
+          headerLeft: () => <Back onPress={() => navigation.goBack()} />,
+        })}
       />
     </Navigator>
   );

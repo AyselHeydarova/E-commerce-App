@@ -1,17 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
   StatusBar,
   FlatList,
-  TouchableOpacity,
   ScrollView,
-  Image,
 } from "react-native";
 import { COLORS } from "../../style/colors";
 import { CustomText } from "../../components/CustomText";
 import { Btn } from "../../components/Btn";
 import { ProductCard } from "../../components/ProductCard";
+import { GLOBAL_STYLES } from "../../style/globalStyles";
 
 export const OrderDetails = ({ navigation, route }) => {
   const {
@@ -21,34 +20,33 @@ export const OrderDetails = ({ navigation, route }) => {
     date,
     total,
     orderedProducts,
-    shippingAddresses,
+    deliveryMethod,
+    paymentMethod,
+    shippingAddress,
   } = route.params;
-  console.log("shippingAddresses", shippingAddresses);
-  const currentAddress = shippingAddresses.filter(
-    (address) => address.isSelected == true
-  );
+
   const orderInfo = [
     {
       infoTitle: "Shipping Address:",
-      infoText: `${currentAddress[0].address}, ${currentAddress[0].city},
-            ${currentAddress[0].country}`,
+      infoText: `${shippingAddress.address}, ${shippingAddress.city},
+        ${shippingAddress.country}`,
     },
     {
-      infoTitle: " Payment method:",
-      infoText: `**** **** **** 9876`,
+      infoTitle: "Payment method:",
+      infoText: `**** **** **** ${paymentMethod.cardNumber.slice(15, 19)}`,
     },
     {
       infoTitle: "Delivery method:",
-      infoText: `FedEx, 3 days,15$`,
+      infoText: `${deliveryMethod.deliveryMethodName}, 3 days,${deliveryMethod.deliveryMethodCost}$`,
     },
     {
       infoTitle: "Discount:",
       infoText: `10%,Personal promo
-             code`,
+         code`,
     },
     {
       infoTitle: "Total Amount:",
-      infoText: `${total}$`,
+      infoText: `${Math.floor(total)}$`,
     },
   ];
   return (
@@ -86,7 +84,7 @@ export const OrderDetails = ({ navigation, route }) => {
                 />
               </View>
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => `${item.id - item.color}`}
           />
         </View>
         <CustomText weight={"medium"} style={styles.orderInfoTitle}>
@@ -126,25 +124,13 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     backgroundColor: COLORS.BACKGROUND,
-    padding: 10,
+    paddingHorizontal: GLOBAL_STYLES.PADDING,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 20,
   },
-  title: {
-    color: COLORS.TEXT,
-    fontSize: 30,
-    lineHeight: 28,
-    margin: 10,
-    marginLeft: 40,
-  },
-  backIcon: {
-    marginTop: 10,
-    marginLeft: 10,
-  },
-
   date: {
     paddingRight: 10,
     color: COLORS.GRAY,
@@ -164,7 +150,6 @@ const styles = StyleSheet.create({
   cards: {
     width: "100%",
     display: "flex",
-    // alignItems: "center",
   },
   orderInfoTitle: {
     fontSize: 19,

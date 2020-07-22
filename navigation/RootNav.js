@@ -1,6 +1,5 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-
 import { connect } from "react-redux";
 import MyTabs from "./MyTabs";
 import { selectAuthStatus } from "../store/auth";
@@ -11,10 +10,5 @@ const mapStateToProps = (state) => ({
 });
 
 export const RootNav = connect(mapStateToProps)(({ auth }) => (
-    <NavigationContainer>{auth ? <MyTabs /> : <AuthStack />}</NavigationContainer>
-
+  <NavigationContainer>{auth ? <MyTabs /> : <AuthStack />}</NavigationContainer>
 ));
-{/*<NavigationContainer>*/}
-{/*    <MyTabs />*/}
-{/*</NavigationContainer>*/}
-

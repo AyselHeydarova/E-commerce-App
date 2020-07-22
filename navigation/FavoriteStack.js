@@ -1,8 +1,6 @@
 import React from "react";
-
 import { createStackNavigator } from "@react-navigation/stack";
 import { SingleProductScreen } from "../Screens/SingleProductScreen";
-
 import { Favorites } from "../Screens/Favorites";
 import { COLORS } from "../style/colors";
 import { Back } from "../Icons/Back";

@@ -11,9 +11,6 @@ export const selectAuthUserID = (state) => state[MODULE_NAME].userID;
 export const selectAuthUsername = (state) => state[MODULE_NAME].username;
 export const selectAuthPhoto = (state) => state[MODULE_NAME].photo;
 
-// export const selectUsernameByID = (state, ID) =>
-//   state[MODULE_NAME].filter((user) => user.userID === ID).username;
-
 // ACTION CREATORS
 export const setAuthSuccess = (payload) => ({
   type: SET_AUTH_SUCCESS,
@@ -32,7 +29,6 @@ const initialState = [
     status: false,
     userID: null,
     username: null,
-    photo: null,
   },
 ];
 export function authReducer(state = initialState, { type, payload }) {
@@ -43,7 +39,6 @@ export function authReducer(state = initialState, { type, payload }) {
         status: true,
         userID: payload.userID,
         username: payload.username,
-        // photo: payload.photo,
       };
     case SET_AUTH_LOGOUT:
       return {
@@ -69,18 +64,21 @@ export const signupUser = (userDetails) => async (dispatch) => {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(async () => {
+        const { currentUser } = await firebase.auth();
+        let userUid = currentUser.uid;
         firebase
           .firestore()
           .collection("users")
-          .doc(firebase.auth().currentUser.uid)
+          .doc(userUid)
           .set({
             username: username,
             email: email,
-            password: password,
             userFavorites: [],
             userProductsInBag: [],
+            shippingAddresses: [],
             orders: [],
+            paymentMethods: [],
           })
           .catch((error) => {
             console.log(
@@ -89,17 +87,12 @@ export const signupUser = (userDetails) => async (dispatch) => {
             );
           });
 
-        let uid = firebase.auth().currentUser.uid;
-        console.log("uid", uid);
-
         dispatch(
           setAuthSuccess({
-            userID: uid,
+            userID: userUid,
             username,
-            // photo,
           })
         );
-        console.log("firebase auth", firebase.auth());
       });
   } catch (error) {
     console.log("Something went wrong with sign up: ", error);
@@ -112,27 +105,25 @@ export const signIn = (userDetails) => async (dispatch) => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(async () => {
+        const { currentUser } = await firebase.auth();
+        let userUid = currentUser.uid;
         firebase
           .firestore()
           .collection("users")
-          .doc(firebase.auth().currentUser.uid)
+          .doc(userUid)
           .get()
           .then(function (doc) {
             console.log("userDattaaa", doc.data());
           });
+
+        dispatch(
+          setAuthSuccess({
+            userID: userUid,
+            username,
+          })
+        );
       });
-
-    let uid = firebase.auth().currentUser.uid;
-    console.log("uid", uid);
-
-    dispatch(
-      setAuthSuccess({
-        userID: uid,
-        username,
-        // photo,
-      })
-    );
   } catch (error) {
     console.log("signIN error", error);
   }
@@ -140,9 +131,9 @@ export const signIn = (userDetails) => async (dispatch) => {
 
 export const logOut = () => async (dispatch) => {
   try {
-    await firebase.auth().signOut();
-    dispatch(setAuthLogout());
+    const logout = await firebase.auth().signOut();
+    dispatch(setAuthLogout(logout));
   } catch (error) {
-    Alert.alert(error.message);
+    console.log(error.message);
   }
 };

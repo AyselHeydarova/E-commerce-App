@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  StatusBar,
-  FlatList,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { StyleSheet, View, StatusBar, FlatList } from "react-native";
 import { COLORS } from "../../style/colors";
 import { CustomText } from "../../components/CustomText";
-import { Forward } from "../../Icons/Forward";
-import { Back } from "../../Icons/Back";
 import { Btn } from "../../components/Btn";
 import { Order } from "../../components/Order";
 import { GLOBAL_STYLES } from "../../style/globalStyles";
@@ -27,7 +18,6 @@ export const MyOrders = connect(mapStateToProps, {
   const [isDeliveredClicked, setIsDeliveredClicked] = useState(true);
   const [isProcessingClicked, setIsProcessingClicked] = useState(false);
   const [isCancelledClicked, setIsCancelledClicked] = useState(false);
-  console.log("usersData MyOrders", usersData);
   const orders = usersData.orders || [];
   const handleDelivered = () => {
     setIsDeliveredClicked(true);
@@ -44,7 +34,6 @@ export const MyOrders = connect(mapStateToProps, {
     setIsProcessingClicked(false);
     setIsCancelledClicked(true);
   };
-
   const handleUserData = async () => {
     try {
       await getCurrentUserData();
@@ -91,13 +80,15 @@ export const MyOrders = connect(mapStateToProps, {
         />
       </View>
       <FlatList
-        data={orders}
+        data={orders.reverse()}
         renderItem={({ item }) => (
           <Order
             date={item.date}
             orderNo={item.orderNo}
             quantity={item.quantity}
-            total={item.totalAmount}
+            total={Math.floor(
+              item.totalAmount + item.deliveryMethod.deliveryMethodCost
+            )}
             trackingNo={item.trackingNo}
             onPress={() =>
               navigation.navigate("OrderDetails", {
@@ -107,8 +98,12 @@ export const MyOrders = connect(mapStateToProps, {
                 quantity: item.quantity,
                 date: item.date,
                 status: "Delivered",
-                total: item.totalAmount,
-                shippingAddresses: usersData.shippingAddresses,
+                total: Math.floor(
+                  item.totalAmount + item.deliveryMethod.deliveryMethodCost
+                ),
+                deliveryMethod: item.deliveryMethod,
+                paymentMethod: item.paymentMethod,
+                shippingAddress: item.shippingAddress,
               })
             }
           />
@@ -129,7 +124,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT,
     fontSize: 34,
     lineHeight: 34,
-    margin: GLOBAL_STYLES.MARGIN_LEFT,
+    margin: 15,
   },
   backIcon: {
     marginTop: 20,

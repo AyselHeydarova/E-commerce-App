@@ -1,18 +1,6 @@
 import React, { useState } from "react";
-import {
-  addProductToUsersBag,
-  selectCount,
-  setCount,
-  setCountSize,
-} from "../store/users";
 import { Cross } from "../Icons/Cross";
-import {
-  View,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { CustomText } from "./CustomText";
 import { COLORS } from "../style/colors";
 import StarRating from "react-native-star-rating";
@@ -20,32 +8,30 @@ import { ProductTag } from "../commons/ProductTag";
 import { Heart } from "../Icons/Heart";
 import { Counter } from "./Counter";
 import { averageRatingCalc, totalRatingCalc } from "../Utils/Calculations";
-import { selectAllProductData, setAddToBag } from "../store/products";
+import { selectAllProductData } from "../store/products";
 import { connect } from "react-redux";
 import { columnStyles } from "../style/globalStyles";
-import { Bag } from "../Icons/Bag";
+import { setCountSize, addProductToUsersBag } from "../API";
 
 const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),
-  count: selectCount(state),
 });
 export const ProductCard = connect(mapStateToProps, {
-  setAddToBag,
-  setCount,
   setCountSize,
   addProductToUsersBag,
 })(
   ({
-    addProductToUsersBag,
     setCountSize,
+    addProductToUsersBag,
     product,
     isRowView = false,
     isInCatalog = false,
-    isInFavs,
+    isInFavs = false,
     isNew,
     isOnSale,
     isInOrders = false,
     onPress,
+    onLongPress,
   }) => {
     const {
       id,
@@ -83,20 +69,17 @@ export const ProductCard = connect(mapStateToProps, {
       try {
         await setCountSize({
           productID: id,
+          color: color,
+          size: size,
           selectedCount: count,
         });
       } catch (error) {
         console.log("getCurrentUserData", error);
       }
     };
-
+    console.log("isInFavs", isInFavs);
     return (
-      <TouchableOpacity
-        onPress={onPress}
-        onLongPress={() =>
-          isInFavs ? addProductToUsersBag(product, true, true, false) : {}
-        }
-      >
+      <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
         <View style={cardWrapperStyles}>
           <View style={isRowView ? styles.imgWrapper : columnStyles.imgWrapper}>
             {isNew ? <ProductTag style={styles.tag} title="new" /> : null}
@@ -287,7 +270,6 @@ const styles = StyleSheet.create({
   },
   description: {
     padding: 10,
-    // width: "70%",
     paddingTop: 0,
     justifyContent: "space-between",
     flex: 1,

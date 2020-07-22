@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { CustomText } from "./CustomText";
 
 export const Btn = ({
@@ -18,6 +18,7 @@ export const Btn = ({
     <TouchableOpacity
       style={[
         styles.btnContainer,
+        containerStyle,
         {
           backgroundColor: bgColor,
           height: height,
@@ -25,7 +26,6 @@ export const Btn = ({
           borderWidth: borderWidth,
           borderColor: borderColor,
         },
-        containerStyle,
       ]}
       onPress={onPress}
       rest={rest}

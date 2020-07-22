@@ -5,7 +5,6 @@ import {
   StatusBar,
   FlatList,
   TouchableOpacity,
-  ScrollView,
   Alert,
 } from "react-native";
 import { COLORS } from "../style/colors";
@@ -15,15 +14,14 @@ import { PriceArrows } from "../Icons/PriceArrows";
 import { ListViewChanger } from "../Icons/ListViewChanger";
 import { ProductCard } from "../components/ProductCard";
 import { CardView } from "../Icons/CardView";
-import { BottomModal } from "../components/bottomModal";
 import {
-  getAllData,
   selectAllProductData,
   selectFilteredProducts,
   getFilteredProducts,
 } from "../store/products";
 import { connect } from "react-redux";
 import { GLOBAL_STYLES } from "../style/globalStyles";
+import { SortByModal } from "../components/SortByModal";
 
 const mapStateToProps = (state) => ({
   allProducts: selectAllProductData(state),
@@ -46,9 +44,9 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
       lowestToHigh: false,
       highestToLow: false,
     });
-
     const [isSortingType, setIsSortingType] = useState("Price");
     const [isSorted, setIsSorted] = useState(false);
+    const [isListView, setIsListView] = useState(true);
 
     const sortType =
       isSortingType === "Price: highest to low"
@@ -58,7 +56,7 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
         : null;
 
     const sortedFields = {
-      category: categoryName,
+      category: name,
       gender: isWomanClicked ? "women" : "men",
       isSortClicked: true,
       sortType,
@@ -75,7 +73,13 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
       },
     ];
 
-    const sortingHandler = async () => await getFilteredProducts(sortedFields);
+    const sortingHandler = async () => {
+      try {
+        await getFilteredProducts(sortedFields);
+      } catch (error) {
+        console.log("sortingHandler err", error);
+      }
+    };
 
     const handleSorting = (name, sortOptionBool) => {
       setIsSortingType(name);
@@ -102,9 +106,6 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
 
     const finalProducts =
       categoryName === "New" ? newProducts : isOnSale ? saleProducts : products;
-    console.log("finalProducts", finalProducts);
-    // console.log('filteredProductsData',filteredProductsData)
-    const [isListView, setIsListView] = useState(true);
 
     const numberOfColums = isListView ? 1 : 2;
 
@@ -165,12 +166,19 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
         </View>
         {finalProducts.length === 0 ? (
           <CustomText style={{ fontSize: 16.6, color: COLORS.SALE }}>
-            Sorry, We don't have any products in {`${categoryName}`} yet!
+            Sorry, You don't have any products in {`${categoryName}`} yet!
+          </CustomText>
+        ) : filteredProducts !== undefined && filteredProducts.length === 0 ? (
+          <CustomText style={{ fontSize: 16.6, color: COLORS.SALE }}>
+            Sorry, You don't have any products by this filtering
           </CustomText>
         ) : (
           <FlatList
             data={result}
             numColumns={numberOfColums}
+            columnWrapperStyle={
+              isListView ? null : { justifyContent: "space-around" }
+            }
             key={numberOfColums}
             renderItem={({ item }) => (
               <ProductCard
@@ -185,7 +193,7 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
           />
         )}
         {isBottomModalOpen ? (
-          <BottomModal name={"SortBy"} height={250}>
+          <SortByModal name={"SortBy"} height={250}>
             <View style={styles.sortBy}>
               <FlatList
                 data={sortOptions}
@@ -211,7 +219,7 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
                 keyExtractor={(item) => item.sortingName}
               />
             </View>
-          </BottomModal>
+          </SortByModal>
         ) : null}
       </View>
     );
@@ -220,6 +228,7 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
     paddingHorizontal: GLOBAL_STYLES.PADDING,
@@ -228,13 +237,13 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT,
     fontSize: 34,
     lineHeight: 34,
-    margin: 20,
+    marginBottom: 20,
   },
   btn: {
     margin: 10,
   },
   filters: {
-    height: 60,
+    height: 40,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-around",

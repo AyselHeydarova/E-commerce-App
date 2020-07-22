@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  StatusBar,
-  FlatList,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, View, StatusBar, FlatList } from "react-native";
 import { COLORS } from "../style/colors";
 import { CustomText } from "../components/CustomText";
 import { Btn } from "../components/Btn";
@@ -15,13 +7,26 @@ import { ProductCard } from "../components/ProductCard";
 import { getCurrentUserData, selectUserData } from "../store/users";
 import { connect } from "react-redux";
 import { GLOBAL_STYLES } from "../style/globalStyles";
-
+import { selectAllProductData } from "../store/products";
+import { addProductToUsersBag } from "../API";
 const mapStateToProps = (state) => ({
   usersData: selectUserData(state),
+  allProducts: selectAllProductData(state),
 });
-export const Favorites = connect(mapStateToProps, { getCurrentUserData })(
-  ({ getCurrentUserData, usersData, navigation }) => {
+export const Favorites = connect(mapStateToProps, {
+  getCurrentUserData,
+  addProductToUsersBag,
+})(
+  ({
+    getCurrentUserData,
+    allProducts,
+    usersData,
+    navigation,
+    addProductToUsersBag,
+    getAllData,
+  }) => {
     const favorites = usersData.userFavorites || [];
+    console.log("favorites", favorites);
     const clothes = [
       "T-Shirts",
       "Skirts",
@@ -30,12 +35,14 @@ export const Favorites = connect(mapStateToProps, { getCurrentUserData })(
       "Dresses",
       "Trousers",
     ];
-    const [favoritesData, setFavData] = useState(favorites);
+    const [favoritesData, setFavData] = useState([]);
+    const [isSorted, setIsSorted] = useState(false);
 
     let favoritesSortedByCategory = [];
     const handleFavs = async () => {
       try {
         await getCurrentUserData();
+        await getAllData();
       } catch (error) {
         console.log("getNewData", error);
       }
@@ -43,18 +50,19 @@ export const Favorites = connect(mapStateToProps, { getCurrentUserData })(
 
     useEffect(() => {
       handleFavs();
-    }, []);
+    }, [favoritesData]);
+
     const handleSortByCategory = (category) => {
       favoritesSortedByCategory = favorites.filter((fav) =>
         fav.tags.includes(category)
       );
       setFavData(favoritesSortedByCategory);
+      setIsSorted(true);
     };
 
     return (
       <View style={styles.container}>
         <StatusBar />
-
         <CustomText weight={"bold"} style={styles.title}>
           Favorites
         </CustomText>
@@ -78,16 +86,22 @@ export const Favorites = connect(mapStateToProps, { getCurrentUserData })(
         </View>
 
         <FlatList
-          data={favoritesData}
+          data={isSorted ? favoritesData : favorites}
           renderItem={({ item }) => (
             <ProductCard
               product={item}
               isInFavs={true}
               isRowView={true}
               isInCatalog={true}
+              onLongPress={() => {
+                addProductToUsersBag(item, true, true, false);
+              }}
               onPress={() =>
                 navigation.navigate("SingleProductScreen", {
                   product: item,
+                  products: allProducts.allProducts.filter(
+                    (product) => product.categoryName === item.categoryName
+                  ),
                 })
               }
             />

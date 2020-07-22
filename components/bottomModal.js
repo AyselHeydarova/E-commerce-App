@@ -1,20 +1,63 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { COLORS } from "../style/colors";
-
 import { CustomText } from "../components/CustomText";
+import { SizeContainer } from "./SizeContainer";
 
-export const BottomModal = ({ name, children, height }) => {
+export const BottomModal = ({
+  title,
+  height,
+  data,
+  isClicked,
+  isColor,
+  handlePress,
+  closeModal,
+}) => {
   return (
-    <View style={[styles.container, { height: height || 400 }]}>
-      <View style={styles.headerContainer}>
-        <View style={styles.line} />
-        <CustomText weight={"bold"} style={styles.title}>
-          {name}{" "}
-        </CustomText>
+    <TouchableWithoutFeedback onPress={closeModal}>
+      <View style={[styles.container, { height: height || 400, elevation: 5 }]}>
+        <View style={styles.headerContainer}>
+          <View style={styles.line} />
+          <CustomText weight={"bold"} style={styles.title}>
+            {title}
+          </CustomText>
+        </View>
+        <View style={styles.bodyContainer}>
+          <ScrollView
+            contentContainerStyle={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+            }}
+          >
+            {data.map((name) => (
+              <View>
+                <SizeContainer
+                  bgColor={
+                    isColor
+                      ? name
+                      : isClicked[`${name}`]
+                      ? COLORS.PRIMARY
+                      : null
+                  }
+                  borderWidth={isColor ? 0 : isClicked[`${name}`] ? 0 : 0.4}
+                  onPress={() => {
+                    handlePress(name);
+                    console.log(`${name} clicked`);
+                  }}
+                  name={name}
+                  width={100}
+                />
+              </View>
+            ))}
+          </ScrollView>
+        </View>
       </View>
-      <View style={styles.bodyContainer}>{children}</View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -26,10 +69,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderTopRightRadius: 34,
     borderTopLeftRadius: 34,
-    // position:"absolute",
-    // bottom:0,
-    // left:0,
-    // right:0
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   bodyContainer: {
     width: "100%",

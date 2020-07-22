@@ -19,7 +19,7 @@ export const ReviewItem = ({
       <Image
         style={styles.userImg}
         source={{
-          uri: userImg ,
+          uri: userImg,
         }}
       />
       <CustomText style={styles.username} weight="medium">
