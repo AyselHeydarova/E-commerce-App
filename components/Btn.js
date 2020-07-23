@@ -1,7 +1,6 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { CustomText } from "./CustomText";
-import { COLORS } from "../style/colors";
 
 export const Btn = ({
   btnName,
@@ -19,9 +18,7 @@ export const Btn = ({
     <TouchableOpacity
       style={[
         styles.btnContainer,
-
         containerStyle,
-
         {
           backgroundColor: bgColor,
           height: height,

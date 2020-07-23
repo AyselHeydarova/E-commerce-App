@@ -19,7 +19,7 @@ export const ShippingAddressesScreen = connect(
 )(({ navigation, shippingAddresses }) => {
   return (
     <View style={styles.container}>
-      {shippingAddresses ? (
+      {shippingAddresses.length !== 0 ? (
         <FlatList
           data={shippingAddresses}
           renderItem={({ item, index }) => (
@@ -33,7 +33,11 @@ export const ShippingAddressesScreen = connect(
               isSelected={item.isSelected}
               onPress={() => selectShippingAddress(index)}
               editPressHandler={() =>
-                navigation.navigate("AddingShippingAddress", { address: item })
+                navigation.navigate("AddingShippingAddress", {
+                  address: item,
+                  isEditPressed: true,
+                  index: index,
+                })
               }
             />
           )}
@@ -43,7 +47,7 @@ export const ShippingAddressesScreen = connect(
       )}
 
       <Plus
-        style={{ alignSelf: "flex-end" }}
+        style={{ alignSelf: "flex-end", backgroundColor: COLORS.DARK }}
         onPress={() => navigation.navigate("AddingShippingAddress")}
       />
     </View>

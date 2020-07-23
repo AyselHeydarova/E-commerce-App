@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Image, ScrollView, FlatList } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  ScrollView,
+  FlatList,
+  YellowBox,
+} from "react-native";
 import { connect } from "react-redux";
-
 import { Btn } from "../components/Btn";
 import { CustomText } from "../components/CustomText";
 import { getCurrentUserData } from "../store/users";
@@ -14,10 +20,8 @@ import {
   getFilteredProducts,
 } from "../store/products";
 import { COLORS } from "../style/colors";
-
 import homeImage from "../assets/homeImage.png";
 import banner from "../assets/Small_banner.png";
-import { getDataByCategoryGenderAndFilter } from "../API";
 
 const mapStateToProps = (state) => ({
   saleProducts: selectSaleProductData(state),
@@ -38,6 +42,7 @@ const Home = connect(mapStateToProps, {
     getCurrentUserData,
     getFilteredProducts,
   }) => {
+    YellowBox.ignoreWarnings(["Setting a timer"]);
     const [showSale, setShowSale] = useState(false);
 
     const handleNewProducts = async () => {
@@ -54,7 +59,6 @@ const Home = connect(mapStateToProps, {
       } catch (error) {
         console.log("getOnSaleProducts", error);
       }
-      console.log(saleProducts);
     };
     const handleGetCurrentUserData = async () => {
       try {
@@ -65,18 +69,9 @@ const Home = connect(mapStateToProps, {
       }
     };
 
-    const sortedFields = {
-      category: "Trousers",
-      gender: "women",
-      sortType: "desc",
-    };
-    const sort = async () => await getFilteredProducts(sortedFields);
-    // await getDataByCategoryGenderAndFilter("Trousers", "women", "asc");
-
     useEffect(() => {
       handleNewProducts();
       handleGetCurrentUserData();
-      sort();
     }, []);
 
     return (
@@ -106,7 +101,10 @@ const Home = connect(mapStateToProps, {
                     onPress={() =>
                       navigation.navigate("SingleProduct", {
                         product: item,
-                        products: saleProducts,
+                        products: saleProducts.filter(
+                          (product) =>
+                            product.categoryName === item.categoryName
+                        ),
                       })
                     }
                   />
@@ -155,7 +153,9 @@ const Home = connect(mapStateToProps, {
                 onPress={() =>
                   navigation.navigate("SingleProduct", {
                     product: item,
-                    products: newProducts,
+                    products: newProducts.filter(
+                      (product) => product.categoryName === item.categoryName
+                    ),
                   })
                 }
               />

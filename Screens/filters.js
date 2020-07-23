@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   StatusBar,
   View,
   FlatList,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   Text,
 } from "react-native";
 import { COLORS } from "../style/colors";
 import { CustomText } from "../components/CustomText";
-// import MultiSlider from "@ptomasroos/react-native-multi-slider";
+import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import { ColorContainer } from "../components/ColorContainer";
 import { SizeContainer } from "../components/SizeContainer";
 import { Forward } from "../Icons/Forward";
@@ -18,7 +17,6 @@ import { Buttons } from "../components/Buttons";
 
 export const Filters = ({ navigation, route }) => {
   const { finalProducts } = route.params;
-
   const [colors, setColors] = useState([
     {
       color: "black",
@@ -74,6 +72,7 @@ export const Filters = ({ navigation, route }) => {
     },
   ]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [isFilteredProducts, setIsFilteredProducts] = useState(false);
   const [sizes, setSizes] = useState([
     {
       size: "XS",
@@ -100,15 +99,14 @@ export const Filters = ({ navigation, route }) => {
 
   const multiSliderValuesChange = (values) => {
     setValues(values);
-    let products =
-      filteredProducts.length === 0 ? finalProducts : filteredProducts;
+    let products = isFilteredProducts ? filteredProducts : finalProducts;
 
     const filteredProductsByPrice = products.filter((product) => {
       if (product.price < values[1] && values[0] < product.price)
         return product;
     });
     setFilteredProducts(filteredProductsByPrice);
-    console.log("filteredProductsByPrice", filteredProductsByPrice);
+    setIsFilteredProducts(true);
   };
   const handleSize = (size, state, index) => {
     let updatedSizes = [...sizes];
@@ -117,8 +115,7 @@ export const Filters = ({ navigation, route }) => {
       state: !state,
     };
     setSizes(updatedSizes);
-    let products =
-      filteredProducts.length === 0 ? finalProducts : filteredProducts;
+    let products = isFilteredProducts ? filteredProducts : finalProducts;
 
     const filteredProductsBySize = products.filter((product) => {
       const s = product.sizes.filter((item) => {
@@ -129,6 +126,7 @@ export const Filters = ({ navigation, route }) => {
       return product.sizes.includes(s[0]);
     });
     setFilteredProducts(filteredProductsBySize);
+    setIsFilteredProducts(true);
   };
   const handleColor = (color, state, index) => {
     let updatedColors = [...colors];
@@ -137,8 +135,7 @@ export const Filters = ({ navigation, route }) => {
       state: !state,
     };
     setColors(updatedColors);
-    let products =
-      filteredProducts.length === 0 ? finalProducts : filteredProducts;
+    let products = isFilteredProducts ? filteredProducts : finalProducts;
     const filteredProductsByColor = products.filter((product) => {
       const col = product.colors.filter((item) => {
         return item.color === color;
@@ -146,6 +143,7 @@ export const Filters = ({ navigation, route }) => {
       return product.colors.includes(col[0]);
     });
     setFilteredProducts(filteredProductsByColor);
+    setIsFilteredProducts(true);
   };
   const handleFilter = () => {
     navigation.navigate("Catalog", {
@@ -170,14 +168,14 @@ export const Filters = ({ navigation, route }) => {
           <Text style={[styles.title, { position: "absolute", right: 0 }]}>
             ${values[1]}
           </Text>
-          {/* <MultiSlider
+          <MultiSlider
             values={[values[0], values[1]]}
             sliderLength={300}
             onValuesChange={multiSliderValuesChange}
             min={0}
-            max={2000}
+            max={500}
             step={1}
-          /> */}
+          />
         </View>
       </View>
 
@@ -232,8 +230,9 @@ export const Filters = ({ navigation, route }) => {
         style={[styles.bodyPart, { height: 80 }]}
         onPress={() =>
           navigation.navigate("BrandsScreen", {
-            finalProducts:
-              filteredProducts.length === 0 ? finalProducts : filteredProducts,
+            finalProducts: isFilteredProducts
+              ? filteredProducts
+              : finalProducts,
           })
         }
       >
@@ -266,8 +265,6 @@ export const Filters = ({ navigation, route }) => {
         onPressApply={() => handleFilter()}
         onPressDiscard={() => navigation.navigate("Catalog")}
       />
-      {/* </View>
-      // </TouchableOpacity> */}
       <Buttons
         onPressApply={() => handleFilter()}
         onPressDiscard={() => navigation.navigate("Catalog")}

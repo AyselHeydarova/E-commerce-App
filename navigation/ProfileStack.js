@@ -2,9 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ProfileScreen } from "../Screens/ProfileScreens/ProfileScreen";
 import { OrderDetails } from "../Screens/ProfileScreens/OrderDetails";
-import { PasswordChange } from "../Screens/ProfileScreens/PasswordChange";
 import { MyOrders } from "../Screens/ProfileScreens/MyOrders";
-import { PaymentScreen } from "../Screens/PaymentScreen";
 import { Settings } from "../Screens/ProfileScreens/Settings";
 import { AddingShippingAddress } from "../Screens/AddingShippingAddress";
 import { ShippingAddressesScreen } from "../Screens/ShippingAddressesScreen";
@@ -47,16 +45,7 @@ export const ProfileStack = () => {
         name="OrderDetails"
         component={OrderDetails}
       />
-      <Screen
-        options={{ headerShown: false }}
-        name="Payment"
-        component={PaymentScreen}
-      />
-      <Screen
-        options={{ headerShown: false }}
-        name="PasswordChange"
-        component={PasswordChange}
-      />
+
       <Screen
         options={({ navigation }) => ({
           title: "",

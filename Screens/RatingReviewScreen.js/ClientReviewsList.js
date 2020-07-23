@@ -2,10 +2,8 @@ import React, { useEffect } from "react";
 import { FlatList, View, StyleSheet } from "react-native";
 import { ReviewItem } from "./ReviewItem";
 import { CustomText } from "../../components/CustomText";
-import { COLORS } from "../../style/colors";
 import { GLOBAL_STYLES } from "../../style/globalStyles";
 import { connect } from "react-redux";
-// import { selectUserData } from "../../store/users";
 import { selectCurrentProduct, getCurrentProduct } from "../../store/products";
 
 const mapStateToProps = (state) => ({
@@ -27,14 +25,11 @@ export const ClientReviewsList = connect(mapStateToProps, {
   }, []);
 
   let reviews;
-
   if (currentProduct.reviews) {
     reviews = currentProduct.reviews;
   } else {
     reviews = [];
   }
-
-  console.log("reviews client", reviews);
 
   return (
     <View>
@@ -43,7 +38,7 @@ export const ClientReviewsList = connect(mapStateToProps, {
       </CustomText>
       {reviews ? (
         <FlatList
-          data={reviews || []}
+          data={reviews.reverse() || []}
           contentContainerStyle={styles.container}
           renderItem={({ item, index }) => (
             <ReviewItem
@@ -56,7 +51,9 @@ export const ClientReviewsList = connect(mapStateToProps, {
             />
           )}
         />
-      ) : null}
+      ) : (
+        <CustomText>There is no reviews for this product</CustomText>
+      )}
     </View>
   );
 });

@@ -14,7 +14,6 @@ import { PriceArrows } from "../Icons/PriceArrows";
 import { ListViewChanger } from "../Icons/ListViewChanger";
 import { ProductCard } from "../components/ProductCard";
 import { CardView } from "../Icons/CardView";
-import { BottomModal } from "../components/bottomModal";
 import {
   selectAllProductData,
   selectFilteredProducts,
@@ -173,12 +172,19 @@ export const Catalog = connect(mapStateToProps, { getFilteredProducts })(
         </View>
         {finalProducts.length === 0 ? (
           <CustomText style={{ fontSize: 16.6, color: COLORS.SALE }}>
-            Sorry, We don't have any products in {`${categoryName}`} yet!
+            Sorry, You don't have any products in {`${categoryName}`} yet!
+          </CustomText>
+        ) : filteredProducts !== undefined && filteredProducts.length === 0 ? (
+          <CustomText style={{ fontSize: 16.6, color: COLORS.SALE }}>
+            Sorry, You don't have any products by this filtering
           </CustomText>
         ) : (
           <FlatList
             data={result}
             numColumns={numberOfColums}
+            columnWrapperStyle={
+              isListView ? null : { justifyContent: "space-around" }
+            }
             key={numberOfColums}
             renderItem={({ item }) => (
               <ProductCard
@@ -237,13 +243,13 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT,
     fontSize: 34,
     lineHeight: 34,
-    margin: 20,
+    marginBottom: 20,
   },
   btn: {
     margin: 10,
   },
   filters: {
-    height: 60,
+    height: 40,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-around",

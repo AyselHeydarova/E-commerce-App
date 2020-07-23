@@ -1,5 +1,4 @@
 import React from "react";
-
 import { createStackNavigator } from "@react-navigation/stack";
 import { AuthForm } from "../Screens/AuthForm";
 import { COLORS } from "../style/colors";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   StatusBar,
@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { CustomText } from "../../components";
 import { COLORS } from "../../style/colors";
@@ -14,24 +15,37 @@ import { getCurrentUserData, selectUserData } from "../../store/users";
 import { connect } from "react-redux";
 import { Btn } from "../../components/Btn";
 import { totalAmount } from "../../Utils/Calculations";
-import { addOrderedProducts, deleteBagProducts } from "../../API";
+import {
+  addOrderedProducts,
+  deleteBagProducts,
+  countDecreaser,
+} from "../../API";
+import { GLOBAL_STYLES } from "../../style/globalStyles";
 
 const mapStateToProps = (state) => ({
   user: selectUserData(state),
 });
 export const Checkout = connect(mapStateToProps, {
-  addOrderedProducts,
-  deleteBagProducts,
   getCurrentUserData,
-})(({ navigation, addOrderedProducts, deleteBagProducts, route, user }) => {
+})(({ navigation, route, user }) => {
   const { bagProducts } = route.params;
   const shippingAddresses = (user.shippingAddresses || []).filter(
-    (address) => address.isSelected == true
+    (address) => address.isSelected === true
   );
   const paymentMethods = (user.paymentMethods || []).filter(
     (method) => method.isSelected === true
   );
-  console.log("user.paymentMethods", user.paymentMethods);
+  const [deliveryMethod, setDeliveryMethod] = useState({
+    deliveryMethodName: "fedex",
+    deliveryMethodCost: 15,
+  });
+  const handleDeliveryMethod = (name, value) => {
+    setDeliveryMethod({
+      deliveryMethodName: name,
+      deliveryMethodCost: value,
+    });
+  };
+
   const handleDeleteBagProducts = async () => {
     try {
       await deleteBagProducts();
@@ -39,8 +53,21 @@ export const Checkout = connect(mapStateToProps, {
       console.log("handleDeleteBagProducts", error);
     }
   };
+
+  const handleCountDecrease = () => {
+    bagProducts.forEach((element) => {
+      countDecreaser(element);
+    });
+  };
+
   const handleSubmit = () => {
-    addOrderedProducts(bagProducts);
+    addOrderedProducts(
+      bagProducts,
+      paymentMethods[0],
+      shippingAddresses[0],
+      deliveryMethod
+    );
+    handleCountDecrease();
     handleDeleteBagProducts();
     navigation.navigate("SuccessScreen");
   };
@@ -62,6 +89,9 @@ export const Checkout = connect(mapStateToProps, {
             zipCode={shippingAddresses[0].zipCode}
             country={shippingAddresses[0].country}
             isInCheckout={true}
+            changePressHandler={() =>
+              navigation.navigate("ShippingAddressesScreen")
+            }
           />
         </View>
       </View>
@@ -75,7 +105,7 @@ export const Checkout = connect(mapStateToProps, {
             style={styles.change}
             onPress={() => navigation.navigate("PaymentMethods")}
           >
-            <CustomText weight={"medium"} style={{ color: COLORS.PRIMARY }}>
+            <CustomText weight={"bold"} style={{ color: COLORS.PRIMARY }}>
               Change{" "}
             </CustomText>
           </TouchableOpacity>
@@ -97,13 +127,17 @@ export const Checkout = connect(mapStateToProps, {
           </View>
         ) : null}
       </View>
-      <View style={styles.bodyPart}>
-        <View style={styles.titleContainer}>
-          <CustomText weight={"medium"} style={styles.title}>
-            Delivery Method{" "}
-          </CustomText>
-        </View>
-        <View style={[styles.section, { height: 100 }]}>
+      <View style={styles.titleContainer}>
+        <CustomText weight={"medium"} style={styles.title}>
+          Delivery Method{" "}
+        </CustomText>
+      </View>
+      <View style={[styles.section, { height: 100 }]}>
+        <TouchableOpacity
+          onPress={() => {
+            handleDeliveryMethod("fedEx", 15);
+          }}
+        >
           <Image
             style={styles.deliveryImgWrapper}
             source={{
@@ -111,6 +145,12 @@ export const Checkout = connect(mapStateToProps, {
                 "https://cdnuploads.aa.com.tr/uploads/Contents/2020/05/21/thumbs_b_c_734048bfd3b897e3a838fe7dbe4d2bcb.jpg?v=144915",
             }}
           />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            handleDeliveryMethod("usps.com", 17);
+          }}
+        >
           <Image
             style={styles.deliveryImgWrapper}
             source={{
@@ -118,50 +158,57 @@ export const Checkout = connect(mapStateToProps, {
                 "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/042018/untitled-1_102.png?5lnaGj371nVr0mbE.uvCG3dfRcjQIgZL&itok=f3Iwenu5",
             }}
           />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            handleDeliveryMethod("DHL", 25);
+          }}
+        >
           <Image
             style={styles.deliveryImgWrapper}
             source={{
               uri:
-                "https://ru.epackagingsrl.com/wp-content/uploads/2018/05/dhl-logo.jpg",
+                "https://www.albawaba.com/sites/default/files/styles/d08_standard/public/im/pr_new/DHL-large.png?itok=i3KT2eS2",
             }}
           />
-        </View>
+        </TouchableOpacity>
       </View>
-      <View style={styles.bodyPart}>
-        <View style={styles.titleContainer}>
-          <CustomText weight={"medium"} style={styles.text}>
-            Order:{" "}
-          </CustomText>
-          <CustomText weight={"medium"} style={styles.price}>
-            ${Math.floor(totalAmount(bagProducts))}
-          </CustomText>
-        </View>
+      <View style={styles.titleContainer}>
+        <CustomText weight={"medium"} style={styles.text}>
+          Order:{" "}
+        </CustomText>
+        <CustomText weight={"medium"} style={styles.price}>
+          ${Math.floor(totalAmount(bagProducts))}
+        </CustomText>
+      </View>
 
-        <View style={styles.titleContainer}>
-          <CustomText weight={"medium"} style={styles.text}>
-            Delivery:{" "}
-          </CustomText>
-          <CustomText weight={"medium"} style={styles.price}>
-            $127
-          </CustomText>
-        </View>
+      <View style={styles.titleContainer}>
+        <CustomText weight={"medium"} style={styles.text}>
+          Delivery:{" "}
+        </CustomText>
+        <CustomText weight={"medium"} style={styles.price}>
+          ${deliveryMethod.deliveryMethodCost}
+        </CustomText>
+      </View>
 
-        <View style={styles.titleContainer}>
-          <CustomText weight={"medium"} style={styles.text}>
-            Summary:{" "}
-          </CustomText>
-          <CustomText weight={"medium"} style={styles.price}>
-            ${Math.floor(totalAmount(bagProducts))}
-          </CustomText>
-        </View>
+      <View style={styles.titleContainer}>
+        <CustomText weight={"medium"} style={styles.text}>
+          Summary:{" "}
+        </CustomText>
+        <CustomText weight={"medium"} style={styles.price}>
+          $
+          {Math.floor(
+            totalAmount(bagProducts) + deliveryMethod.deliveryMethodCost
+          )}
+        </CustomText>
       </View>
       <Btn
         height={50}
-        width={340}
+        width={Dimensions.get("window").width - 32}
         bgColor={COLORS.PRIMARY}
         btnName={"Submit Order"}
         titleStyle={{ fontSize: 18 }}
-        containerStyle={{ marginTop: 25, marginLeft: 10 }}
+        containerStyle={{ marginTop: 25 }}
         onPress={() => handleSubmit()}
       />
     </ScrollView>
@@ -172,24 +219,16 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
+    paddingHorizontal: GLOBAL_STYLES.PADDING,
   },
   titleContainer: {
     width: "100%",
     height: 20,
-    paddingHorizontal: 10,
-  },
-  bodyPart: {
-    width: "100%",
-    height: "auto",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 2,
   },
   title: {
     color: COLORS.TEXT,
     fontSize: 16,
     lineHeight: 20,
-    // marginVertical: ,
   },
   section: {
     width: "100%",

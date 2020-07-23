@@ -16,7 +16,7 @@ function MyTabs() {
     <View style={styles.container}>
       <Tab.Navigator
         initialRouteName={Home}
-        tabBar={(props) => <MyTabBar {...props} />}
+        tabBar={(props, index) => <MyTabBar {...props} />}
         tabBarOptions={{
           labelPosition: "below-icon",
           style: { ...styles.tabBar },

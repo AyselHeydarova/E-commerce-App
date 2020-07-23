@@ -56,10 +56,8 @@ export const totalAmount = (products) => {
           +product.selectedCount
         : +product.price * +product.selectedCount;
 
-    console.log("addition", add);
     total = total + add;
   });
 
-  console.log("total", total);
   return total;
 };

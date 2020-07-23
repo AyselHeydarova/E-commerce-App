@@ -29,7 +29,6 @@ const initialState = [
     status: false,
     userID: null,
     username: null,
-    photo: null,
   },
 ];
 export function authReducer(state = initialState, { type, payload }) {
@@ -40,7 +39,6 @@ export function authReducer(state = initialState, { type, payload }) {
         status: true,
         userID: payload.userID,
         username: payload.username,
-        // photo: payload.photo,
       };
     case SET_AUTH_LOGOUT:
       return {
@@ -78,6 +76,7 @@ export const signupUser = (userDetails) => async (dispatch) => {
             email: email,
             userFavorites: [],
             userProductsInBag: [],
+            shippingAddresses: [],
             orders: [],
             paymentMethods: [],
           })
@@ -88,16 +87,12 @@ export const signupUser = (userDetails) => async (dispatch) => {
             );
           });
 
-        // let uid = firebase.auth().currentUser.uid;
-        // console.log("uid", uid);
-
         dispatch(
           setAuthSuccess({
-            userID: uid,
+            userID: userUid,
             username,
           })
         );
-        // console.log("firebase auth", firebase.auth());
       });
   } catch (error) {
     console.log("Something went wrong with sign up: ", error);
@@ -113,8 +108,6 @@ export const signIn = (userDetails) => async (dispatch) => {
       .then(async () => {
         const { currentUser } = await firebase.auth();
         let userUid = currentUser.uid;
-
-        console.log("signIN uid", userUid);
         firebase
           .firestore()
           .collection("users")
@@ -128,12 +121,9 @@ export const signIn = (userDetails) => async (dispatch) => {
           setAuthSuccess({
             userID: userUid,
             username,
-            // photo,
           })
         );
       });
-
-    // let uid = firebase.auth().currentUser.uid;
   } catch (error) {
     console.log("signIN error", error);
   }
@@ -141,9 +131,9 @@ export const signIn = (userDetails) => async (dispatch) => {
 
 export const logOut = () => async (dispatch) => {
   try {
-    await firebase.auth().signOut();
-    dispatch(setAuthLogout());
+    const logout = await firebase.auth().signOut();
+    dispatch(setAuthLogout(logout));
   } catch (error) {
-    Alert.alert(error.message);
+    console.log(error.message);
   }
 };

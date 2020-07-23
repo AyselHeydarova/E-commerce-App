@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
-import { COLORS } from "../style/colors";
+import React from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { CustomText } from "./CustomText";
 
 export const SizeContainer = ({

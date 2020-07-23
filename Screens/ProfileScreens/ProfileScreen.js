@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -15,6 +15,7 @@ import { connect } from "react-redux";
 import { getCurrentUserData, selectUserData } from "../../store/users";
 import { selectCurrentProduct } from "../../store/products";
 import { LogOut } from "../../Icons/LogOut";
+import { GLOBAL_STYLES } from "../../style/globalStyles";
 
 const mapStateToProps = (state) => ({
   user: selectUserData(state),
@@ -27,14 +28,16 @@ export const ProfileScreen = connect(mapStateToProps, {
 })(({ getCurrentUserData, navigation, user, logOut }) => {
   const handleGetCurrentUserData = async () => {
     try {
-      const user = await getCurrentUserData();
-      console.log("user home", user);
+      await getCurrentUserData();
     } catch (error) {
       console.log("getNewData", error);
     }
   };
 
-  useEffect(() => handleGetCurrentUserData(), []);
+  useEffect(() => {
+    handleGetCurrentUserData();
+  }, []);
+
   const profileSections = [
     {
       sectionName: "My Orders",
@@ -68,7 +71,15 @@ export const ProfileScreen = connect(mapStateToProps, {
         <LogOut width={30} height={30} onPress={() => logOut()} />
       </View>
       <View style={styles.userInfoSection}>
-        <Image style={styles.avatar} source={{ uri: user.userPhoto }} />
+        <Image
+          style={styles.avatar}
+          source={{
+            uri:
+              user.userPhoto === undefined
+                ? "https://icon-library.com/images/icon-panda/icon-panda-25.jpg"
+                : user.userPhoto,
+          }}
+        />
         <View style={styles.text}>
           <CustomText weight={"bold"} style={styles.name}>
             {user.username}
@@ -87,10 +98,12 @@ export const ProfileScreen = connect(mapStateToProps, {
             onPress={() => navigation.navigate(item.screenTo)}
           >
             <View style={styles.text}>
-              <CustomText weight={"bold"} style={styles.name}>
+              <CustomText weight={"bold"} style={styles.sectionName}>
                 {item.sectionName}
               </CustomText>
-              <CustomText style={styles.email}>{item.dutyOfSection}</CustomText>
+              <CustomText style={styles.sectionDesc}>
+                {item.dutyOfSection}
+              </CustomText>
             </View>
             <Forward height={20} width={20} color={COLORS.GRAY} />
           </TouchableOpacity>
@@ -105,12 +118,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
+    paddingHorizontal: GLOBAL_STYLES.PADDING,
   },
   title: {
     color: COLORS.TEXT,
     fontSize: 34,
-    lineHeight: 34,
-    margin: 30,
+    marginVertical: 24,
   },
   email: {
     color: COLORS.GRAY,
@@ -127,14 +140,25 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 
+  sectionName: {
+    color: COLORS.TEXT,
+    fontSize: 18,
+    marginBottom: 8,
+  },
+
+  sectionDesc: {
+    color: COLORS.GRAY,
+    fontSize: 14,
+  },
+
   profileSection: {
     width: "100%",
-    borderBottomWidth: 0.3,
+    height: 72,
+    borderBottomWidth: 0.5,
     borderColor: COLORS.GRAY,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingRight: 10,
   },
 
   text: {
@@ -146,27 +170,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
   },
-  avatar: {
-    width: 70,
-    height: 70,
-    borderRadius: 40,
-    marginLeft: 30,
-  },
 
-  text: {
-    marginTop: 10,
-  },
-  userInfoSection: {
-    width: "100%",
-    height: 120,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-  },
   avatar: {
     width: 70,
     height: 70,
     borderRadius: 40,
-    marginLeft: 30,
+    backgroundColor: "white",
   },
 
   logoutWrapper: {

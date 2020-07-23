@@ -20,7 +20,7 @@ export const BottomModal = ({
 }) => {
   return (
     <TouchableWithoutFeedback onPress={closeModal}>
-      <View style={[styles.container, { height: height || 400 }]}>
+      <View style={[styles.container, { height: height || 400, elevation: 5 }]}>
         <View style={styles.headerContainer}>
           <View style={styles.line} />
           <CustomText weight={"bold"} style={styles.title}>

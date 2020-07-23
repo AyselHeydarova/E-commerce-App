@@ -5,19 +5,14 @@ import {
   Image,
   StatusBar,
   KeyboardAvoidingView,
-  TouchableOpacity,
   Platform,
   Dimensions,
 } from "react-native";
 import { COLORS } from "../../style/colors";
 import { CustomText } from "../../components/CustomText";
-import { Back } from "../../Icons/Back";
 import { Btn } from "../../components/Btn";
-import { Order } from "../../components/Order";
-import { Input } from "../../components/Input";
+import { Input } from "../../components";
 import { GLOBAL_STYLES } from "../../style/globalStyles";
-
-import { connect } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import * as FileSystem from "expo-file-system";
@@ -40,9 +35,7 @@ const getPermissions = async () => {
   }
 };
 
-export const Settings = connect(null, {
-  //   changeUsernameAndAvatar,
-})(({ navigation, changeUsernameAndAvatar }) => {
+export const Settings = ({ navigation }) => {
   const [userFields, setUserFields] = useState({
     username: "",
     userPhoto: "",
@@ -51,9 +44,6 @@ export const Settings = connect(null, {
   useEffect(() => {
     getPermissions().then((answer) => console.log("Permission answer", answer));
   }, []);
-
-  const username = userFields.username;
-  const userPhoto = userFields.userPhoto;
 
   const handleFieldChange = (name, value) => {
     setUserFields((fields) => ({
@@ -93,11 +83,6 @@ export const Settings = connect(null, {
     }));
   };
 
-  //   const saveChangesHandler = () => {
-  //     changeUsernameAndAvatar({ username, userAvatar });
-  //     navigation.navigate("Home");
-  //   };
-
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
@@ -110,14 +95,13 @@ export const Settings = connect(null, {
           Settings
         </CustomText>
         <Input
-          placeholder="Enter your FullName"
-          label="user name"
+          name="Username"
           value={userFields.username}
           onChangeText={(v) => handleFieldChange("username", v)}
         />
         <View style={styles.imgWraper}>
           <Image
-            source={{ uri: userPhoto }}
+            source={{ uri: userFields.userPhoto }}
             style={styles.img}
             resizeMode="contain"
           />
@@ -128,7 +112,6 @@ export const Settings = connect(null, {
             btnName="FROM GALLERY"
             bgColor={COLORS.PRIMARY}
             onPress={takeImageFromGallery}
-            // style={styles.btn}
             width={(Dimensions.get("window").width - 48) / 2}
             height={50}
           />
@@ -144,8 +127,10 @@ export const Settings = connect(null, {
         <Btn
           btnName="SAVE CHANGES"
           bgColor={COLORS.PRIMARY}
-          onPress={() => changeUsernameAndPhoto(userFields)}
-          //   style={styles.btn}
+          onPress={() => {
+            changeUsernameAndPhoto(userFields);
+            navigation.navigate("Profile");
+          }}
           width={"100%"}
           height={50}
           containerStyle={{ marginTop: 16 }}
@@ -153,7 +138,7 @@ export const Settings = connect(null, {
       </KeyboardAvoidingView>
     </View>
   );
-});
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -193,73 +178,3 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
 });
-
-// export const Settings = ({ navigation }) => {
-//   return (
-//     <KeyboardAvoidingView
-//       behavior="padding"
-//       keyboardVerticalOffset={Platform.select({ ios: 120, android: 500 })}
-//       enabled
-//       style={styles.container}
-//     >
-//       <StatusBar />
-//       <TouchableOpacity style={styles.backIcon}>
-//         <Back />
-//       </TouchableOpacity>
-//       <CustomText weight={"bold"} style={styles.title}>
-//         Settings
-//       </CustomText>
-
-//       <CustomText weight={"medium"} style={styles.infoTitle}>
-//         Personal Information
-//       </CustomText>
-//       <Input name={"Full name"} />
-//       <Input name={"Date of birth"} />
-
-//       <View style={[styles.header, { marginTop: 30 }]}>
-//         <CustomText weight={"medium"} style={styles.infoTitle}>
-//           Password
-//         </CustomText>
-//         <TouchableOpacity onPress={() => navigation.navigate("PasswordChange")}>
-//           <CustomText style={styles.btnText}>Change</CustomText>
-//         </TouchableOpacity>
-//       </View>
-//       <Input marginLeft={20} name={"Password"} secureTextEntry={true} />
-//     </KeyboardAvoidingView>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: COLORS.BACKGROUND,
-//   },
-//   title: {
-//     color: COLORS.TEXT,
-//     fontSize: 34,
-//     lineHeight: 34,
-//     margin: GLOBAL_STYLES.MARGIN_LEFT,
-//   },
-//   btnText: {
-//     color: COLORS.GRAY,
-//     fontSize: 14,
-//     lineHeight: 38,
-//     marginRight: GLOBAL_STYLES.MARGIN_LEFT,
-//   },
-//   backIcon: {
-//     marginTop: 20,
-//     marginLeft: GLOBAL_STYLES.MARGIN_LEFT,
-//   },
-//   infoTitle: {
-//     fontSize: 19,
-//     lineHeight: 20,
-//     marginLeft: GLOBAL_STYLES.MARGIN_LEFT,
-//     marginTop: 10,
-//     marginBottom: 20,
-//   },
-//   header: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     marginBottom: 20,
-//   },
-// });

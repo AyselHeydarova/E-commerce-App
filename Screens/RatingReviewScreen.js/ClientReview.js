@@ -11,85 +11,86 @@ import { COLORS } from "../../style/colors";
 import { CustomText } from "../../components/CustomText";
 import StarRating from "react-native-star-rating";
 import { GLOBAL_STYLES } from "../../style/globalStyles";
-import { ActionModal } from "../../components/ActionModal";
 import { Btn } from "../../components/Btn";
 import { connect } from "react-redux";
 import { selectUserData } from "../../store/users";
 import { sendReview, increaseRating } from "../../API";
+import { toggleModal } from "../../store/products";
 
 const mapStateToProps = (state) => ({
   currentUser: selectUserData(state),
 });
 
-export const ClientReview = connect(mapStateToProps, { sendReview })(
-  ({ currentUser, productID, sendReview }) => {
-    console.log("current user reviw", currentUser);
-    const [rating, setRating] = useState(0);
-    const [comment, setComment] = useState("");
+export const ClientReview = connect(mapStateToProps, {
+  sendReview,
+  toggleModal,
+})(({ currentUser, productID, sendReview, toggleModal, isModalOpen }) => {
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
 
-    const increaseRatingFields = {
-      productID: productID,
-      givenRating: rating,
-    };
+  const increaseRatingFields = {
+    productID: productID,
+    givenRating: rating,
+  };
 
-    const fields = {
-      username: currentUser.username,
-      userPhoto: currentUser.userPhoto,
-      review_text: comment,
-      givenRating: rating,
-      productID: productID,
-    };
+  const fields = {
+    username: currentUser.username,
+    userPhoto: currentUser.userPhoto,
+    review_text: comment,
+    givenRating: rating,
+    productID: productID,
+  };
+  const handleSendReview = () => {
+    toggleModal(false);
+    sendReview(fields);
+    increaseRating(increaseRatingFields);
+  };
+  return (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <View style={styles.shortLine} />
 
-    return (
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.container}>
-          <View style={styles.shortLine} />
+        <CustomText style={styles.heading} weight="bold">
+          What is your rate?
+        </CustomText>
 
-          <CustomText style={styles.heading} weight="bold">
-            What is your rate?
-          </CustomText>
+        <StarRating
+          starStyle={{ margin: 3 }}
+          starSize={36}
+          fullStarColor={COLORS.STAR}
+          rating={rating}
+          selectedStar={(rating) => setRating(rating)}
+          containerStyle={{ width: 276, alignSelf: "center" }}
+        />
 
-          <StarRating
-            starStyle={{ margin: 3 }}
-            starSize={36}
-            fullStarColor={COLORS.STAR}
-            rating={rating}
-            selectedStar={(rating) => setRating(rating)}
-            containerStyle={{ width: 276, alignSelf: "center" }}
+        <CustomText
+          style={{ ...styles.heading, paddingHorizontal: 30 }}
+          weight="bold"
+        >
+          Please share your opinion about the product
+        </CustomText>
+
+        <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoid}>
+          <TextInput
+            style={styles.comment}
+            multiline={true}
+            textAlignVertical="top"
+            placeholder="Your review"
+            onChangeText={(v) => setComment(v)}
           />
+        </KeyboardAvoidingView>
 
-          <CustomText
-            style={{ ...styles.heading, paddingHorizontal: 30 }}
-            weight="bold"
-          >
-            Please share your opinion about the product
-          </CustomText>
-
-          <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoid}>
-            <TextInput
-              style={styles.comment}
-              multiline={true}
-              textAlignVertical="top"
-              placeholder="Your review"
-              onChangeText={(v) => setComment(v)}
-            />
-          </KeyboardAvoidingView>
-
-          <Btn
-            btnName="SEND REVIEW"
-            bgColor={COLORS.PRIMARY}
-            width="100%"
-            height={48}
-            onPress={() => {
-              sendReview(fields);
-              increaseRating(increaseRatingFields);
-            }}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-    );
-  }
-);
+        <Btn
+          btnName="SEND REVIEW"
+          bgColor={COLORS.PRIMARY}
+          width="100%"
+          height={48}
+          onPress={() => handleSendReview()}
+        />
+      </View>
+    </TouchableWithoutFeedback>
+  );
+});
 
 const styles = StyleSheet.create({
   container: {

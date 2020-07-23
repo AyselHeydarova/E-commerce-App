@@ -6,6 +6,8 @@ import {
   StatusBar,
   FlatList,
   TouchableOpacity,
+  Dimensions,
+  Alert,
 } from "react-native";
 import { COLORS } from "../style/colors";
 import { CustomText } from "../components/CustomText";
@@ -14,6 +16,7 @@ import { ProductCard } from "../components/ProductCard";
 import { selectUserData, getCurrentUserData } from "../store/users";
 import { connect } from "react-redux";
 import { totalAmount } from "../Utils/Calculations";
+import { GLOBAL_STYLES } from "../style/globalStyles";
 
 const mapStateToProps = (state) => ({
   usersData: selectUserData(state),
@@ -35,30 +38,46 @@ export const MyBag = connect(mapStateToProps, {
     }
   };
   const handleCheckOut = () => {
-    navigation.navigate("Checkout", {
-      bagProducts: bagProducts,
-    });
+    if (bagProducts.length) {
+      navigation.navigate("Checkout", {
+        bagProducts: bagProducts,
+      });
+    } else {
+      Alert.alert("Error", "Please add product before ordering!");
+    }
   };
 
   useEffect(() => {
     handleUserData();
   }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar />
       <CustomText weight={"bold"} style={styles.title}>
         My Bag
       </CustomText>
-
-      <FlatList
-        data={bagProducts}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <ProductCard isInFavs={true} product={item} isRowView={true} />
-          </View>
-        )}
-        keyExtractor={(item) => `${item.id}${item.size}${item.color}`}
-      />
+      {bagProducts.length ? (
+        <FlatList
+          data={bagProducts}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <ProductCard isInFavs={true} product={item} isRowView={true} />
+            </View>
+          )}
+          keyExtractor={(item) => `${item.id}${item.size}${item.color}`}
+        />
+      ) : (
+        <View
+          style={{
+            flex: 1,
+          }}
+        >
+          <CustomText style={{ fontSize: 16.6, color: COLORS.SALE }}>
+            Sorry, You don't have any products in Bag.
+          </CustomText>
+        </View>
+      )}
       <View style={styles.amountContainer}>
         <CustomText weight={"bold"} style={styles.amount}>
           Total amount:
@@ -70,7 +89,7 @@ export const MyBag = connect(mapStateToProps, {
       <TouchableOpacity style={styles.btn}>
         <Btn
           onPress={() => handleCheckOut()}
-          width={345}
+          width={Dimensions.get("window").width - 32}
           height={50}
           bgColor={COLORS.PRIMARY}
           btnName={"CHECK OUT"}
@@ -84,7 +103,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
-    paddingHorizontal: 15,
+    paddingHorizontal: GLOBAL_STYLES.PADDING,
   },
   title: {
     color: COLORS.TEXT,

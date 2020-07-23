@@ -25,10 +25,8 @@ export const selectCurrentProduct = (state) =>
   state[MODULE_NAME].currentProduct;
 export const selectCurrentProductRating = (state) =>
   state[MODULE_NAME].currentProduct.rating;
-
 export const selectCategory = (state, category) =>
   state[MODULE_NAME].allProducts[category];
-
 export const selectIsModalOpen = (state) => state[MODULE_NAME].isModalOpen;
 
 const initialState = {
@@ -144,7 +142,6 @@ export const getCurrentProduct = (productID) => async (dispatch) => {
       .doc(productID)
       .onSnapshot(function (doc) {
         dispatch(setCurrentProduct(doc.data()));
-        console.log("getCurrentProduct redux", doc.data());
       });
   } catch (e) {
     console.log("getCurrentProduct error", e);
@@ -156,11 +153,9 @@ export const getFilteredProducts = (payload) => async (dispatch) => {
     const filteredProducts = await getDataByCategoryGenderAndFilter(
       payload.category,
       payload.gender,
-      // payload.isSortClicked,
+      payload.isSortClicked,
       payload.sortType
     );
-    console.log("payload", payload);
-    console.log("filteredProducts from redux", filteredProducts);
     dispatch(setFilteredProducts(filteredProducts));
   } catch (error) {
     console.log("getFilteredProducts error ", error);

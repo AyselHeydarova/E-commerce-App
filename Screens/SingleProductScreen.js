@@ -6,8 +6,9 @@ import {
   View,
   StyleSheet,
   FlatList,
-  TouchableWithoutFeedback,
   TouchableOpacity,
+  Dimensions,
+  Alert,
 } from "react-native";
 import { SizeContainer } from "../components/SizeContainer";
 import { Heart } from "../Icons/Heart";
@@ -17,7 +18,7 @@ import { GLOBAL_STYLES } from "../style/globalStyles";
 import { BottomModal } from "../components/bottomModal";
 import StarRating from "react-native-star-rating";
 import { averageRatingCalc, totalRatingCalc } from "../Utils/Calculations";
-import { getCurrentProduct, toggleModal } from "../store/products";
+import { getCurrentProduct } from "../store/products";
 import { connect } from "react-redux";
 import { Btn } from "../components/Btn";
 import { addProductToUsersBag } from "../API";
@@ -25,7 +26,6 @@ import { addProductToUsersBag } from "../API";
 export const SingleProductScreen = connect(null, {
   addProductToUsersBag,
   getCurrentProduct,
-  toggleModal,
 })(({ route, addProductToUsersBag, navigation, getCurrentProduct }) => {
   useEffect(() => {
     handleGetCurrentProduct();
@@ -75,9 +75,14 @@ export const SingleProductScreen = connect(null, {
     }
   };
   const handleAddToCart = () => {
-    addProductToUsersBag(addProduct, false);
-    setIsSizeClicked(false);
-    setIsColorClicked(false);
+    if (addProduct.color && addProduct.size) {
+      addProductToUsersBag(addProduct, false);
+      setIsSizeClicked(false);
+      setIsColorClicked(false);
+      Alert.alert("Success", "The product added to your cart!");
+    } else {
+      Alert.alert("Error", "Please choose both color and size!");
+    }
   };
   const handleFavoriteProduct = () => {
     addProductToUsersBag(product, true);
@@ -102,37 +107,40 @@ export const SingleProductScreen = connect(null, {
     onSale !== undefined && onSale.discount !== undefined
       ? Math.floor((+price * (100 - +onSale.discount)) / 100)
       : null;
+
   return (
     <View style={styles.container}>
       <ScrollView>
         <SliderBox
           images={imagesUrls}
-          sliderBoxHeight={400}
+          resizeMode="contain"
+          sliderBoxHeight={340}
           circleLoop={true}
           dotColor={COLORS.PRIMARY}
         />
         <View style={styles.main}>
-          <View style={styles.row}>
+          <View style={styles.firstRow}>
             <SizeContainer
               width={130}
-              name="Size"
+              name={addProduct.size ? addProduct.size : "Size"}
               onPress={() => setIsSizeClicked(!isSizeClicked)}
               isClicked={isSizeClicked}
-              bgColor={isSizeClicked ? COLORS.PRIMARY : null}
-              borderWidth={isSizeClicked ? 0 : 0.4}
+              bgColor={addProduct.size ? COLORS.PRIMARY : null}
+              borderWidth={addProduct.size ? 0 : 0.4}
             />
             <SizeContainer
               onPress={() => setIsColorClicked(!isColorClicked)}
               isClicked={isColorClicked}
               width={130}
               name="Color"
-              bgColor={isColorClicked ? COLORS.PRIMARY : null}
-              borderWidth={isColorClicked ? 0 : 0.4}
+              bgColor={addProduct.color ? addProduct.color : null}
+              borderWidth={addProduct.color ? 0 : 0.4}
             />
             <View style={{ width: 38 }}>
               <Heart
-                width={20}
-                height={20}
+                width={30}
+                height={30}
+                hasContainer={false}
                 isHeartClicked={isHeartClicked}
                 onPress={() => handleFavoriteProduct()}
               />
@@ -158,13 +166,17 @@ export const SingleProductScreen = connect(null, {
               >
                 {`${price}$`}
               </CustomText>
-
-              <CustomText
-                style={{ ...styles.bigText, ...{ color: COLORS.SALE } }}
-                weight="bold"
-              >
-                {`${salePrice}$`}
-              </CustomText>
+              {onSale !== undefined && onSale.discount !== undefined ? (
+                <CustomText
+                  style={{
+                    ...styles.bigText,
+                    ...{ color: COLORS.SALE, marginLeft: 10 },
+                  }}
+                  weight="bold"
+                >
+                  {`${salePrice}$`}
+                </CustomText>
+              ) : null}
             </View>
           </View>
           <CustomText style={styles.clothName}>{name}</CustomText>
@@ -181,7 +193,7 @@ export const SingleProductScreen = connect(null, {
               fullStarColor={COLORS.STAR}
               starSize={14}
               starStyle={{ margin: 3 }}
-              containerStyle={{ marginTop: 10, width: 80 }}
+              containerStyle={{ marginTop: 8, width: 80 }}
               maxStars={5}
               rating={averageRatingCalc(rating)}
             />
@@ -193,31 +205,34 @@ export const SingleProductScreen = connect(null, {
           <CustomText style={styles.suggestionText} weight="bold">
             You can also like this
           </CustomText>
-          <FlatList
-            data={products}
-            horizontal={true}
-            renderItem={({ item }) => (
-              <TouchableWithoutFeedback
-                onPress={() =>
-                  navigation.navigate("SingleProductScreen", {
-                    product: item,
-                    products: products,
-                  })
-                }
-              >
+          {products.length !== 1 ? (
+            <FlatList
+              data={products}
+              horizontal={true}
+              renderItem={({ item }) => (
                 <View>
                   {id !== item.id ? (
                     <ProductCard
                       isInCatalog={true}
                       product={item}
                       isRowView={false}
+                      onPress={() =>
+                        navigation.navigate("SingleProduct", {
+                          product: item,
+                          products: products,
+                        })
+                      }
                     />
                   ) : null}
                 </View>
-              </TouchableWithoutFeedback>
-            )}
-            keyExtractor={(item) => item.id}
-          />
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          ) : (
+            <CustomText>
+              Similar products to this item will be available soon!
+            </CustomText>
+          )}
         </View>
       </ScrollView>
 
@@ -246,11 +261,13 @@ export const SingleProductScreen = connect(null, {
 
       <Btn
         height={50}
-        width={"100%"}
+        width={Dimensions.get("window").width - 32}
         bgColor={COLORS.PRIMARY}
-        btnName="Add to cart"
-        titleStyle={{ fontSize: 18 }}
-        onPress={() => handleAddToCart()}
+        btnName="ADD TO CART"
+        containerStyle={{ marginHorizontal: 16 }}
+        onPress={() => {
+          handleAddToCart();
+        }}
       />
     </View>
   );
@@ -294,8 +311,8 @@ const styles = StyleSheet.create({
   },
 
   clothName: {
-    fontSize: 10,
-    marginBottom: 15,
+    fontSize: 11,
+    color: COLORS.GRAY,
   },
   ratingCount: {
     color: COLORS.GRAY,
@@ -305,6 +322,12 @@ const styles = StyleSheet.create({
   priceRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: 150,
+  },
+
+  firstRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 20,
+    justifyContent: "space-between",
   },
 });

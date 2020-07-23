@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { ClientReviewsList } from "./ClientReviewsList";
 import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { COLORS } from "../../style/colors";
@@ -6,25 +6,26 @@ import { CustomText } from "../../components/CustomText";
 import { RatingRow } from "./RatingRow";
 import { GLOBAL_STYLES } from "../../style/globalStyles";
 import { averageRatingCalc, totalRatingCalc } from "../../Utils/Calculations";
-import { ActionModal } from "../../components/ActionModal";
 import { ClientReview } from "./ClientReview";
 import { Btn } from "../../components/Btn";
 import { connect } from "react-redux";
 import {
   selectCurrentProductRating,
   getCurrentProduct,
+  selectIsModalOpen,
+  toggleModal,
 } from "../../store/products";
 
 const mapStateToProps = (state) => ({
   rating: selectCurrentProductRating(state),
+  isModalOpen: selectIsModalOpen(state),
 });
 
 export const RatingReviewScreen = connect(mapStateToProps, {
   getCurrentProduct,
-})(({ route, rating, getCurrentProduct }) => {
+  toggleModal,
+})(({ route, rating, getCurrentProduct, toggleModal, isModalOpen }) => {
   const productID = route.params.productID;
-  const [showWriteReview, setShowWriteReview] = useState(false);
-
   const handleGetCurrentProduct = async () => {
     try {
       await getCurrentProduct(productID);
@@ -37,7 +38,7 @@ export const RatingReviewScreen = connect(mapStateToProps, {
   }, []);
 
   return (
-    <TouchableWithoutFeedback onPress={() => setShowWriteReview(false)}>
+    <TouchableWithoutFeedback onPress={() => toggleModal(false)}>
       <View style={styles.container}>
         <View style={styles.ratingWrapper}>
           <CustomText style={styles.heading} weight="bold">
@@ -86,17 +87,14 @@ export const RatingReviewScreen = connect(mapStateToProps, {
         <ClientReviewsList productID={productID} />
         <Btn
           btnName="Write a review"
-          onPress={() => setShowWriteReview(true)}
+          onPress={() => toggleModal(true)}
           width={128}
           height={36}
           bgColor={COLORS.PRIMARY}
           containerStyle={{ position: "absolute", bottom: 10, right: 16 }}
         />
-        {/* <ActionModal
-          btnName="Write a review"
-          
-        /> */}
-        {showWriteReview ? <ClientReview productID={productID} /> : null}
+
+        {isModalOpen ? <ClientReview productID={productID} /> : null}
       </View>
     </TouchableWithoutFeedback>
   );

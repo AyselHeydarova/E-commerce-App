@@ -21,7 +21,7 @@ export const Category = ({ categoryName, imageSrc, onPress }) => {
 const styles = StyleSheet.create({
   categoryContainer: {
     height: 100,
-    width: 330,
+    width: "100%",
     backgroundColor: COLORS.DARK,
     borderRadius: 7,
     position: "relative",

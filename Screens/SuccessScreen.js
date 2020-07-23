@@ -2,7 +2,6 @@ import React from "react";
 import { View, StyleSheet, Image } from "react-native";
 import Bags from "../assets/bags.png";
 import { CustomText } from "../components/CustomText";
-import { ActionModal } from "../components/ActionModal";
 import { GLOBAL_STYLES } from "../style/globalStyles";
 import { COLORS } from "../style/colors";
 import { Btn } from "../components/Btn";
@@ -16,17 +15,12 @@ export const SuccessScreen = ({ navigation }) => {
       </CustomText>
       <CustomText>Your order will be delivered soon.</CustomText>
       <CustomText>Thank you for choosing our app!</CustomText>
-      {/* <ActionModal
-        btnName="Continue shopping"
-        onPress={() => navigation.navigate("Home")}
-      /> */}
       <Btn
         height={50}
         width={"100%"}
         bgColor={COLORS.PRIMARY}
         btnName="CONTINUE SHOPPING"
         containerStyle={{ marginTop: 25 }}
-        // titleStyle={{ fontSize: 18 }}
         onPress={() => navigation.navigate("Home")}
       />
     </View>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { CustomText } from "../components/CustomText";
 import { COLORS } from "../style/colors";
@@ -12,6 +12,7 @@ export const AddressCard = ({
   zipCode = "AZ1000",
   country = "Azerbaijan",
   editPressHandler,
+  changePressHandler,
   isSelected,
   onPress,
   isInCheckout = false,
@@ -20,13 +21,20 @@ export const AddressCard = ({
     <View style={styles.container}>
       <View style={styles.row}>
         <CustomText weight="medium">{fullName}</CustomText>
-        <TouchableOpacity onPress={editPressHandler}>
-          {isInCheckout ? null : (
+
+        {isInCheckout ? (
+          <TouchableOpacity onPress={changePressHandler}>
+            <CustomText style={styles.edit} weight="bold">
+              Change{" "}
+            </CustomText>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={editPressHandler}>
             <CustomText style={styles.edit} weight="bold">
               Edit
             </CustomText>
-          )}
-        </TouchableOpacity>
+          </TouchableOpacity>
+        )}
       </View>
 
       <CustomText>{address}</CustomText>

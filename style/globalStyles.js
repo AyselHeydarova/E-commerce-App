@@ -12,7 +12,7 @@ export const columnStyles = {
     height: 280,
     borderRadius: 8,
     backgroundColor: COLORS.DARK,
-    marginRight: 20,
+    margin: 5,
     marginBottom: 20,
   },
 

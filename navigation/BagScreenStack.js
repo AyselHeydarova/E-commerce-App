@@ -7,6 +7,7 @@ import { COLORS } from "../style/colors";
 import { SuccessScreen } from "../Screens/SuccessScreen";
 import { PaymentMethods } from "../Screens/PaymentScreens/PaymentMethods";
 import { AddPayCardScreen } from "../Screens/PaymentScreens/AddPayCardScreen";
+import { ShippingAddressesScreen } from "../Screens/ShippingAddressesScreen";
 
 const { Navigator, Screen } = createStackNavigator();
 export const BagScreenStack = () => {
@@ -37,6 +38,20 @@ export const BagScreenStack = () => {
         })}
         name="Checkout"
         component={Checkout}
+      />
+
+      <Screen
+        options={({ navigation }) => ({
+          title: "Shipping Addresses",
+          headerStyle: {
+            backgroundColor: COLORS.BACKGROUND,
+            elevation: 0,
+          },
+          headerTintColor: COLORS.TEXT,
+          headerLeft: () => <Back onPress={() => navigation.goBack()} />,
+        })}
+        name="ShippingAddressesScreen"
+        component={ShippingAddressesScreen}
       />
       <Screen
         options={({ navigation }) => ({

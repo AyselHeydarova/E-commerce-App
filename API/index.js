@@ -1,12 +1,10 @@
 import * as firebase from "firebase";
 import "./firebase";
-import { randomString } from "../Utils/Calculations";
+import { randomString, totalAmount } from "../Utils/Calculations";
 
 export const getData = async (gender, category) => {
   const products = [];
   let ref = {};
-  console.log("category", category);
-  console.log("gender", gender);
   try {
     if (category === undefined) {
       ref = firebase
@@ -18,7 +16,6 @@ export const getData = async (gender, category) => {
           gender === undefined ? ["men", "women"] : gender
         );
     } else {
-      console.log("else");
       ref = firebase
         .firestore()
         .collection("products")
@@ -37,7 +34,6 @@ export const getData = async (gender, category) => {
         ...data,
       });
     });
-    console.log("products", products);
   } catch (e) {
     console.log("error", e);
   }
@@ -128,7 +124,12 @@ export const deleteBagProducts = () => {
   }
 };
 
-export const addOrderedProducts = (products) => async () => {
+export const addOrderedProducts = (
+  products,
+  paymentMethod,
+  shippingAddress,
+  deliveryMethod
+) => async () => {
   try {
     const date = new Date(Date.now()).toLocaleString().split(",")[0];
     const userProductsRef = firebase
@@ -137,22 +138,17 @@ export const addOrderedProducts = (products) => async () => {
       .doc(firebase.auth().currentUser.uid);
     const userProductsSnap = await userProductsRef.get();
     const userData = await userProductsSnap.data();
-    console.log("userData", userData);
-    console.log("length", products.length);
-    const totalAmount = () => {
-      let total = 0;
-      products.forEach((product) => {
-        total = total + product.price * product.selectedCount;
-      });
-      return total;
-    };
+
     userData.orders.push({
       orderNo: randomString(7, "n"),
       trackingNo: randomString(12),
       quantity: products.length,
-      totalAmount: totalAmount(),
+      totalAmount: totalAmount(products),
       date: date,
       orderedProducts: products,
+      paymentMethod: paymentMethod,
+      shippingAddress: shippingAddress,
+      deliveryMethod: deliveryMethod,
     });
     userProductsRef.set(
       {
@@ -176,8 +172,11 @@ export const setCountSize = async (payload) => {
     const countData = countSnap.data();
     const updatedProducts = [];
     countData.userProductsInBag.forEach((product) => {
-      console.log("payload.selectedCount", payload.selectedCount);
-      if (product.id === payload.productID) {
+      if (
+        product.id === payload.productID &&
+        product.color === payload.color &&
+        product.size === payload.size
+      ) {
         updatedProducts.push({
           ...product,
           selectedCount: payload.selectedCount,
@@ -186,8 +185,6 @@ export const setCountSize = async (payload) => {
         updatedProducts.push(product);
       }
     });
-    console.log("updatedProducts", updatedProducts);
-
     countRef
       .set(
         {
@@ -202,7 +199,6 @@ export const setCountSize = async (payload) => {
           error
         );
       });
-    // dispatch(addReview(payload));
   } catch (error) {
     console.log("countData error", error);
   }
@@ -288,6 +284,7 @@ export const addProductToUsersBag = (
   isDeleteFav,
   isDeleteBag
 ) => async () => {
+  console.log("product isFav isDeleteFav", product, isFav, isDeleteFav);
   try {
     const userProductsRef = firebase
       .firestore()
@@ -295,18 +292,16 @@ export const addProductToUsersBag = (
       .doc(firebase.auth().currentUser.uid);
     const userProductsSnap = await userProductsRef.get();
     const userData = await userProductsSnap.data();
-
-    console.log(
-      "userData.userProductsInBag in try",
-      userData.userProductsInBag
-    );
     if (isFav) {
       if (isDeleteFav) {
         const favs = userData.userFavorites;
         favs.push(product);
+        console.log("favs", favs);
         const filteredFavs = favs.filter((item) => {
           return item.id !== product.id;
         });
+        console.log("filteredFavs", filteredFavs);
+
         userProductsRef.set(
           {
             userFavorites: filteredFavs,
@@ -314,8 +309,6 @@ export const addProductToUsersBag = (
           { merge: true }
         );
       } else {
-        console.log(userData);
-
         let shouldBeAdded = true;
         shouldBeAdded = userData.userFavorites.find(
           (item) => item.id === product.id
@@ -353,11 +346,6 @@ export const addProductToUsersBag = (
         );
       } else {
         if (userData.userProductsInBag === undefined) {
-          console.log(
-            "userData.userProductsInBag in undefined",
-            userData.userProductsInBag
-          );
-
           const userProductsInBag = [];
           userProductsInBag.push(product);
           userProductsRef.set(
@@ -376,7 +364,6 @@ export const addProductToUsersBag = (
           );
 
           shouldBeAddedToBag ? null : userData.userProductsInBag.push(product);
-          console.log("userData.userProductsInBag", userData.userProductsInBag);
           userProductsRef.set(
             {
               userProductsInBag: userData.userProductsInBag,
@@ -391,37 +378,50 @@ export const addProductToUsersBag = (
   }
 };
 
-export const saveShippingAddress = (payload) => async (dispatch, getState) => {
+export const saveShippingAddress = async (payload, isEdit, index) => {
   try {
     const userRef = firebase
       .firestore()
       .collection("users")
       .doc(firebase.auth().currentUser.uid);
-
     const userSnap = await userRef.get();
     const userData = userSnap.data();
 
-    userData.shippingAddresses.push({
-      ...payload,
-    });
-
-    userRef
-      .set(
-        {
-          shippingAddresses: userData.shippingAddresses,
-        },
-
-        { merge: true }
-      )
-      .catch((error) => {
-        console.log(
-          "Something went wrong with added shipping address to firestore: ",
-          error
-        );
+    if (isEdit) {
+      userData.shippingAddresses[index] = payload;
+      userRef
+        .set(
+          {
+            shippingAddresses: userData.shippingAddresses,
+          },
+          { merge: true }
+        )
+        .catch((error) => {
+          console.log(
+            "Something went wrong with added shipping address to firestore: ",
+            error
+          );
+        });
+    } else {
+      userData.shippingAddresses.push({
+        ...payload,
       });
-    // dispatch(addShippingAddress(payload));
+      userRef
+        .set(
+          {
+            shippingAddresses: userData.shippingAddresses,
+          },
+          { merge: true }
+        )
+        .catch((error) => {
+          console.log(
+            "Something went wrong with added shipping address to firestore: ",
+            error
+          );
+        });
+    }
   } catch (error) {
-    console.log("sendReview error", error);
+    console.log("saveShippingAddress error", error);
   }
 };
 
@@ -458,7 +458,6 @@ export const sendReview = (payload) => async (dispatch, getState) => {
           error
         );
       });
-    // dispatch(addReview(payload));
   } catch (error) {
     console.log("sendReview error", error);
   }
@@ -507,7 +506,6 @@ export const savePaymentCard = async (payload) => {
 
     const userSnap = await userRef.get();
     const userData = userSnap.data();
-    console.log("userData", userData);
     userData.paymentMethods.push({
       ...payload,
     });
@@ -567,20 +565,38 @@ export const selectPaymentCard = async (pressedIndex) => {
   }
 };
 
-// let  db = firebase.firestore();
-// products.forEach(function(product) {
-//     db.collection("products").add({
-//         // id:product.id,
-//         brandName: product.brandName,
-//         colors: product.colors,
-//         sizes: product.sizes,
-//         about: product.about,
-//         count: product.count,
-//         imagesUrls: product.imagesUrls,
-//         tags: product.tags,
-//         rating: product.rating,
-//         reviews: product.reviews,
-//         price: product.price,
-//         name: product.name
-//     })
-// })
+export const countDecreaser = async (item) => {
+  try {
+    const ref = await firebase.firestore().collection("products").doc(item.id);
+    return firebase.firestore().runTransaction(function (transaction) {
+      return transaction
+        .get(ref)
+        .then(function (productsSnap) {
+          const productData = productsSnap.data();
+          const colorIndex = productData.colors.findIndex(
+            (colorItem) => colorItem.color === item.color
+          );
+          productData.colors[colorIndex].count -= item.selectedCount;
+
+          const sizeIndex = productData.sizes.findIndex(
+            (sizeItem) => sizeItem.size === item.size
+          );
+          productData.sizes[sizeIndex].count -= item.selectedCount;
+
+          transaction.update(ref, {
+            colors: productData.colors,
+            sizes: productData.sizes,
+            count: productData.count - item.selectedCount,
+          });
+        })
+        .then(function () {
+          console.log("Transaction successfully committed!");
+        })
+        .catch(function (error) {
+          console.log("Transaction failed: ", error);
+        });
+    });
+  } catch (error) {
+    console.log("decrease count error", error);
+  }
+};

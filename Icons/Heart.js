@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import Svg, { Path } from "react-native-svg";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { COLORS } from "../style/colors";
 
-export const Heart = ({ width, height, isHeartClicked, style, onPress }) => {
+export const Heart = ({
+  width,
+  height,
+  isHeartClicked,
+  style,
+  onPress,
+  hasContainer = true,
+}) => {
   return (
-    <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
+    <TouchableOpacity
+      style={hasContainer ? [styles.container, style] : null}
+      onPress={onPress}
+    >
       <Svg height={height} viewBox="0 0 512 512" width={width}>
         <Path
           d="m471.382812 44.578125c-26.503906-28.746094-62.871093-44.578125-102.410156-44.578125-29.554687
@@ -27,7 +37,7 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     borderRadius: 20,
     backgroundColor: COLORS.DARK,
-    elevation: 1,
+    elevation: 2,
     justifyContent: "center",
     alignItems: "center",
     zIndex: 3,

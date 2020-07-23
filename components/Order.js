@@ -10,14 +10,10 @@ export const Order = ({
   quantity,
   total,
   date,
-  status = "Delivered",
   onPress,
 }) => {
   return (
-    <TouchableOpacity
-      style={styles.container}
-      // onPress={onPress}
-    >
+    <TouchableOpacity style={styles.container}>
       <View style={styles.firstPart}>
         <CustomText weight={"medium"} style={styles.orderNo}>
           Order №{orderNo}

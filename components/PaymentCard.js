@@ -25,7 +25,7 @@ export const PaymentCard = ({
   return (
     <>
       <TouchableWithoutFeedback>
-        <View style={{ width: 350, height: 220 }}>
+        <View style={{ width: 380, height: 220 }}>
           <Image source={url} style={styles.container} resizeMode={"cover"} />
           <View style={styles.numberCont}>
             <CustomText style={{ fontSize: 27, letterSpacing: 5 }}>
@@ -78,8 +78,7 @@ export const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: 220,
-    position: "absolute",
-    left: -10,
+    position: "relative",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -97,9 +96,10 @@ export const styles = StyleSheet.create({
   },
   checkboxWrapper: {
     width: "100%",
-    marginBottom: 50,
     flexDirection: "row",
-    marginLeft: 5,
+    marginVertical: 10,
+    marginBottom: 25,
+    marginLeft: 15,
   },
   checkbox: {
     width: 20,
