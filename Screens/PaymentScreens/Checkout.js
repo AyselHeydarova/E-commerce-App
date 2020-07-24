@@ -27,7 +27,9 @@ const mapStateToProps = (state) => ({
 });
 export const Checkout = connect(mapStateToProps, {
   getCurrentUserData,
-})(({ navigation, route, user }) => {
+  addOrderedProducts,
+  deleteBagProducts,
+})(({ navigation, route, user, addOrderedProducts, deleteBagProducts }) => {
   const { bagProducts } = route.params;
   const shippingAddresses = (user.shippingAddresses || []).filter(
     (address) => address.isSelected === true
